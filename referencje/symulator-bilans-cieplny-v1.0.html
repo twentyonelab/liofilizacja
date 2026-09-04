@@ -1,0 +1,2672 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bilans cieplny liofilizatora</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  color-scheme: light;
+  --ground:#eef2f5; --surface:#ffffff; --surface-2:#f6f9fb; --surface-3:#e9eff4;
+  --line:#d3dce4; --line-soft:#e4ebf1;
+  --ink:#0d1a23; --ink-2:#42586a; --ink-3:#6d8593;
+  --cold:#0e6e8c; --cold-soft:#dceef4; --hot:#a95410; --hot-soft:#f8e8da;
+  --good:#1a7a56; --warn:#a56c07; --bad:#b03a36;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4; --s6:#008300;
+  --grid:#dfe7ed; --shadow:0 1px 2px rgba(13,26,35,.05), 0 8px 24px -16px rgba(13,26,35,.22);
+  --font-display:'Archivo', system-ui, -apple-system, sans-serif;
+  --font-body:'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+  --font-mono:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --ground:#0a1119; --surface:#131e28; --surface-2:#18242f; --surface-3:#1e2c38;
+    --line:#273644; --line-soft:#1e2c37;
+    --ink:#e6eef4; --ink-2:#a6bac8; --ink-3:#7a8e9d;
+    --cold:#46b4d2; --cold-soft:#12313d; --hot:#e08b3b; --hot-soft:#3a2413;
+    --good:#3aa77c; --warn:#d1962b; --bad:#e07470;
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#008300;
+    --grid:#243441; --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --ground:#0a1119; --surface:#131e28; --surface-2:#18242f; --surface-3:#1e2c38;
+  --line:#273644; --line-soft:#1e2c37;
+  --ink:#e6eef4; --ink-2:#a6bac8; --ink-3:#7a8e9d;
+  --cold:#46b4d2; --cold-soft:#12313d; --hot:#e08b3b; --hot-soft:#3a2413;
+  --good:#3aa77c; --warn:#d1962b; --bad:#e07470;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#008300;
+  --grid:#243441; --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:var(--font-body); font-size:14px; line-height:1.55;
+  font-feature-settings:"kern" 1;
+}
+h1,h2,h3,h4{font-family:var(--font-display); margin:0; text-wrap:balance; letter-spacing:-.015em}
+.mono{font-family:var(--font-mono); font-variant-numeric:tabular-nums}
+.lbl{font-family:var(--font-mono); font-size:10.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--ink-3); font-weight:500}
+#pvNote,#calibNote,#barUnit,#peakNote{text-transform:none; letter-spacing:.02em}
+
+/* ---------- masthead ---------- */
+.masthead{
+  border-bottom:1px solid var(--line); background:var(--surface);
+  position:sticky; top:0; z-index:40;
+}
+.masthead-in{max-width:1580px; margin:0 auto; padding:14px 22px; display:flex; align-items:center; gap:20px; flex-wrap:wrap}
+.brandmark{display:flex; align-items:baseline; gap:11px; margin-right:auto}
+.brandmark h1{font-size:17px; font-weight:700}
+.brandmark .sub{font-size:12px; color:var(--ink-3); font-family:var(--font-mono)}
+.tempstrip{display:flex; align-items:center; gap:0; border:1px solid var(--line); border-radius:3px; overflow:hidden}
+.tempstrip span{
+  font-family:var(--font-mono); font-size:10px; padding:4px 8px; font-weight:500;
+  border-right:1px solid var(--line); white-space:nowrap
+}
+.tempstrip span:last-child{border-right:0}
+.btn{
+  font-family:var(--font-body); font-size:12.5px; font-weight:500; cursor:pointer;
+  background:var(--surface-2); color:var(--ink-2); border:1px solid var(--line);
+  border-radius:3px; padding:6px 11px;
+}
+.btn:hover{background:var(--surface-3); color:var(--ink)}
+.btn:focus-visible, select:focus-visible, input:focus-visible, summary:focus-visible{outline:2px solid var(--cold); outline-offset:2px}
+
+/* ---------- shell ---------- */
+.shell{max-width:1580px; margin:0 auto; padding:20px 22px 64px; display:grid; grid-template-columns:335px minmax(0,1fr); gap:22px; align-items:start}
+@media (max-width:1180px){ .shell{grid-template-columns:minmax(0,1fr)} }
+
+/* ---------- controls ---------- */
+.panel{background:var(--surface); border:1px solid var(--line); border-radius:5px; box-shadow:var(--shadow)}
+#controls{position:sticky; top:74px; max-height:calc(100vh - 96px); overflow-y:auto; overscroll-behavior:contain}
+@media (max-width:1180px){ #controls{position:static; max-height:none} }
+#controls::-webkit-scrollbar{width:9px}
+#controls::-webkit-scrollbar-thumb{background:var(--line); border-radius:9px}
+.ctl-head{padding:13px 15px; border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; gap:10px}
+.ctl-head h2{font-size:13px; font-weight:600}
+details.grp{border-bottom:1px solid var(--line-soft)}
+details.grp:last-of-type{border-bottom:0}
+details.grp>summary{
+  padding:10px 15px; cursor:pointer; list-style:none; display:flex; align-items:center; gap:8px;
+  font-family:var(--font-mono); font-size:10.5px; letter-spacing:.09em; text-transform:uppercase;
+  color:var(--ink-2); font-weight:500; user-select:none;
+}
+details.grp>summary::-webkit-details-marker{display:none}
+details.grp>summary::before{content:"+"; width:11px; color:var(--ink-3); font-size:12px}
+details.grp[open]>summary::before{content:"−"}
+details.grp>summary:hover{background:var(--surface-2); color:var(--ink)}
+.grp-body{padding:2px 15px 14px; display:flex; flex-direction:column; gap:11px}
+.f{display:grid; grid-template-columns:1fr auto; gap:3px 10px; align-items:baseline}
+.f label{font-size:12.5px; color:var(--ink-2); line-height:1.3}
+.f .val{font-family:var(--font-mono); font-size:12px; font-weight:500; color:var(--ink); white-space:nowrap}
+.f input[type=range]{grid-column:1/-1; width:100%; margin:2px 0 0; accent-color:var(--cold); height:16px}
+.f select, .f input[type=number]{
+  grid-column:1/-1; width:100%; font-family:var(--font-body); font-size:12.5px; padding:5px 7px;
+  background:var(--surface-2); color:var(--ink); border:1px solid var(--line); border-radius:3px;
+}
+.f .hint{grid-column:1/-1; font-size:11px; color:var(--ink-3); line-height:1.35}
+.sink{display:grid; grid-template-columns:auto 1fr auto; gap:7px; align-items:center; padding:5px 0; border-bottom:1px dotted var(--line-soft)}
+.sink:last-child{border-bottom:0}
+.sink input[type=checkbox]{accent-color:var(--cold); width:14px; height:14px; margin:0}
+.sink .nm{font-size:12px; color:var(--ink-2); line-height:1.25}
+.sink .nm b{display:block; font-family:var(--font-mono); font-size:10px; color:var(--ink-3); font-weight:500}
+.sink input[type=number]{width:58px; font-family:var(--font-mono); font-size:11.5px; padding:3px 5px; background:var(--surface-2); color:var(--ink); border:1px solid var(--line); border-radius:3px; text-align:right}
+.sink.off .nm{opacity:.45}
+.pinfo{border:1px solid var(--line); border-radius:3px; background:var(--surface-2); padding:9px 11px; display:flex; flex-direction:column; gap:5px}
+.pinfo .pr{display:flex; justify-content:space-between; gap:10px; font-size:11.5px; color:var(--ink-2)}
+.pinfo .pr span:last-child{font-family:var(--font-mono); font-variant-numeric:tabular-nums; color:var(--ink); font-weight:500; white-space:nowrap}
+.pinfo .pw{font-size:11.5px; line-height:1.4; margin-top:2px; padding-top:6px; border-top:1px dotted var(--line)}
+.pinfo .pw.ok{color:var(--good)} .pinfo .pw.warn{color:var(--warn)} .pinfo .pw.bad{color:var(--bad)}
+</style>
+<style>
+/* ---------- results ---------- */
+#results{display:flex; flex-direction:column; gap:22px; min-width:0}
+.block{background:var(--surface); border:1px solid var(--line); border-radius:5px; box-shadow:var(--shadow); overflow:hidden}
+.block-head{padding:14px 18px 12px; border-bottom:1px solid var(--line-soft); display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap}
+.block-head h3{font-size:14.5px; font-weight:600}
+.block-head p{margin:3px 0 0; font-size:12.5px; color:var(--ink-3); max-width:68ch; line-height:1.45}
+.block-body{padding:16px 18px 18px}
+.scroll-x{overflow-x:auto}
+
+/* KPI */
+.kpis{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:1px; background:var(--line-soft)}
+@media (max-width:1000px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.kpis{grid-template-columns:minmax(0,1fr)}}
+.kpi{background:var(--surface); padding:14px 16px 15px}
+.kpi .k{font-family:var(--font-mono); font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); font-weight:500}
+.kpi .v{font-family:var(--font-display); font-size:26px; font-weight:600; line-height:1.1; margin-top:6px; font-variant-numeric:tabular-nums; letter-spacing:-.02em}
+.kpi .v small{font-size:12.5px; font-weight:500; color:var(--ink-3); margin-left:3px; letter-spacing:0}
+.kpi .d{font-family:var(--font-mono); font-size:11px; margin-top:4px; font-variant-numeric:tabular-nums}
+.up{color:var(--bad)} .down{color:var(--good)} .flat{color:var(--ink-3)}
+
+/* scenario switcher */
+.scen{display:grid; grid-template-columns:repeat(auto-fit,minmax(168px,1fr)); gap:9px}
+.scen button{
+  text-align:left; cursor:pointer; padding:11px 13px 12px; border-radius:4px; background:var(--surface-2);
+  border:1px solid var(--line); font-family:var(--font-body); color:var(--ink-2); transition:none;
+}
+.scen button:hover{background:var(--surface-3)}
+.scen button[aria-pressed="true"]{background:var(--surface); border-color:var(--cold); box-shadow:inset 0 0 0 1px var(--cold); color:var(--ink)}
+.scen .tag{font-family:var(--font-mono); font-size:10px; letter-spacing:.1em; color:var(--ink-3); font-weight:600}
+.scen button[aria-pressed="true"] .tag{color:var(--cold)}
+.scen .nm{font-family:var(--font-display); font-size:13px; font-weight:600; margin-top:3px; display:block; line-height:1.25}
+.scen .ds{font-size:11.5px; color:var(--ink-3); margin-top:4px; display:block; line-height:1.35}
+.scen .fig{font-family:var(--font-mono); font-size:12px; font-weight:600; margin-top:7px; display:block; font-variant-numeric:tabular-nums}
+
+/* legend */
+.legend{display:flex; flex-wrap:wrap; gap:5px 16px; margin-top:14px}
+.legend .li{display:flex; align-items:center; gap:6px; font-size:12px; color:var(--ink-2)}
+.legend .sw{width:11px; height:11px; border-radius:2px; flex:none}
+.legend .lv{font-family:var(--font-mono); font-size:11px; color:var(--ink-3); font-variant-numeric:tabular-nums}
+
+/* tables */
+table{border-collapse:collapse; width:100%; font-size:12.5px}
+th,td{padding:6px 10px; text-align:right; border-bottom:1px solid var(--line-soft); white-space:nowrap}
+th:first-child,td:first-child{text-align:left; white-space:normal}
+thead th{
+  font-family:var(--font-mono); font-size:10px; letter-spacing:.07em; text-transform:uppercase;
+  color:var(--ink-3); font-weight:500; border-bottom:1px solid var(--line); position:sticky; top:0; background:var(--surface)
+}
+tbody td.num{font-family:var(--font-mono); font-variant-numeric:tabular-nums}
+tbody tr.sec td{background:var(--surface-2); font-weight:600; font-size:11px; font-family:var(--font-mono);
+  letter-spacing:.06em; text-transform:uppercase; color:var(--ink-2); padding-top:9px; padding-bottom:5px}
+tbody tr.tot td{border-top:1px solid var(--line); font-weight:600}
+tbody tr:hover td:not(.pad){background:var(--surface-2)}
+td .u{color:var(--ink-3); font-size:11px; margin-left:2px}
+
+/* svg charts */
+svg{display:block; max-width:100%}
+.ax{stroke:var(--grid); stroke-width:1}
+.axtext{font-family:var(--font-mono); font-size:10px; fill:var(--ink-3); font-variant-numeric:tabular-nums}
+.axlabel{font-family:var(--font-mono); font-size:9.5px; fill:var(--ink-3); letter-spacing:.08em; text-transform:uppercase}
+.vlabel{font-family:var(--font-mono); font-size:10.5px; fill:var(--ink); font-weight:500; font-variant-numeric:tabular-nums}
+.slabel{font-family:var(--font-body); font-size:11px; fill:var(--ink-2)}
+.sname{font-family:var(--font-display); font-size:11.5px; fill:var(--ink); font-weight:600}
+
+/* callouts */
+.note{
+  border-left:2px solid var(--cold); background:var(--surface-2); padding:11px 14px; border-radius:0 3px 3px 0;
+  font-size:12.5px; color:var(--ink-2); line-height:1.5;
+}
+.note.warm{border-left-color:var(--hot)}
+.note b{color:var(--ink); font-weight:600}
+.grid2{display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:16px}
+
+/* --- wartości odżywcze --- */
+.ngrid{display:grid; grid-template-columns:repeat(auto-fit,minmax(312px,1fr)); gap:14px; margin-top:16px}
+.ncard{background:var(--surface-2); border:1px solid var(--line-soft); border-radius:5px; padding:13px 15px 12px}
+.ncard .hd{display:flex; justify-content:space-between; align-items:baseline; gap:10px; margin-bottom:9px}
+.ncard h4{font-family:var(--font-display); font-size:13px; font-weight:600; margin:0}
+.nrow{display:grid; grid-template-columns:118px 1fr auto; gap:9px; align-items:center; margin:6px 0}
+.nrow .nm{font-size:11.5px; color:var(--ink-2); display:flex; align-items:center; gap:6px; line-height:1.2; white-space:nowrap}
+.nrow .dot{width:9px; height:9px; border-radius:2px; flex:none}
+.ntrack{display:block; height:15px; background:var(--surface-3); border-radius:3px; overflow:hidden}
+.nfill{display:block; height:100%; border-radius:3px; transition:width .25s ease}
+.nval{font-family:var(--font-mono); font-size:11.5px; font-weight:500; white-space:nowrap; font-variant-numeric:tabular-nums}
+.nval .rws{color:var(--ink-3); font-weight:400; font-size:10.5px}
+.ncard .ft{font-size:11px; color:var(--ink-3); margin-top:8px; padding-top:7px; border-top:1px dotted var(--line)}
+.ncard .ft b{color:var(--s3); font-weight:600}
+.nadv{margin-top:20px; border-top:1px solid var(--line-soft); padding-top:16px}
+.nadv h4{font-family:var(--font-display); font-size:13.5px; font-weight:600; margin:0 0 3px}
+.nadv .sub{margin:0 0 12px; font-size:12px; color:var(--ink-3); max-width:72ch; line-height:1.45}
+.advrow{display:grid; grid-template-columns:246px 1fr 62px; gap:12px; align-items:center; margin:8px 0}
+.advrow .n{font-size:12px; color:var(--ink-2)}
+.advrow .b{height:18px; background:var(--surface-3); border-radius:3px; overflow:hidden}
+.advrow .b span{display:block; height:100%; border-radius:3px}
+.advrow .x{font-family:var(--font-mono); font-size:12px; font-weight:600; text-align:right; font-variant-numeric:tabular-nums}
+.chip{display:inline-block; font-family:var(--font-mono); font-size:10.5px; padding:2px 9px; border-radius:20px;
+  border:1px solid var(--good); color:var(--good); margin:4px 4px 0 0; line-height:1.55}
+.chip.no{border-color:var(--bad); color:var(--bad)}
+.chip.mid{border-color:var(--cold); color:var(--cold)}
+.nempty{font-size:12.5px; color:var(--ink-3); padding:18px 0; line-height:1.6}
+@media (max-width:640px){.nrow{grid-template-columns:104px 1fr auto} .advrow{grid-template-columns:150px 1fr 54px}}
+.pill{display:inline-flex; align-items:center; gap:5px; font-family:var(--font-mono); font-size:10.5px;
+  padding:2px 7px; border-radius:20px; border:1px solid var(--line); color:var(--ink-2); font-weight:500}
+.pill.on{border-color:var(--good); color:var(--good)}
+.pill.off{opacity:.5}
+.tip{position:fixed; pointer-events:none; z-index:90; background:var(--surface); border:1px solid var(--line);
+  border-radius:4px; box-shadow:var(--shadow); padding:8px 11px; font-size:12px; color:var(--ink); opacity:0;
+  max-width:270px; line-height:1.45}
+.tip.on{opacity:1}
+.tip .t{font-family:var(--font-display); font-weight:600; font-size:12.5px; margin-bottom:3px}
+.tip .r{display:flex; justify-content:space-between; gap:14px; font-family:var(--font-mono); font-size:11.5px; font-variant-numeric:tabular-nums}
+.tip .r span:first-child{color:var(--ink-3)}
+.meth{font-size:12.5px; color:var(--ink-2); line-height:1.6}
+.meth h4{font-size:12.5px; margin:16px 0 5px; color:var(--ink)}
+.meth h4:first-child{margin-top:0}
+.meth code{font-family:var(--font-mono); font-size:11.5px; background:var(--surface-2); padding:1px 5px; border-radius:3px; border:1px solid var(--line-soft)}
+.meth ul{margin:5px 0; padding-left:17px}
+.meth li{margin:3px 0}
+.meth a{color:var(--cold)}
+.foot{font-size:11.5px; color:var(--ink-3); text-align:center; padding:0 22px 8px; line-height:1.6}
+@media (prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-in">
+    <div class="brandmark">
+      <h1>Bilans cieplny liofilizatora</h1>
+      <span class="sub">21 ZMYSŁÓW · v1.0</span>
+    </div>
+    <div class="tempstrip" aria-label="Poziomy temperatur w układzie">
+      <span style="color:var(--cold)">−45 °C CO₂</span>
+      <span style="color:var(--ink-2)">−5 °C kaskada</span>
+      <span style="color:var(--hot)">+50 °C R290</span>
+      <span style="color:var(--hot)">+85 °C CO₂ tk.</span>
+    </div>
+    <button class="btn" id="themeBtn" type="button">Motyw</button>
+    <button class="btn" id="resetBtn" type="button">Reset</button>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="panel" id="controls">
+    <div class="ctl-head"><h2>Parametry modelu</h2><span class="lbl" id="calibNote"></span></div>
+    <div id="ctlBody"></div>
+  </aside>
+
+  <div id="results">
+
+    <section class="block">
+      <div class="kpis" id="kpiRow"></div>
+    </section>
+
+    <section class="block">
+      <div class="block-head">
+        <div>
+          <h3>Warianty układu</h3>
+          <p>Cztery architektury tego samego procesu. Wybór wariantu przełącza schemat przepływu ciepła i profil dobowy poniżej. Wszystkie liczby liczone dla jednego cyklu i tego samego wsadu.</p>
+        </div>
+      </div>
+      <div class="block-body"><div class="scen" id="scenRow"></div></div>
+    </section>
+
+    <section class="block">
+      <div class="block-head">
+        <div>
+          <h3>Energia elektryczna na cykl</h3>
+          <p>Rozbicie poboru energii elektrycznej na węzły układu. Pozycje „chłodzenie kondensatora lodu” i „grzanie półek” to dwa największe strumienie — cała idea integracji polega na tym, że są to ten sam strumień ciepła, tylko na dwóch poziomach temperatury.</p>
+        </div>
+        <span class="lbl" id="barUnit"></span>
+      </div>
+      <div class="block-body">
+        <div class="scroll-x"><svg id="barChart" role="img" aria-label="Porównanie zużycia energii elektrycznej w czterech wariantach"></svg></div>
+        <div class="legend" id="barLegend"></div>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="block-head">
+        <div>
+          <h3>Co jest najbardziej energochłonne i jak to obniżyć</h3>
+          <p>Po lewej fizyka: na co idzie ciepło w procesie, niezależnie od układu chłodniczego. Po prawej maszyna: na co idzie prąd w wybranym wariancie. Niżej lista dźwigni kosztowych — każda przeliczona przez pełny model, uszeregowana według tego, ile realnie daje.</p>
+        </div>
+      </div>
+      <div class="block-body">
+        <div class="grid2">
+          <div><div class="lbl" style="margin-bottom:9px">Zapotrzebowanie cieplne procesu</div>
+            <div class="scroll-x"><svg id="thermSplit" role="img" aria-label="Podział zapotrzebowania cieplnego"></svg></div>
+            <div class="legend" id="thermLegend"></div></div>
+          <div><div class="lbl" style="margin-bottom:9px">Energia elektryczna wg węzłów</div>
+            <div class="scroll-x"><svg id="elecSplit" role="img" aria-label="Podział energii elektrycznej"></svg></div>
+            <div class="legend" id="elecLegend"></div></div>
+        </div>
+        <div class="note" id="dominNote" style="margin:18px 0 20px"></div>
+        <div class="lbl" style="margin-bottom:10px">Dźwignie kosztowe — zmiana kosztu energii na kilogram produktu</div>
+        <div class="scroll-x"><svg id="levers" role="img" aria-label="Wpływ poszczególnych dźwigni na koszt"></svg></div>
+        <div class="legend" id="leverLegend"></div>
+        <div class="note warm" id="leverNote" style="margin-top:16px"></div>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="block-head">
+        <div>
+          <h3>Próżnia — ile jej trzeba i co robi ciśnienie</h3>
+          <p>Ciśnienie w komorze ustawia temperaturę frontu sublimacji, a przez nią wszystko inne. Niżej nie znaczy lepiej: im głębsza próżnia, tym zimniejszy front i tym słabiej gaz przewodzi ciepło z półki, więc suszenie zwalnia. Wyżej — front robi się cieplejszy i zbliża do temperatury, przy której matryca produktu się zapada. Optimum leży pomiędzy i to ono, a nie możliwości pomp, powinno wyznaczać nastawę.</p>
+        </div>
+      </div>
+      <div class="block-body">
+        <div class="kpis" id="vacKpi" style="border:1px solid var(--line);border-radius:4px;overflow:hidden;margin-bottom:18px"></div>
+        <div class="scroll-x"><svg id="vacChart" role="img" aria-label="Wpływ ciśnienia na temperaturę frontu i szybkość sublimacji"></svg></div>
+        <div class="legend" id="vacLegend"></div>
+        <div class="note" id="vacNote" style="margin-top:16px"></div>
+        <div class="note warm" id="pumpNote" style="margin-top:12px"></div>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="block-head">
+        <div>
+          <h3>Drabina temperatur — gdzie ciepło wchodzi i wychodzi</h3>
+          <p>Oś pionowa to temperatura, poziomo — energia w kWh na cykl. Po lewej strumienie wymagające chłodzenia, po prawej dostępne i potrzebne ciepło. Strzałki to sprężarki: każda podnosi ciepło o różnicę temperatur, płacąc za to pracą.</p>
+        </div>
+      </div>
+      <div class="block-body"><div class="scroll-x"><svg id="ladder" role="img" aria-label="Diagram poziomów temperatury i przepływów energii"></svg></div><div class="legend" id="ladderLegend"></div></div>
+    </section>
+
+    <section class="block">
+      <div class="block-head">
+        <div>
+          <h3>Profil dobowy mocy elektrycznej</h3>
+          <p>Przebieg mocy w czasie jednego cyklu. Szczyt decyduje o mocy przyłączeniowej i opłacie mocowej — magazyn chłodu rozkłada pik zamrażania na cały cykl, magazyn ciepła oddziela produkcję ciepła od zapotrzebowania.</p>
+        </div>
+        <span class="lbl" id="peakNote"></span>
+      </div>
+      <div class="block-body"><div class="scroll-x"><svg id="profile" role="img" aria-label="Profil mocy elektrycznej w cyklu"></svg></div>
+        <div class="legend" id="profLegend"></div>
+      </div>
+    </section>
+
+    <section class="block" id="nutrBlock">
+      <div class="block-head">
+        <div>
+          <h3>Wartości odżywcze — liofilizat, susz tradycyjny, surowiec świeży</h3>
+          <p>Trzy warianty tego samego surowca — albo tej samej receptury, jeśli włączone są domieszki — liczone z tablic składu i współczynników retencji z piśmiennictwa. Podstawa porównania zmienia wnioski radykalnie, więc jest przełączana zakładkami: etykieta pokazuje 100 g produktu, sucha masa pokazuje, ile składnika faktycznie przetrwało, a porcja mówi, co dostaje konsument. Kolory trzymają jedną logikę: niebieski to surowiec świeży, pomarańczowy susz konwekcyjny, zielony liofilizat.</p>
+        </div>
+        <span class="lbl" id="basisNote"></span>
+      </div>
+      <div class="block-body">
+        <div class="scen" id="nutrTabs" style="grid-template-columns:repeat(auto-fit,minmax(210px,1fr))"></div>
+        <div class="note" id="nutrNote" style="margin-top:14px"></div>
+        <div id="nutrGrid" class="ngrid"></div>
+        <div class="legend" id="nutrLegend" style="margin-top:16px"></div>
+        <div class="nadv"><h4>Gdzie przewaga liofilizacji naprawdę jest</h4>
+          <p class="sub">Krotność zawartości w liofilizacie względem suszu konwekcyjnego, liczona zawsze na suchą masę — czyli sama retencja, bez efektu mocniejszego dosuszenia. Krotność nie zmienia się przy przełączaniu podstawy, bo to jedyne porównanie, w którym woda nie zaburza wyniku. Pod nazwą składnika stoi to, co z tej krotności realnie wychodzi na 100 g gotowego produktu — dopiero ta liczba mówi, czy przewaga jest warta komunikowania.</p>
+          <div id="nutrAdv"></div></div>
+        <div class="note" id="claimNote" style="margin-top:18px"></div>
+        <div class="note warm" id="cavNote" style="margin-top:12px"></div>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="block-head">
+        <div>
+          <h3>Koszt wytworzenia i gatunek surowca</h3>
+          <p>Energia to jedna pozycja w rachunku, i nie największa. Ten blok pokazuje pełny koszt kilograma produktu i to, ile z niego da się odzyskać, schodząc z gatunkiem surowca. Przy postaci mielonej wady wyglądu przestają dyskwalifikować owoc, więc dostęp do tańszego surowca jest tu realnie większy niż przy plastrach.</p>
+        </div>
+        <span class="lbl" id="cogsNote"></span>
+      </div>
+      <div class="block-body">
+        <div class="scroll-x"><svg id="cogsChart" role="img" aria-label="Struktura kosztu wytworzenia"></svg></div>
+        <div class="legend" id="cogsLegend"></div>
+        <div class="grid2" style="margin-top:22px">
+          <div><div class="lbl" style="margin-bottom:9px">Koszt wytworzenia wg gatunku surowca</div>
+            <div class="scroll-x"><svg id="gradeChart" role="img" aria-label="Porównanie gatunków surowca"></svg></div></div>
+          <div><div class="lbl" style="margin-bottom:9px">Udział pozycji w koszcie</div>
+            <div class="scroll-x"><svg id="sharePie" role="img" aria-label="Udział pozycji kosztowych"></svg></div>
+            <div class="legend" id="shareLegend"></div></div>
+        </div>
+        <div class="note" id="rawNote" style="margin-top:18px"></div>
+        <div class="note warm" id="riskNote" style="margin-top:12px"></div>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="block-head">
+        <div>
+          <h3>Doba wzorcowa — cena, produkcja PV i obciążenie</h3>
+          <p>Górny wykres to cena zakupu energii godzina po godzinie, dolny — jak model rozkłada obciążenie zakładu. Część sztywna leży płasko, część elastyczna wędruje w godziny najtańsze albo pod produkcję własną. Linia w dolnym panelu to moc z fotowoltaiki; żółte pole nad słupkami to nadwyżka oddana do sieci.</p>
+        </div>
+        <label class="lbl" style="display:flex;align-items:center;gap:7px">Miesiąc
+          <select id="monthSel" style="font-family:var(--font-body);font-size:12px;padding:4px 7px;background:var(--surface-2);color:var(--ink);border:1px solid var(--line);border-radius:3px;text-transform:none;letter-spacing:0"></select>
+        </label>
+      </div>
+      <div class="block-body">
+        <div class="scroll-x"><svg id="dayChart" role="img" aria-label="Cena energii i obciążenie w dobie wzorcowej"></svg></div>
+        <div class="legend" id="dayLegend"></div>
+        <div class="note" id="dayNote" style="margin-top:14px"></div>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="block-head">
+        <div>
+          <h3>Rok energetyczny i wybór taryfy</h3>
+          <p>Po lewej bilans miesiąc po miesiącu: ile energii pokrywa własna produkcja, ile trzeba kupić, ile ucieka do sieci. Po prawej ten sam zakład rozliczony w trzech taryfach, z instalacją PV i bez niej — to jest odpowiedź na pytanie, czy przechodzić na cenę dynamiczną.</p>
+        </div>
+        <span class="lbl" id="pvNote"></span>
+      </div>
+      <div class="block-body"><div class="grid2">
+        <div><div class="lbl" style="margin-bottom:9px">Bilans miesięczny energii elektrycznej</div>
+          <div class="scroll-x"><svg id="yearChart" role="img" aria-label="Miesięczny bilans energii"></svg></div>
+          <div class="legend" id="yearLegend"></div></div>
+        <div><div class="lbl" style="margin-bottom:9px">Roczny koszt energii elektrycznej wg taryfy</div>
+          <div class="scroll-x"><svg id="tariffChart" role="img" aria-label="Porównanie taryf"></svg></div>
+          <div class="legend" id="tariffLegend"></div></div>
+      </div>
+      <div class="note warm" id="pvPayback" style="margin-top:16px"></div>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="block-head"><div><h3>Bilans systemowy i koszt</h3>
+      <p>Porównanie obejmuje także odbiorniki ciepła i chłodu: w wariantach bez odzysku pokrywa je kocioł gazowy i osobna chłodnica, w wariantach zintegrowanych — odzysk. Bez tego rozszerzenia porównanie byłoby nieuczciwe wobec boostera, który zużywa prąd, ale kasuje gaz.</p></div></div>
+      <div class="block-body"><div class="grid2">
+        <div><div class="lbl" style="margin-bottom:9px">Koszt energii na cykl</div>
+          <div class="scroll-x"><svg id="costChart" role="img" aria-label="Koszt energii w wariantach"></svg></div></div>
+        <div><div class="lbl" style="margin-bottom:9px">Emisja CO₂ na kg produktu</div>
+          <div class="scroll-x"><svg id="co2Chart" role="img" aria-label="Emisja CO2 w wariantach"></svg></div></div>
+      </div>
+      <div class="note" id="paybackNote" style="margin-top:16px"></div>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="block-head"><div><h3>Pełne rozbicie bilansu</h3>
+        <p>Wszystkie wielkości pośrednie modelu, w kWh na cykl, o ile nie zaznaczono inaczej. Ta tabela jest miejscem, w którym sprawdza się, czy wynik ma sens.</p></div></div>
+      <div class="block-body scroll-x"><table id="fullTable"></table></div>
+    </section>
+
+    <section class="block">
+      <div class="block-head"><div><h3>Metodyka i założenia</h3></div></div>
+      <div class="block-body meth" id="methodology"></div>
+    </section>
+
+    <p class="foot">Narzędzie robocze 21 ZMYSŁÓW · model uproszczony, przeznaczony do analizy wariantów i wrażliwości, nie do doboru urządzeń.<br>Do wyceny i doboru sprężarek konieczne obliczenia obiegowe na rzeczywistych charakterystykach producenta.</p>
+  </div>
+</div>
+<div class="tip" id="tip" role="status" aria-live="polite"></div>
+<script>
+"use strict";
+/* ============================================================
+   1. STAŁE FIZYCZNE I DANE SUROWCOWE
+   ============================================================ */
+const LF=333.6, DHS=2838, DHD=3000, CPI=2.05, CPW=4.187, CPD=1.50, K0=273.15;
+const copC=(te,tc,eta)=> tc<=te ? 99 : eta*(te+K0)/(tc-te);
+/* prężność pary nasyconej nad lodem — Murphy & Koop 2005, [Pa], T w °C */
+function pIce(tC){
+  const T=tC+K0;
+  return Math.exp(9.550426-5723.265/T+3.53068*Math.log(T)-0.00728332*T);
+}
+/* odwrotność: temperatura lodu przy zadanej prężności [°C] */
+function tIce(p){
+  let a=-120, b=0.01;
+  for(let i=0;i<26;i++){ const m=(a+b)/2; if(pIce(m)<p) a=m; else b=m; }
+  return (a+b)/2;
+}
+/* współczynnik przejmowania ciepła półka → produkt, rośnie z ciśnieniem i nasyca się */
+const kVac=(p,kc,kg,ph)=> kc + kg*p/(p+ph);
+/* gęstość strumienia ciepła przy zadanym ciśnieniu komory */
+function fluxAt(p,tShelf,kc,kg,ph,dTd){
+  const tFront=tIce(p)+dTd;
+  return {p, tFront, kv:kVac(p,kc,kg,ph), q:Math.max(0,kVac(p,kc,kg,ph)*(tShelf-tFront))};
+}
+
+/* Udział wody dobrany tak, aby uzysk odtwarzał dane produkcyjne (mięso i podroby — FrostX 2026),
+   dla pozostałych wg tablic składu (USDA / tablice IŻŻ). `d` to gęstość załadunku tac w kg/m²
+   — dla ziół jest kilkakrotnie niższa niż dla owoców i to ona, a nie masa, ogranicza wsad. */
+const PRODUCTS={
+  truskawka:{n:"Truskawka, plastry 5 mm",      w:.910, t:26, d:10, tc:-20, sp:200, rp:6, pro:0.7, nu:{c:58.8,b12:0,fe:.41,ca:16,k:153,kar:7,pol:230,ant:35,fib:2.0},  g:"Owoce"},
+  truskCala:{n:"Truskawka, cała",              w:.910, t:40, d:7, tc:-20, sp:230, rp:6, pro:0.7, nu:{c:58.8,b12:0,fe:.41,ca:16,k:153,kar:7,pol:230,ant:35,fib:2.0},   g:"Owoce"},
+  malina:   {n:"Malina, cała",                 w:.860, t:24, d:6, tc:-20, sp:260, rp:9, pro:1.2, nu:{c:26.2,b12:0,fe:.69,ca:25,k:151,kar:12,pol:300,ant:40,fib:6.5},   g:"Owoce"},
+  borowka:  {n:"Borówka, cała",                w:.845, t:26, d:8, tc:-22, sp:240, rp:12, pro:0.7, nu:{c:9.7,b12:0,fe:.28,ca:6,k:77,kar:32,pol:525,ant:165,fib:2.4},   g:"Owoce"},
+  jablko:   {n:"Jabłko, plastry",              w:.856, t:26, d:10, tc:-22, sp:120, rp:1.5, pro:0.3, nu:{c:4.6,b12:0,fe:.12,ca:6,k:107,kar:27,pol:135,ant:2,fib:2.4},  g:"Owoce"},
+  mirabelka:{n:"Mirabelka, bez pestki",        w:.820, t:30, d:9, tc:-22, sp:150, rp:3, pro:0.7, nu:{c:9.5,b12:0,fe:.17,ca:6,k:157,kar:190,pol:320,ant:20,fib:1.4},   g:"Owoce"},
+  wegierka: {n:"Węgierka, bez pestki",         w:.825, t:32, d:9, tc:-22, sp:150, rp:3.5, pro:0.7, nu:{c:9.5,b12:0,fe:.17,ca:6,k:157,kar:190,pol:320,ant:20,fib:1.4},   g:"Owoce"},
+  renkloda: {n:"Renkloda, bez pestki",         w:.845, t:32, d:9, tc:-22, sp:150, rp:4, pro:0.8, nu:{c:9.5,b12:0,fe:.17,ca:6,k:157,kar:190,pol:320,ant:20,fib:1.4},   g:"Owoce"},
+  mango:    {n:"Mango, kostka / plastry",       w:.835, t:26, d:10,  tc:-20, sp:170, rp:8, pro:0.8, nu:{c:36.4,b12:0,fe:.16,ca:11,k:168,kar:640,pol:100,ant:0,fib:1.6},   g:"Owoce"},
+  morela:   {n:"Morela, połówki / plastry",     w:.860, t:26, d:9,   tc:-21, sp:160, rp:6, pro:1.4, nu:{c:10.0,b12:0,fe:.39,ca:13,k:259,kar:1094,pol:135,ant:0,fib:2.0},   g:"Owoce"},
+  banan:    {n:"Banan, plastry",                w:.750, t:24, d:10,  tc:-18, sp:130, rp:4.5, pro:1.1, nu:{c:8.7,b12:0,fe:.26,ca:5,k:358,kar:26,pol:90,ant:0,fib:2.6}, g:"Owoce"},
+  kokos:    {n:"Kokos, miąższ (wiórki, płatki)", w:.470, t:20, d:7,   tc:-15, sp:95, rp:10, fat:33.5, pro:3.3, nu:{c:3.3,b12:0,fe:2.43,ca:14,k:356,kar:0,pol:80,ant:0,fib:9.0}, g:"Owoce"},
+  marchew:  {n:"Marchew, kostka",              w:.880, t:24, d:11, tc:-18, sp:110, rp:1.2, pro:0.9, nu:{c:5.9,b12:0,fe:.30,ca:33,k:320,kar:8285,pol:100,ant:0,fib:2.8},  g:"Warzywa"},
+  papryka:  {n:"Papryka, paski (blanszowana)", w:.920, t:22, d:8, tc:-20, sp:130, rp:4, pro:1.0, nu:{c:127.7,b12:0,fe:.43,ca:7,k:211,kar:1624,pol:120,ant:0,fib:2.1},   g:"Warzywa"},
+  ziemniak: {n:"Ziemniak, kostka (blansz.)",   w:.790, t:22, d:11, tc:-10, sp:70, rp:0.8, pro:2.0, nu:{c:19.7,b12:0,fe:.81,ca:12,k:425,kar:1,pol:60,ant:0,fib:2.2},  g:"Warzywa"},
+  majeranek:{n:"Majeranek, całe gałązki",      w:.840, t:16, d:2.5, tc:-20, sp:300, rp:12, pro:3.0, nu:{c:51.0,b12:0,fe:5.0,ca:200,k:300,kar:2400,pol:700,ant:0,fib:7.0}, g:"Zioła — całe gałązki"},
+  oregano:  {n:"Oregano, całe gałązki",        w:.720, t:14, d:2.8, tc:-20, sp:280, rp:14, pro:3.4, nu:{c:7.0,b12:0,fe:3.4,ca:232,k:260,kar:2620,pol:900,ant:0,fib:4.2}, g:"Zioła — całe gałązki"},
+  rozmaryn: {n:"Rozmaryn, całe gałązki",       w:.680, t:16, d:3.0, tc:-20, sp:280, rp:16, pro:3.3, nu:{c:21.8,b12:0,fe:6.65,ca:317,k:668,kar:2924,pol:850,ant:0,fib:14.1}, g:"Zioła — całe gałązki"},
+  bazylia:  {n:"Bazylia, całe gałązki",        w:.900, t:18, d:2.0, tc:-21, sp:320, rp:10, pro:3.2, nu:{c:18.0,b12:0,fe:3.17,ca:177,k:295,kar:3142,pol:800,ant:0,fib:1.6}, g:"Zioła — całe gałązki"},
+  pietruszka:{n:"Pietruszka, nać, całe gałązki",w:.860,t:18, d:2.2, tc:-21, sp:300, rp:8, pro:3.0, nu:{c:133.0,b12:0,fe:6.20,ca:138,k:554,kar:5054,pol:600,ant:0,fib:3.3}, g:"Zioła — całe gałązki"},
+  lubczyk:  {n:"Lubczyk, całe gałązki",        w:.860, t:18, d:2.2, tc:-21, sp:300, rp:10, pro:3.0, nu:{c:30.0,b12:0,fe:2.5,ca:130,k:470,kar:1800,pol:500,ant:0,fib:3.0}, g:"Zioła — całe gałązki"},
+  mleko:    {n:"Mleko pełne",                  w:.875, t:24, d:8,   tc:-24, sp:16, liq:1, rp:2.2, fat:3.5, pro:3.3, nu:{c:0,b12:.45,fe:.03,ca:113,k:132,kar:7,pol:0,ant:0,fib:0}, g:"Nabiał i płyny"},
+  serwatka: {n:"Retentat serwatkowy (białko natywne)", w:.750, t:24, d:9,   tc:-22, sp:120, liq:1, rp:3.5, fat:1.0, pro:6.0, nu:{c:0,b12:.30,fe:.10,ca:60,k:160,kar:0,pol:0,ant:0,fib:0}, g:"Nabiał i płyny"},
+  smietKok: {n:"Śmietanka kokosowa",            w:.680, t:22, d:8,   tc:-18, sp:180, rp:8, fat:24.0, liq:1, pro:2.3, nu:{c:1.0,b12:0,fe:3.3,ca:16,k:325,kar:0,pol:60,ant:0,fib:2.2}, g:"Nabiał i płyny"},
+  twarog:   {n:"Twaróg chudy",                  w:.780, t:24, d:9, tc:-16, sp:200, rp:14, fat:0.5, pro:19.0, liq:1, nu:{c:0,b12:.63,fe:.07,ca:83,k:86,kar:0,pol:0,ant:0,fib:0}, g:"Nabiał i płyny"},
+  skyr:     {n:"Skyr / jogurt typu greckiego",  w:.840, t:26, d:8, tc:-20, sp:180, rp:12, fat:0.4, pro:11.0, liq:1, nu:{c:0,b12:.75,fe:.05,ca:110,k:141,kar:2,pol:0,ant:0,fib:0}, g:"Nabiał i płyny"},
+  bialkoJaj:{n:"Białko jaja, płynne",           w:.880, t:24, d:8, tc:-15, sp:190, rp:12, fat:0.2, pro:11.0, liq:1, nu:{c:0,b12:.09,fe:.08,ca:7,k:163,kar:0,pol:0,ant:0,fib:0}, g:"Nabiał i płyny"},
+  jogurt:   {n:"Jogurt naturalny (kawałki, proszek)",w:.870, t:26, d:8,   tc:-26, sp:160, liq:1, rp:4.5, fat:3.0, pro:3.5, nu:{c:.5,b12:.37,fe:.05,ca:121,k:155,kar:5,pol:0,ant:0,fib:0}, g:"Nabiał i płyny"},
+  owies:    {n:"Płatki owsiane",                w:.087, t:14, d:6,  tc:-5,  sp:60,  rp:4,  fat:6.9, dry:1, pro:16.9, nu:{c:0,b12:0,fe:4.72,ca:54,k:429,kar:0,pol:60,ant:0,fib:10.6}, g:"Składniki suche"},
+  owiesMaka:{n:"Mąka owsiana",                  w:.080, t:14, d:7,  tc:-5,  sp:60,  rp:6,  fat:7.0, dry:1, pro:13.0, nu:{c:0,b12:0,fe:4.0,ca:50,k:400,kar:0,pol:55,ant:0,fib:6.5}, g:"Składniki suche"},
+  blonnik:  {n:"Błonnik owsiany",               w:.060, t:14, d:4,  tc:-4,  sp:80,  rp:12, fat:2.0, dry:1, pro:3.0, nu:{c:0,b12:0,fe:2.0,ca:50,k:200,kar:0,pol:30,ant:0,fib:60.0}, g:"Składniki suche"},
+  wpi:      {n:"Izolat serwatkowy WPI 90",      w:.050, t:14, d:8, tc:-6, sp:120, rp:75, fat:0.5, pro:90.0, dry:1, nu:{c:0,b12:1.5,fe:.5,ca:400,k:200,kar:0,pol:0,ant:0,fib:0}, g:"Składniki suche"},
+  wpc:      {n:"Koncentrat serwatkowy WPC 80",  w:.050, t:14, d:8, tc:-6, sp:100, rp:50, fat:7.0, pro:80.0, dry:1, nu:{c:0,b12:2.0,fe:.7,ca:450,k:500,kar:0,pol:0,ant:0,fib:0}, g:"Składniki suche"},
+  groch:    {n:"Izolat białka grochu",          w:.060, t:14, d:7, tc:-6, sp:90,  rp:40, fat:7.0, pro:80.0, dry:1, nu:{c:0,b12:0,fe:5.0,ca:100,k:100,kar:0,pol:0,ant:0,fib:2.0}, g:"Składniki suche"},
+  bialkoOw: {n:"Białko owsiane",                w:.060, t:14, d:7, tc:-6, sp:95,  rp:45, fat:8.0, pro:55.0, dry:1, nu:{c:0,b12:0,fe:4.0,ca:80,k:350,kar:0,pol:40,ant:0,fib:5.0}, g:"Składniki suche"},
+  albumina: {n:"Albumina jaja w proszku",       w:.060, t:14, d:6, tc:-7, sp:110, rp:70, fat:0.5, pro:80.0, dry:1, nu:{c:0,b12:.20,fe:.20,ca:60,k:1100,kar:0,pol:0,ant:0,fib:0}, g:"Składniki suche"},
+  omp:      {n:"Odtłuszczone mleko w proszku",  w:.040, t:14, d:8, tc:-8, sp:60,  rp:16, fat:1.0, pro:36.0, dry:1, nu:{c:1.5,b12:4.0,fe:.32,ca:1257,k:1794,kar:0,pol:0,ant:0,fib:0}, g:"Składniki suche"},
+  malto:    {n:"Maltodekstryna DE 15",          w:.050, t:14, d:8,  tc:-9,  sp:40,  rp:6,  fat:0.0, dry:1, pro:0.0, nu:{c:0,b12:0,fe:0,ca:0,k:5,kar:0,pol:0,ant:0,fib:0}, g:"Składniki suche"},
+  macznik:  {n:"Larwy mącznika (Tenebrio)",     w:.620, t:24, d:9, tc:-14, sp:180, rp:18, fat:13.0, pro:19.0, nu:{c:4.0,b12:.50,fe:2.0,ca:42,k:340,kar:0,pol:0,ant:0,fib:2.5}, g:"Mięso i podroby"},
+  filet:    {n:"Filet z kurczaka",             w:.749, t:28, d:10, tc:-12, sp:220, rp:16, fat:1.2, pro:23.0, nu:{c:0,b12:.34,fe:.37,ca:5,k:256,kar:5,pol:0,ant:0,fib:0},  g:"Mięso i podroby"},
+  wolowina: {n:"Wołowina, plastry",            w:.740, t:28, d:10, tc:-12, sp:220, rp:22, fat:5.0, pro:21.0, nu:{c:0,b12:2.60,fe:2.60,ca:12,k:318,kar:0,pol:0,ant:0,fib:0},  g:"Mięso i podroby"},
+  watroba:  {n:"Wątroba wieprzowa",            w:.751, t:26, d:10, tc:-13, sp:200, rp:15, fat:3.5, pro:20.0, nu:{c:23.6,b12:26.0,fe:23.3,ca:9,k:273,kar:0,pol:0,ant:0,fib:0},  g:"Mięso i podroby"},
+  serca:    {n:"Serca kurze",                  w:.807, t:28, d:9, tc:-13, sp:200, rp:12, fat:9.3, pro:15.5, nu:{c:3.2,b12:7.30,fe:5.96,ca:12,k:176,kar:0,pol:0,ant:0,fib:0},   g:"Mięso i podroby"},
+  sercaWol: {n:"Serca wołowe, kostka",         w:.775, t:28, d:10, tc:-13, sp:200, rp:20, fat:4.0, pro:17.7, nu:{c:2.0,b12:8.50,fe:4.31,ca:7,k:287,kar:0,pol:0,ant:0,fib:0},  g:"Mięso i podroby"},
+  zwacz:    {n:"Żwacz wołowy, mielony",        w:.800, t:28, d:10, tc:-12, sp:180, rp:14, fat:4.0, pro:12.0, nu:{c:0,b12:1.40,fe:.65,ca:69,k:67,kar:0,pol:0,ant:0,fib:0},  g:"Mięso i podroby"}
+};
+
+const FORMATS={
+  kawalki:{n:"Kawałki / plastry — wg surowca"},
+  warstwa:{n:"Mielone — warstwa na tacy"},
+  formy:  {n:"Mielone — w foremkach na tacy"},
+  plyta:  {n:"Mielone — płyta do wykrawania"}
+};
+const SHAPES={
+  prostokat:{n:"Prostokąt / kwadrat", y:92},
+  szescian: {n:"Sześciokąt (plaster miodu)", y:88},
+  kolo:     {n:"Koło / krążek", y:72},
+  gwiazda:  {n:"Gwiazdka, serce, kwiatek", y:48},
+  litera:   {n:"Litery i figurki", y:38}
+};
+const CUTSTAGE={
+  sucha:   {n:"Po suszeniu — z suchej płyty"},
+  mrozona: {n:"Przed suszeniem — z płyty mrożonej"}
+};
+/* Referencyjne wartości spożycia (rozp. 1169/2011 zał. XIII) i progi oświadczeń (rozp. 1924/2006) */
+const NUTR=[
+  {k:"c",   n:"Witamina C",        u:"mg", nrv:80,   ret:[90,35],   g2:"witaminy C"},
+  {k:"b12", n:"Witamina B12",      u:"µg", nrv:2.5,  ret:[95,75],   g2:"witaminy B12"},
+  {k:"fe",  n:"Żelazo",            u:"mg", nrv:14,   ret:[100,100], g2:"żelaza"},
+  {k:"ca",  n:"Wapń",              u:"mg", nrv:800,  ret:[100,100], g2:"wapnia"},
+  {k:"k",   n:"Potas",             u:"mg", nrv:2000, ret:[100,100], g2:"potasu"},
+  {k:"kar", n:"Beta-karoten",      u:"µg", nrv:9600, ret:[85,55],   g2:"witaminy A"},
+  {k:"pol", n:"Polifenole ogółem", u:"mg", nrv:0,    ret:[92,65]},
+  {k:"ant", n:"Antocyjany",        u:"mg", nrv:0,    ret:[88,45]},
+  {k:"fib", n:"Błonnik",           u:"g",  nrv:0,    ret:[100,100]}
+];
+const BASIS={
+  produkt:{n:"Na 100 g produktu", t:"Na 100 g produktu", d:"Tak wygląda etykieta. Mierzy głównie usunięcie wody."},
+  sucha:  {n:"Na 100 g suchej masy", t:"Na 100 g suchej masy", d:"Uczciwe porównanie chemiczne. Widać samą retencję."},
+  porcja: {n:"Na porcję z 100 g świeżego", t:"Na porcję ze 100 g świeżego", d:"Co realnie dostaje konsument w równoważnej porcji."}
+};
+const BASORD=["produkt","sucha","porcja"];
+
+const GRADES={
+  deser:   {n:"Deserowa / klasa I", d:55,  loss:2,  dm:0},
+  przem:   {n:"Przemysłowa (odniesienie)", d:0, loss:6, dm:0},
+  odrzut:  {n:"Odrzut sortowniczy / klasa II", d:-32, loss:14, dm:.5},
+  nadwyzka:{n:"Przejrzałe i nadwyżki sezonowe", d:-58, loss:24, dm:1.5}
+};
+const FRZMODE={
+  inline:{n:"Szoker w linii (obieg zakładu)"},
+  iqf:   {n:"Tunel fluidyzacyjny IQF (osobna maszyna)"},
+  kupny: {n:"Surowiec kupowany mrożony"}
+};
+
+const SINKS_H=[
+  {id:"h1", n:"Ogrzewanie hali i piwnic",            T:45, q:120, on:true},
+  {id:"h2", n:"Wstępne podgrzanie i mycie surowca",  T:35, q:60,  on:true},
+  {id:"h3", n:"CWU i mycie zakładu",                 T:60, q:150, on:true},
+  {id:"h4", n:"Regeneracja osuszacza hali pakowania",T:80, q:90,  on:true},
+  {id:"h5", n:"Pasteryzacja / CIP mleczarni",        T:85, q:200, on:false}
+];
+const SINKS_C=[
+  {id:"c1", n:"Chłodnica powietrza hali pakowania",  T:2,  q:45, on:true},
+  {id:"c2", n:"Dojrzewalnia serów",                  T:12, q:60, on:false},
+  {id:"c3", n:"Mroźnia surowca",                     T:-20,q:80, on:true}
+];
+
+/* --- fotowoltaika: Kraków, 35° S, kWh/kWp miesięcznie (profil typu PVGIS) --- */
+const PV_M=[25,40,80,115,130,128,133,122,95,65,30,20];      /* suma 983 kWh/kWp */
+const DAYS=[31,28,31,30,31,30,31,31,30,31,30,31];
+const DAYLEN=[8.5,10.0,11.9,13.8,15.5,16.3,15.9,14.4,12.5,10.6,8.9,8.1];
+const MONTHS=["styczeń","luty","marzec","kwiecień","maj","czerwiec","lipiec","sierpień","wrzesień","październik","listopad","grudzień"];
+const MSHORT=["I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII"];
+
+/* --- kształt doby cen na rynku dnia następnego (RCEt), znormalizowany do średniej 1 --- */
+function norm(a){const m=a.reduce((x,y)=>x+y,0)/a.length; return a.map(v=>v/m);}
+const SHAPE={
+  zima:norm([.80,.74,.70,.69,.72,.82,1.05,1.30,1.35,1.25,1.15,1.08,1.02,1.00,1.02,1.12,1.35,1.60,1.55,1.40,1.25,1.10,.98,.88]),
+  przej:norm([.78,.72,.68,.66,.68,.78,.98,1.20,1.15,.98,.80,.65,.55,.52,.55,.70,.92,1.20,1.50,1.65,1.55,1.30,1.05,.90]),
+  lato:norm([.72,.66,.62,.60,.62,.72,.92,1.10,1.05,.85,.60,.38,.25,.20,.22,.32,.55,.85,1.25,1.75,2.10,1.95,1.45,1.05])
+};
+const SEASON=["zima","zima","przej","przej","lato","lato","lato","lato","przej","przej","zima","zima"];
+const MONTHF=[1.20,1.15,1.02,.88,.82,.85,.90,.92,.98,1.05,1.15,1.18];
+const TARIFFS={flat:{n:"Stała (jednostrefowa)"},zone:{n:"Dwustrefowa (dzień / noc)"},dyn:{n:"Dynamiczna (RCEt godzinowe)"}};
+
+/* Dźwignie kosztowe: każda opisana realną zmianą w obie strony.
+   `lepiej` to kierunek poprawy, `gorzej` — koszt zaniedbania. */
+const LEVERS=[
+ {n:"Sprawność egzergetyczna sprężarek", z:"±5 p.p.",
+  lepiej:p=>({etaCO2:p.etaCO2+5, etaR290:p.etaR290+5}), gorzej:p=>({etaCO2:p.etaCO2-5, etaR290:p.etaR290-5}),
+  t:"Ekonomizer, większe wymienniki, sprężarki inwerterowe. Najdroższa dźwignia inwestycyjnie, ale jedyna, która działa w każdej godzinie roku i na każdym surowcu."},
+ {n:"Czas cyklu — obróbka wstępna", z:"∓15 %",
+  lepiej:p=>({tCycle:p.tCycle*0.85}), gorzej:p=>({tCycle:p.tCycle*1.15}),
+  t:"Cieńsze plastry, blanszowanie, PEF, ultradźwięki. Działa podwójnie: mniej godzin próżni i urządzeń pomocniczych, a przy tym więcej cykli w roku."},
+ {n:"Temperatura kondensatora lodu", z:"∓5 K",
+  lepiej:p=>({tIceSurf:p.tIceSurf+5}), gorzej:p=>({tIceSurf:p.tIceSurf-5}),
+  t:"Nie schładzaj głębiej, niż wymaga ciśnienie w komorze. Farmaceutyczne −60 °C w żywności to czysta strata — Cuddon pracuje na −40 °C."},
+ {n:"Poziom skraplania stopnia wysokiego", z:"∓5 K",
+  lepiej:p=>({tCondHT:p.tCondHT-5}), gorzej:p=>({tCondHT:p.tCondHT+5}),
+  t:"Podnoś skraplanie tylko do poziomu, na którym ciepło ma odbiorcę. Bez odbiorcy każdy stopień wyżej jest czystym kosztem sprężania."},
+ {n:"Urządzenia pomocnicze", z:"∓25 %",
+  lepiej:p=>({pAux:p.pAux*0.75}), gorzej:p=>({pAux:p.pAux*1.25}),
+  t:"Pompy glikolu i wentylatory na falownikach, wyłączanie w fazach bez obciążenia. Tania dźwignia, bo te urządzenia chodzą przez cały cykl bez przerwy."},
+ {n:"Zespół próżniowy", z:"∓25 %",
+  lepiej:p=>({pVac:p.pVac*0.75}), gorzej:p=>({pVac:p.pVac*1.25}),
+  t:"Dobór pomp do rzeczywistej nieszczelności, a nie do katalogu. Po osiągnięciu próżni roboczej praca na obniżonych obrotach."},
+ {n:"Magazyny ciepła i chłodu", z:"+8 / −4 h",
+  lepiej:p=>({storeColdH:p.storeColdH+8, storeHeatH:p.storeHeatH+8}),
+  gorzej:p=>({storeColdH:Math.max(0,p.storeColdH-4), storeHeatH:Math.max(0,p.storeHeatH-4)}),
+  t:"Więcej godzin buforowania to więcej zużycia przesuniętego w tanie godziny i pod własną produkcję. Zasobnik wodny jest tani, magazyn chłodu na poziomie kaskadowym też."},
+ {n:"Moc instalacji PV", z:"+100 / −50 kWp",
+  lepiej:p=>({pvKwp:p.pvKwp+100}), gorzej:p=>({pvKwp:Math.max(0,p.pvKwp-50)}),
+  t:"Pełną cenę zakupu jest wart tylko ten kilowat, który zakład zużyje na miejscu. Powyżej mocy podstawowej autokonsumpcja szybko spada i przyrost korzyści maleje."},
+ {n:"Wilgotność końcowa produktu", z:"±1 p.p.",
+  lepiej:p=>({wEnd:p.wEnd+1}), gorzej:p=>({wEnd:Math.max(1,p.wEnd-1)}),
+  t:"Nie susz głębiej, niż wymaga trwałość i aktywność wody. Ostatni punkt procentowy to woda związana, odrywana entalpią wyższą niż sublimacja."},
+ {n:"Temperatura zamrożenia", z:"±5 K",
+  lepiej:p=>({tFreeze:p.tFreeze+5}), gorzej:p=>({tFreeze:p.tFreeze-5}),
+  t:"Mroź tylko tak głęboko, jak wymaga struktura produktu i temperatura eutektyczna. Każde 5 K to realny chłód do wytworzenia."},
+ {n:"Surowiec mrożony na wejściu", z:"−25 °C, kupowany",
+  lepiej:p=>({tIn:-25, frzMode:"kupny"}), gorzej:p=>({tIn:15, frzMode:"iqf"}),
+  t:"Zamrażanie poza cyklem skraca cykl o całą fazę mrożenia. Efekt siedzi w przerobie, nie w kilowatogodzinach. Własny tunel IQF w bilansie działa odwrotnie."},
+ {n:"Rozliczenie energii", z:"dynamiczna / stała",
+  lepiej:p=>({tariff:"dyn"}), gorzej:p=>({tariff:"flat"}),
+  t:"Przy pracy ciągłej profil zakładu sam zbiera tanie godziny nocne. Zmiana umowy nie wymaga żadnej inwestycji — to najtańsza pozycja na tej liście."}
+];
+/* nakład: 1 = wymaga inwestycji, 0 = nastawa albo umowa */
+[1,1,0,0,1,1,1,1,0,0,0,0].forEach((v,i)=>{ if(LEVERS[i]) LEVERS[i].inv=v; });
+
+const SCEN=[
+  {k:"A", nm:"Tradycyjny",        ds:"Grzałki elektryczne na półkach, agregat R507 dwustopniowy, skraplacz powietrzny. Stan techniki."},
+  {k:"B", nm:"Tradycyjny + odzysk",ds:"To samo, ale skraplanie podniesione do poziomu półek i ciepło skraplania zawrócone na półki."},
+  {k:"C", nm:"Kaskada CO₂ / R290", ds:"CO₂ subkrytyczny na kondensatorze lodu, R290 jako stopień wysoki. Sterowany poziom skraplania, odzysk chłodu z odszraniania."},
+  {k:"D", nm:"Zintegrowany 21z",   ds:"Kaskada + booster CO₂ transkrytyczny na potrzeby wysokotemperaturowe + magazyn ciepła i chłodu + przesunięcie taryfowe."}
+];
+
+/* ============================================================
+   2. PARAMETRY — definicja pól sterujących
+   ============================================================ */
+const P={
+  product:"truskawka", format:"kawalki", batch:500, wEnd:3.0, tCycle:26, avail:85, tFrz:4.0, tDes:3.0, trayArea:50,
+  layerMm:12, moldMl:25, moldDepth:18, moldCover:78, pureeDens:1.05, frontSpeed:0.8, sublExp:1.6,
+  cutShape:"kolo", cutYield:72, cutStage:"mrozona", scrapRecov:95, scrapPrice:60,
+  frzMode:"inline", tIQF:-38, iqfFan:25, iqfLoss:1.0, iqfCrystal:12,
+  mix2:"owies", mix2pct:0, mix3:"kokos", mix3pct:0,
+  basis:"produkt", wEndTrad:18, retFD:100, retTrad:100,
+  grade:"przem", rawPrice:6.0, lossMilledRel:60, labor:20, pack:12, overhead:10, life:15, salePrice:200,
+  pCham:65, kC:8, kG:14, pHalf:40, dTdrive:4, airLeak:0.5, collapsePen:14,
+  tIn:15, tFreeze:-35, tShelf:40, tIceSurf:-40, tAmb:15,
+  tCasc:-5, tCondHT:50, dTe:5, dTcasc:5, dTcAir:25, dTcDry:10, tW1:20, tW2:85,
+  etaHFC:45, etaCO2:52, etaR290:45, etaBoost:42, storeBonus:3,
+  leak:5, radLeak:3, vapSens:1.3, boundFrac:8, iceFrac:96, etaHeat:98,
+  fDefrost:5, fMatch:88, fMatchStore:98, etaBoiler:90,
+  pVac:5.5, dutyVac:70, pAux:4.0,
+  elDay:0.92, elNight:0.62, gasPrice:0.30, powerFee:219,
+  tariff:"dyn", mktMean:410, duckDepth:100, sprzedMar:40, distVar:180, sellShare:100,
+  pvKwp:100, pvYield:985, pvCapex:2700, storeHeatH:8, storeColdH:8, flexBase:8, viewMonth:6,
+  co2el:0.55, co2gas:0.202,
+  capexA:520, capexB:610, capexC:980, capexD:1350,
+  sinksH:SINKS_H.map(s=>({...s})), sinksC:SINKS_C.map(s=>({...s}))
+};
+const P0=JSON.parse(JSON.stringify(P));
+
+const GROUPS=[
+ {t:"Wsad i cykl", open:true, f:[
+  {k:"product", l:"Surowiec", type:"select", opts:PRODUCTS},
+  {k:"format", l:"Postać na tacy", type:"select", opts:FORMATS},
+  {k:"mix2", l:"Składnik dodatkowy 1", type:"select", opts:PRODUCTS},
+  {k:"mix2pct", l:"Udział składnika 1", u:"% masy mokrej", min:0, max:70, step:1,
+   h:"Zero wyłącza mieszankę. Składniki suche wnoszą suchą masę, nie wnosząc wody — to najprostszy sposób na poprawę uzysku i podniesienie temperatury zapadania."},
+  {k:"mix3", l:"Składnik dodatkowy 2", type:"select", opts:PRODUCTS},
+  {k:"mix3pct", l:"Udział składnika 2", u:"% masy mokrej", min:0, max:70, step:1},
+  {k:"layerMm", l:"Grubość warstwy przecieru", u:"mm", min:4, max:40, step:1, showIf:"warstwaLub"},
+  {k:"cutShape", l:"Kształt wykrojnika", type:"select", opts:SHAPES, showIf:"plyta"},
+  {k:"cutYield", l:"Wykorzystanie płyty", u:"%", min:20, max:96, step:1, showIf:"plyta",
+   h:"Ile powierzchni płyty zamienia się w kształty. Prostokąty tracą tylko marginesy, koła w układzie sześciokątnym schodzą do ok. 72 %, figurki poniżej 50 %."},
+  {k:"cutStage", l:"Moment wykrawania", type:"select", opts:CUTSTAGE, showIf:"plyta"},
+  {k:"scrapRecov", l:"Odzysk ażuru do przecieru", u:"%", min:0, max:100, step:1, showIf:"mrozona",
+   h:"Ażur z płyty mrożonej wraca prosto do mieszalnika. To jest powód, dla którego warto wykrawać przed suszeniem, a nie po."},
+  {k:"scrapPrice", l:"Cena ażuru jako proszku", u:"zł/kg", min:0, max:300, step:5, showIf:"sucha",
+   h:"Ażur z suchej płyty nadaje się na granulat albo proszek. Zero oznacza, że traktujesz go jako odpad."},
+  {k:"moldMl", l:"Objętość formy", u:"ml", min:2, max:250, step:1, showIf:"formy",
+   h:"Objętość jednej foremki. Razem z głębokością napełnienia wyznacza obrys formy, liczbę sztuk na tacy i masę jednej kostki."},
+  {k:"moldDepth", l:"Głębokość napełnienia formy", u:"mm", min:4, max:60, step:1, showIf:"formy",
+   h:"To ona, a nie objętość, decyduje o czasie sublimacji — front przesuwa się od góry w dół."},
+  {k:"moldCover", l:"Pokrycie tacy formami", u:"%", min:40, max:95, step:1, showIf:"formy"},
+  {k:"pureeDens", l:"Gęstość przecieru", u:"kg/l", min:.8, max:1.3, step:.01, showIf:"mielone"},
+  {k:"frontSpeed", l:"Szybkość frontu sublimacji przy 10 mm", u:"mm/h", min:.3, max:2.0, step:.05, showIf:"mielone",
+   h:"Zakres literaturowy 0,3–2,0 mm/h. Czas suszenia w warstwie i w formie wynika wprost z tej wielkości."},
+  {k:"sublExp", l:"Wykładnik grubości warstwy", u:"—", min:1.0, max:2.0, step:.05, showIf:"mielone",
+   h:"1,0 to front o stałej prędkości, 2,0 to suszenie ograniczone dyfuzją przez wysuszoną warstwę. Rzeczywistość leży pomiędzy — narastający opór wysuszonego placka spowalnia front."},
+  {k:"batch", l:"Masa wsadu na cykl", u:"kg", min:50, max:2000, step:25},
+  {k:"trayArea", l:"Powierzchnia tac w komorze", u:"m²", min:5, max:400, step:5,
+   h:"Cuddon FD600 ma 57 m², FD1000 — 92 m², FD1800 — 170 m². Przy ~10 kg/m² dla owoców i ~2,5 kg/m² dla ziół to ta liczba, a nie masa, wyznacza realny wsad."},
+  {k:"_prod", type:"info"},
+  {k:"wEnd", l:"Wilgotność końcowa", u:"%", min:1, max:8, step:.5},
+  {k:"tCycle", l:"Czas cyklu", u:"h", min:12, max:48, step:1},
+  {k:"tFrz", l:"Czas zamrażania", u:"h", min:1, max:10, step:.5},
+  {k:"tDes", l:"Czas desorpcji", u:"h", min:1, max:8, step:.5},
+  {k:"avail", l:"Dostępność ruchowa", u:"%", min:50, max:95, step:1, h:"Ile godzin w roku komora realnie pracuje."}
+ ]},
+ {t:"Zamrażanie surowca", open:true, f:[
+  {k:"tIn", l:"Temperatura surowca na wejściu", u:"°C", min:-40, max:25, step:1,
+   h:"Poniżej −1,5 °C surowiec wchodzi już zamrożony i komora nie płaci za zamrażanie. Kto za nie zapłacił, rozstrzyga wybór poniżej."},
+  {k:"frzMode", l:"Sposób zamrażania", type:"select", opts:FRZMODE},
+  {k:"tIQF", l:"Temperatura powietrza w tunelu IQF", u:"°C", min:-45, max:-25, step:1, showIf:"iqf"},
+  {k:"iqfFan", l:"Wentylatory fluidyzacji", u:"% pracy sprężarek", min:5, max:60, step:1, showIf:"iqf",
+   h:"Fluidyzacja złoża wymaga dużego strumienia powietrza — to podstawowa różnica energetyczna wobec szokera."},
+  {k:"iqfLoss", l:"Ubytek masy w tunelu (dehydratacja)", u:"%", min:0, max:4, step:.1, showIf:"iqf"},
+  {k:"iqfCrystal", l:"Wydłużenie sublimacji od drobnych kryształów", u:"%", min:0, max:35, step:1, showIf:"iqf",
+   h:"Szybkie mrożenie daje drobne kryształy lodu, a więc drobne pory i większy opór przepływu pary. Lepszy wygląd, dłuższe suszenie."},
+  {k:"tFreeze", l:"Temperatura zamrożenia", u:"°C", min:-45, max:-20, step:1},
+ ]},
+ {t:"Temperatury procesu", f:[
+  {k:"tShelf", l:"Średnia temperatura półek", u:"°C", min:15, max:70, step:1},
+  {k:"tIceSurf", l:"Temperatura kondensatora lodu", u:"°C", min:-55, max:-30, step:1,
+   h:"Cuddon FD1800GPC pracuje na −40 °C. Farmacja schodzi do −60…−80 °C, co jest bardzo drogie energetycznie."},
+  {k:"tAmb", l:"Temperatura otoczenia (średnia roczna)", u:"°C", min:-5, max:30, step:1}
+ ]},
+ {t:"Próżnia i ciśnienie", open:true, f:[
+  {k:"pCham", l:"Ciśnienie robocze w komorze", u:"Pa", min:5, max:250, step:1,
+   h:"Niżej nie znaczy lepiej. Poniżej ok. 40 Pa przewodzenie ciepła przez gaz zanika i produkt stygnie, powyżej ok. 150 Pa front robi się za ciepły i grozi zapadaniem struktury."},
+  {k:"dTdrive", l:"Nadwyżka temperatury frontu nad równowagą", u:"K", min:1, max:12, step:.5,
+   h:"O tyle front musi być cieplejszy od temperatury równowagi, żeby przepchnąć parę przez wysuszoną warstwę i kanał do kondensatora."},
+  {k:"kC", l:"Przejmowanie ciepła bez udziału gazu", u:"W/m²K", min:2, max:20, step:.5,
+   h:"Styk tacy z półką plus promieniowanie. To jedyne, co zostaje przy bardzo niskim ciśnieniu."},
+  {k:"kG", l:"Maksymalny udział gazu w przejmowaniu ciepła", u:"W/m²K", min:2, max:30, step:.5},
+  {k:"pHalf", l:"Ciśnienie połówkowe udziału gazu", u:"Pa", min:10, max:120, step:5},
+  {k:"collapsePen", l:"Obniżenie temperatury zapadania dla przecieru", u:"K", min:0, max:25, step:1, showIf:"mielone",
+   h:"Wartości bazowe dotyczą tkanki, w której ściany komórkowe podtrzymują matrycę. Po rozdrobnieniu zostaje sama faza amorficzna cukrów i granica spada do poziomu Tg\u2032 soku, czyli o kilkanaście kelwinów."},
+  {k:"airLeak", l:"Nieszczelność komory", u:"kg powietrza/h", min:.05, max:5, step:.05,
+   h:"To powietrze, a nie parę wodną, usuwa pompa próżniowa. Parę wymraża kondensator lodu."}
+ ]},
+ {t:"Obiegi chłodnicze", f:[
+  {k:"tCasc", l:"Poziom kaskadowy CO₂ / R290", u:"°C", min:-20, max:5, step:1},
+  {k:"tCondHT", l:"Skraplanie R290 (poziom użytkowy)", u:"°C", min:35, max:70, step:1,
+   h:"Podniesienie tego poziomu pozwala R290 obsłużyć więcej odbiorników, ale kosztuje COP. Odbiorniki powyżej tego poziomu przejmuje booster CO₂."},
+  {k:"etaCO2", l:"Sprawność egzergetyczna CO₂ (stopień niski)", u:"%", min:35, max:65, step:1},
+  {k:"etaR290", l:"Sprawność egzergetyczna R290", u:"%", min:35, max:60, step:1},
+  {k:"etaBoost", l:"Sprawność boostera CO₂ transkryt. (Lorenz)", u:"%", min:30, max:60, step:1},
+  {k:"etaHFC", l:"Sprawność egzergetyczna agregatu HFC", u:"%", min:30, max:60, step:1,
+   h:"Odniesienie dla wariantów tradycyjnych. 0,45 odpowiada dobremu układowi dwustopniowemu R507."},
+  {k:"tW2", l:"Temperatura wody z boostera", u:"°C", min:60, max:95, step:1},
+  {k:"tW1", l:"Temperatura wody powrotnej", u:"°C", min:5, max:45, step:1},
+  {k:"dTe", l:"Różnica na parowniku", u:"K", min:2, max:12, step:1},
+  {k:"dTcasc", l:"Różnica w wymienniku kaskadowym", u:"K", min:2, max:12, step:1},
+  {k:"dTcAir", l:"Podniesienie skraplania — skraplacz powietrzny", u:"K", min:10, max:35, step:1},
+  {k:"dTcDry", l:"Podniesienie — dry cooler / obieg odrzutu", u:"K", min:5, max:25, step:1}
+ ]},
+ {t:"Straty, sprawności, magazyny", f:[
+  {k:"leak", l:"Udział sublimacji pokryty przeciekiem ciepła", u:"%", min:0, max:15, step:1},
+  {k:"radLeak", l:"Dodatkowe obciążenie kondensatora (promieniowanie)", u:"%", min:0, max:10, step:.5},
+  {k:"boundFrac", l:"Udział wody związanej (desorpcja)", u:"%", min:0, max:20, step:1},
+  {k:"iceFrac", l:"Udział wody wymrożonej", u:"%", min:85, max:99, step:1},
+  {k:"etaHeat", l:"Sprawność grzania elektrycznego", u:"%", min:85, max:100, step:1},
+  {k:"fDefrost", l:"Koszt odszraniania (warianty A/B)", u:"% E_kond", min:0, max:15, step:1},
+  {k:"fMatch", l:"Zgodność czasowa ciepła bez magazynu", u:"%", min:50, max:100, step:1},
+  {k:"fMatchStore", l:"Zgodność czasowa z magazynem ciepła", u:"%", min:80, max:100, step:1},
+  {k:"storeBonus", l:"Zysk sprawności z pracy ustalonej (magazyn chłodu)", u:"p.p.", min:0, max:8, step:.5},
+  {k:"etaBoiler", l:"Sprawność kotła gazowego (odniesienie)", u:"%", min:75, max:105, step:1}
+ ]},
+ {t:"Urządzenia pomocnicze", f:[
+  {k:"pVac", l:"Moc zespołu próżniowego", u:"kW", min:1, max:40, step:.5},
+  {k:"dutyVac", l:"Obciążenie zespołu próżniowego", u:"%", min:30, max:100, step:5},
+  {k:"pAux", l:"Moc urządzeń pomocniczych", u:"kW", min:.5, max:30, step:.5}
+ ]},
+ {t:"Ceny, taryfa, wskaźniki", f:[
+  {k:"elDay", l:"Energia elektryczna — strefa droga", u:"zł/kWh", min:.3, max:2, step:.01},
+  {k:"elNight", l:"Energia elektryczna — strefa tania", u:"zł/kWh", min:.2, max:2, step:.01},
+  {k:"gasPrice", l:"Gaz ziemny", u:"zł/kWh", min:.1, max:1, step:.01},
+  {k:"powerFee", l:"Opłata mocowa", u:"zł/MWh", min:0, max:400, step:5},
+  {k:"co2el", l:"Wskaźnik emisji — energia elektryczna", u:"kg/kWh", min:.05, max:.9, step:.01},
+  {k:"co2gas", l:"Wskaźnik emisji — gaz", u:"kg/kWh", min:.15, max:.25, step:.002}
+ ]},
+ {t:"Wartości odżywcze", f:[
+  {k:"wEndTrad", l:"Wilgotność suszu tradycyjnego", u:"%", min:8, max:25, step:1,
+   h:"Susz konwekcyjny rzadko schodzi poniżej 15–20 % wody. Liofilizat idzie do 2–4 %, więc zagęszcza mocniej — część przewagi na etykiecie bierze się właśnie stąd, nie z retencji."},
+  {k:"retFD", l:"Korekta retencji — liofilizacja", u:"% wartości bazowej", min:60, max:120, step:1},
+  {k:"retTrad", l:"Korekta retencji — susz konwekcyjny", u:"% wartości bazowej", min:40, max:160, step:1,
+   h:"Bazowe współczynniki: witamina C 90 / 35 %, antocyjany 88 / 45, polifenole 92 / 65, beta-karoten 85 / 55, potas i błonnik 100 / 100. Rozrzut w piśmiennictwie jest duży — te suwaki pozwalają go objąć."}
+ ]},
+ {t:"Surowiec i koszt wytworzenia", open:true, f:[
+  {k:"grade", l:"Gatunek surowca", type:"select", opts:GRADES},
+  {k:"rawPrice", l:"Cena surowca — gatunek przemysłowy", u:"zł/kg", min:.5, max:40, step:.1,
+   h:"Odniesienie. Truskawka przemysłowa w skupie 2026: 4,0–6,3 zł/kg. Wybór gatunku przelicza tę cenę i odpad sortowniczy."},
+  {k:"lossMilledRel", l:"Odpad przy mieleniu wzgl. kawałków", u:"%", min:20, max:100, step:5, showIf:"mielone",
+   h:"Wady kształtu, kalibru i wybarwienia nie dyskwalifikują surowca, który i tak trafi pod nóż. Odpaść musi tylko to, co zepsute."},
+  {k:"labor", l:"Robocizna", u:"zł/kg produktu", min:0, max:120, step:1},
+  {k:"pack", l:"Opakowanie", u:"zł/kg produktu", min:0, max:80, step:1},
+  {k:"overhead", l:"Kontrola jakości i koszty ogólne", u:"zł/kg produktu", min:0, max:80, step:1},
+  {k:"life", l:"Okres amortyzacji", u:"lat", min:5, max:25, step:1},
+  {k:"salePrice", l:"Cena sprzedaży", u:"zł/kg produktu", min:20, max:600, step:5,
+   h:"Zmiana surowca podstawia cenę odniesienia dla jego kategorii. Truskawka w plastrach 170–260 zł/kg to dana zweryfikowana; pozostałe są szacunkami rynkowymi do potwierdzenia."}
+ ]},
+ {t:"Fotowoltaika", open:true, f:[
+  {k:"pvKwp", l:"Moc instalacji PV", u:"kWp", min:0, max:600, step:5,
+   h:"0 wyłącza fotowoltaikę z modelu. Produkcja liczona dla Krakowa, 35° na południe."},
+  {k:"pvYield", l:"Uzysk roczny", u:"kWh/kWp", min:800, max:1200, step:5},
+  {k:"pvCapex", l:"Nakład jednostkowy PV", u:"zł/kWp", min:1500, max:4500, step:50}
+ ]},
+ {t:"Taryfa i rynek energii", open:true, f:[
+  {k:"tariff", l:"Sposób rozliczenia energii", type:"select", opts:TARIFFS},
+  {k:"mktMean", l:"Średnia cena rynkowa (RCEt)", u:"zł/MWh", min:150, max:800, step:5},
+  {k:"duckDepth", l:"Głębokość doliny południowej", u:"%", min:0, max:180, step:5,
+   h:"0 spłaszcza dobę do ceny średniej, 100 to kształt obserwowany w 2025 r., powyżej — scenariusz dalszego przyrostu PV w systemie."},
+  {k:"sprzedMar", l:"Marża sprzedawcy", u:"zł/MWh", min:0, max:150, step:5},
+  {k:"distVar", l:"Dystrybucja — składnik zmienny", u:"zł/MWh", min:50, max:400, step:5},
+  {k:"sellShare", l:"Rozliczenie eksportu (net-billing)", u:"% RCEt", min:0, max:100, step:5,
+   h:"Nadwyżka trafia do depozytu prosumenckiego po cenie rynkowej. Przy cenie ujemnej rozliczenie wynosi zero."}
+ ]},
+ {t:"Magazyny i elastyczność", open:true, f:[
+  {k:"storeColdH", l:"Magazyn chłodu — bufor pracy stopnia niskiego", u:"h", min:0, max:16, step:.5,
+   h:"Zasobnik na poziomie kaskadowym. Ile godzin pracy sprężarki potrafi zbuforować."},
+  {k:"storeHeatH", l:"Magazyn ciepła — bufor stopnia wysokiego", u:"h", min:0, max:16, step:.5},
+  {k:"flexBase", l:"Elastyczność bez magazynów", u:"%", min:0, max:30, step:1,
+   h:"Ile zużycia da się przesunąć samym harmonogramem cykli i fazy zamrażania. Dotyczy wariantów A, B i C."}
+ ]},
+ {t:"Nakłady inwestycyjne", f:[
+  {k:"capexA", l:"Wariant A — układ chłodniczy i grzewczy", u:"tys. zł", min:100, max:4000, step:10},
+  {k:"capexB", l:"Wariant B", u:"tys. zł", min:100, max:4000, step:10},
+  {k:"capexC", l:"Wariant C", u:"tys. zł", min:100, max:4000, step:10},
+  {k:"capexD", l:"Wariant D", u:"tys. zł", min:100, max:4000, step:10}
+ ]}
+];
+/* ============================================================
+   2b. SILNIK GODZINOWY — PV, CENY, HARMONOGRAM OBCIĄŻENIA
+   ============================================================ */
+/* produkcja PV w kW dla każdej godziny doby wzorcowej miesiąca m */
+function pvDay(m,p){
+  if(p.pvKwp<=0) return new Array(24).fill(0);
+  const dl=DAYLEN[m], noon=(m>=3&&m<=9)?13.0:12.0, sr=noon-dl/2;
+  const raw=[];
+  for(let h=0;h<24;h++){
+    const t=h+0.5;
+    raw.push(t<=sr||t>=sr+dl ? 0 : Math.pow(Math.sin(Math.PI*(t-sr)/dl),1.25));
+  }
+  const sum=raw.reduce((a,b)=>a+b,0)||1;
+  const daily=PV_M[m]*(p.pvYield/983)*p.pvKwp/DAYS[m];
+  return raw.map(v=>v/sum*daily);
+}
+/* cena rynkowa RCEt w zł/MWh */
+function mktDay(m,p){
+  const sh=SHAPE[SEASON[m]], d=p.duckDepth/100, base=p.mktMean*MONTHF[m];
+  return sh.map(v=>base*(1+(v-1)*d));
+}
+/* cena zakupu i sprzedaży w zł/kWh */
+function pricesDay(m,p){
+  const mk=mktDay(m,p);
+  const peak=h=>h>=7&&h<22;
+  let buy,sell;
+  if(p.tariff==="dyn"){
+    buy=mk.map((v,h)=>(Math.max(0,v)+p.sprzedMar+p.distVar+(peak(h)?p.powerFee:0))/1000);
+    sell=mk.map(v=>Math.max(0,v)*(p.sellShare/100)/1000);
+  }else if(p.tariff==="zone"){
+    const dear=h=>(h>=7&&h<13)||(h>=16&&h<22);
+    buy=mk.map((_,h)=>(dear(h)?p.elDay:p.elNight)+(peak(h)?p.powerFee/1000:0));
+    sell=mk.map(v=>Math.max(0,v)*(p.sellShare/100)/1000);
+  }else{
+    buy=mk.map((_,h)=>p.elDay+(peak(h)?p.powerFee/1000:0));
+    sell=mk.map(v=>Math.max(0,v)*(p.sellShare/100)/1000);
+  }
+  return {mk,buy,sell};
+}
+/* rozłożenie doby: obciążenie sztywne płasko, elastyczne w najtańsze godziny */
+function scheduleDay(m,p,ctx){
+  const pv=pvDay(m,p), pr=pricesDay(m,p);
+  const flex=ctx.eDay*ctx.flexShare, rigid=ctx.eDay-flex;
+  const load=new Array(24).fill(rigid/24);
+  let left=flex;
+  /* krok 1 — godziny z nadwyżką PV, od najniższej wartości eksportu */
+  const o1=[...Array(24).keys()].filter(h=>pv[h]>load[h]).sort((a,b)=>pr.sell[a]-pr.sell[b]);
+  for(const h of o1){ if(left<=1e-9) break;
+    const room=Math.min(pv[h]-load[h],ctx.pMax-load[h]);
+    if(room<=0) continue; const add=Math.min(room,left); load[h]+=add; left-=add; }
+  /* krok 2 — reszta wg ceny zakupu */
+  const o2=[...Array(24).keys()].sort((a,b)=>pr.buy[a]-pr.buy[b]);
+  for(const h of o2){ if(left<=1e-9) break;
+    const room=Math.max(0,ctx.pMax-load[h]); if(room<=0) continue;
+    const add=Math.min(room,left); load[h]+=add; left-=add; }
+  if(left>1e-9){ const per=left/24; for(let h=0;h<24;h++) load[h]+=per; }
+  const self=[],imp=[],exp=[];
+  let S=0,I=0,E=0,C=0;
+  for(let h=0;h<24;h++){
+    const sf=Math.min(pv[h],load[h]), i=load[h]-sf, e=pv[h]-sf;
+    self.push(sf); imp.push(i); exp.push(e);
+    S+=sf; I+=i; E+=e; C+=i*pr.buy[h]-e*pr.sell[h];
+  }
+  return {pv,load,self,imp,exp,buy:pr.buy,sell:pr.sell,mk:pr.mk,S,I,E,C,unplaced:left};
+}
+/* bilans roczny dla zadanego zużycia i elastyczności */
+function yearly(p,eDay,pMax,flexShare){
+  const mo=[]; let S=0,I=0,E=0,C=0,PVy=0;
+  const ctx={eDay,pMax:Math.max(pMax,eDay/24*1.05),flexShare};
+  for(let m=0;m<12;m++){
+    const d=scheduleDay(m,p,ctx), n=DAYS[m];
+    mo.push({m,d,n,S:d.S*n,I:d.I*n,E:d.E*n,C:d.C*n,PV:(d.S+d.E)*n});
+    S+=d.S*n; I+=d.I*n; E+=d.E*n; C+=d.C*n; PVy+=(d.S+d.E)*n;
+  }
+  const use=eDay*365;
+  return {mo,S,I,E,C,PV:PVy,use,autok:PVy>0?S/PVy*100:0,pokrycie:use>0?S/use*100:0,
+          avgBuy:use>0?C/use:0};
+}
+/* ============================================================
+   3. MODEL
+   ============================================================ */
+function model(p,lite){
+  const base=PRODUCTS[p.product], gr=GRADES[p.grade]||GRADES.przem;
+  const wBase=Math.max(.02,base.w-(gr.dm||0)/100);
+  const comps=[{p:base, w:wBase, s:Math.max(0,100-p.mix2pct-p.mix3pct), rp:p.rawPrice}];
+  if(p.mix2pct>0) comps.push({p:PRODUCTS[p.mix2], w:PRODUCTS[p.mix2].w, s:p.mix2pct, rp:PRODUCTS[p.mix2].rp||6});
+  if(p.mix3pct>0) comps.push({p:PRODUCTS[p.mix3], w:PRODUCTS[p.mix3].w, s:p.mix3pct, rp:PRODUCTS[p.mix3].rp||6});
+  const sTot=comps.reduce((a,c)=>a+c.s,0)||100;
+  comps.forEach(c=>c.f=c.s/sTot);
+  const mixed=comps.length>1;
+  const w=Math.max(.02,comps.reduce((a,c)=>a+c.f*c.w,0));
+  const dmTot=comps.reduce((a,c)=>a+c.f*(1-c.w),0);
+  /* temperatura zapadania ważona suchą masą — matrycę buduje sucha masa, nie woda.
+     Kara za rozdrobnienie dotyczy tylko tkanki, bo nośniki suche nie mają struktury komórkowej. */
+  const milledNow=p.format!=="kawalki";
+  /* kara za rozdrobnienie dotyczy tylko tkanki: składniki suche i płynne koloidy
+     nie mają struktury komórkowej, którą można zniszczyć młynkiem */
+  comps.forEach(c=>{ c.tc=(c.p.tc||-20)-((milledNow&&!c.p.dry&&!c.p.liq)?p.collapsePen:0); });
+  const tcMix=comps.reduce((a,c)=>a+c.f*(1-c.w)*c.tc,0)/Math.max(1e-9,dmTot);
+  const rawMix=comps.reduce((a,c)=>a+c.f*c.rp,0);
+  const pr={n:base.n, w, t:comps.reduce((a,c)=>a+c.f*c.p.t,0), d:comps.reduce((a,c)=>a+c.f*(c.p.d||10),0),
+    tc:tcMix, sp:base.sp, rp:rawMix, fat:comps.reduce((a,c)=>a+c.f*(c.p.fat||0),0),
+    pro:comps.reduce((a,c)=>a+c.f*(c.p.pro||0),0),
+    nu:(function(){const o={},any=comps.some(c=>c.p.nu);
+      if(!any) return null;
+      NUTR.forEach(x=>{o[x.k]=comps.reduce((a,c)=>a+c.f*((c.p.nu&&c.p.nu[x.k])||0),0);});
+      return o;})()};
+  const wEnd=p.wEnd/100, tFp=-1.5;
+  const cpF=CPW*w+CPD*(1-w), cpZ=CPI*w+CPD*(1-w);
+  const tCondAir=p.tAmb+p.dTcAir, eH=p.etaHFC/100;
+
+  /* --- postać na tacy: gęstość załadunku i czas sublimacji --- */
+  const milled=p.format!=="kawalki";
+  let dens=pr.d||10, sublGeo=null, pieces=null, mPieceRaw=0, mPieceDry=0, depth=0;
+  if(p.format==="warstwa"||p.format==="plyta"){
+    depth=p.layerMm; dens=depth*p.pureeDens; sublGeo=(10/p.frontSpeed)*Math.pow(depth/10,p.sublExp);
+  }else if(p.format==="formy"){
+    depth=p.moldDepth; dens=depth*p.pureeDens*(p.moldCover/100); sublGeo=(10/p.frontSpeed)*Math.pow(depth/10,p.sublExp);
+    const footCm2=p.moldMl/(depth/10);
+    pieces=Math.max(1,Math.round(10000*(p.moldCover/100)/footCm2*p.trayArea));
+    mPieceRaw=p.moldMl*p.pureeDens/1000;
+    mPieceDry=mPieceRaw*(1-w)/(1-wEnd);
+  }
+
+  /* --- ubytek masy w tunelu fluidyzacyjnym --- */
+  const iqf=p.frzMode==="iqf";
+  const mTunel=p.batch, mIn=iqf?p.batch*(1-p.iqfLoss/100):p.batch;
+  const dm=mIn*(1-w), mProd=dm/(1-wEnd), mWat=mIn-mProd;
+
+  /* --- czas cyklu: fazy stałe + sublimacja --- */
+  const tFrzEff=(p.frzMode==="inline"&&p.tIn>tFp)?p.tFrz:0.5;
+  let subl=sublGeo!==null?sublGeo:Math.max(1,p.tCycle-(0.5+p.tFrz+0.5+p.tDes+1.0));
+  if(iqf) subl*=(1+p.iqfCrystal/100);
+
+  /* --- próżnia: front sublimacji, przejmowanie ciepła, kara za odejście od optimum --- */
+  const tCollapse=pr.tc;
+  const vac=fluxAt(p.pCham,p.tShelf,p.kC,p.kG,p.pHalf,p.dTdrive);
+  let vacOpt=vac;
+  for(let pp=6;pp<=250;pp+=2){
+    const v=fluxAt(pp,p.tShelf,p.kC,p.kG,p.pHalf,p.dTdrive);
+    if(v.q>vacOpt.q) vacOpt=v;
+  }
+  let pSafe=5;
+  for(let pp=5;pp<=250;pp+=1){ if(tIce(pp)+p.dTdrive<=tCollapse) pSafe=pp; else break; }
+  const pWork=Math.min(vacOpt.p,pSafe);          /* zalecana nastawa: optimum ograniczone jakością */
+  const pressPen=vac.q>1e-6?vacOpt.q/vac.q:4;
+  subl*=Math.min(4,pressPen);
+  const collapse=vac.tFront>tCollapse;
+  const tCyc=0.5+tFrzEff+0.5+subl+p.tDes+1.0;
+  /* strumienie: parę wymraża kondensator, powietrze usuwa pompa */
+  const mVap=mWat/Math.max(.1,subl);
+  const vVap=461.5*(vac.tFront+K0)/Math.max(1,p.pCham);
+  const vAir=287*293.15/Math.max(1,p.pCham);
+  const pCond=pIce(p.tIceSurf), dPdrive=pIce(vac.tFront)-pCond;
+
+  /* --- zapotrzebowanie na chłód przy zamrażaniu --- */
+  const chlod=(t1,t2)=>{
+    if(t2>=t1) return 0;
+    if(t1>tFp) return (mIn*cpF*(t1-tFp)+mIn*w*LF*(p.iceFrac/100)+mIn*cpZ*(tFp-t2))/3600;
+    return mIn*cpZ*(t1-t2)/3600;
+  };
+  const Qpre=p.tIn>tFp?mIn*cpF*(p.tIn-tFp)/3600:0;
+  const Qlat=p.tIn>tFp?mIn*w*LF*(p.iceFrac/100)/3600:0;
+  const Qsen=chlod(p.tIn,p.tFreeze)-Qpre-Qlat;
+  let Qfreeze=0, Eiqf=0, copIQF=0, QiqfTh=0;
+  if(p.frzMode==="inline"){
+    Qfreeze=chlod(p.tIn,p.tFreeze);
+  }else if(iqf){
+    QiqfTh=chlod(p.tIn,p.tIQF);
+    copIQF=copC(p.tIQF-p.dTe,tCondAir,eH);
+    Eiqf=QiqfTh/copIQF*(1+p.iqfFan/100);
+    Qfreeze=chlod(p.tIQF,p.tFreeze);
+  }else{
+    Qfreeze=chlod(p.tIn,p.tFreeze);
+  }
+  const mB=mWat*(p.boundFrac/100), mF=mWat-mB;
+  const Qsubl=(mF*DHS+mB*DHD)/3600;
+  const Qshelf=Qsubl*(1-p.leak/100);
+  const Qice  =Qsubl*(1+p.vapSens/100+p.radLeak/100);
+  const Qdefr =mWat*(LF+CPI*(0-p.tIceSurf))/3600;
+
+  /* --- poziomy temperatur --- */
+  const tEvIce=p.tIceSurf-p.dTe, tEvFrz=p.tFreeze-p.dTe;
+  const tDry=p.tAmb+p.dTcDry, tCondB=Math.max(p.tShelf+10, tDry);
+  const eCO=p.etaCO2/100, eR=p.etaR290/100, eB=p.etaBoost/100;
+
+  /* --- odbiorniki --- */
+  const sh=p.sinksH.filter(s=>s.on), sc=p.sinksC.filter(s=>s.on);
+  const hSum=sh.reduce((a,s)=>a+s.q,0), cSum=sc.reduce((a,s)=>a+s.q,0);
+  const hHTlist=sh.filter(s=>s.T<=p.tCondHT-p.dTe), hVHTlist=sh.filter(s=>s.T>p.tCondHT-p.dTe);
+  const hHT=hHTlist.reduce((a,s)=>a+s.q,0), hVHT=hVHTlist.reduce((a,s)=>a+s.q,0);
+  const hBmax=sh.filter(s=>s.T<=tCondB-p.dTe).reduce((a,s)=>a+s.q,0);
+  const Evac=p.pVac*tCyc*(p.dutyVac/100), Eaux=p.pAux*tCyc;
+  const etaHt=p.etaHeat/100, fM=p.fMatch/100, fMS=p.fMatchStore/100;
+  const R={};
+
+  /* ---------- A: tradycyjny ---------- */
+  {
+    const ci=copC(tEvIce,tCondAir,eH), cf=copC(tEvFrz,tCondAir,eH);
+    const Eice=Qice/ci, Efrz=Qfreeze/cf, Esh=Qshelf/etaHt, Edef=(p.fDefrost/100)*Eice;
+    R.A={parts:{Eice,Efrz,Esh,Evac,Eaux,Eoth:Edef}, el:Eice+Efrz+Esh+Evac+Eaux+Edef,
+      hCov:0, coldCov:0, Qw:0, Qhot:0, cop:{"CO₂ / HFC −45 °C":ci,"Mrożenie":cf},
+      levels:[{T:tCondAir,q:Qice+Eice+Qfreeze+Efrz,lab:"odrzut do atmosfery",waste:true}],
+      QthShelfEl:Qshelf, arch:"jednopoziomowy odrzut ciepła"};
+  }
+  /* ---------- B: tradycyjny + odzysk ---------- */
+  {
+    const ci=copC(tEvIce,tCondB,eH), cf=copC(tEvFrz,tCondB,eH);
+    const Eice=Qice/ci, Efrz=Qfreeze/cf;
+    const Qrej=(Qice+Eice)*fM;
+    const Qsh=Math.min(Qshelf,Qrej);
+    const Esh=(Qshelf-Qsh)/etaHt, Edef=(p.fDefrost/100)*Eice;
+    const hCov=Math.min(hBmax,Math.max(0,Qrej-Qsh));
+    R.B={parts:{Eice,Efrz,Esh,Evac,Eaux,Eoth:Edef}, el:Eice+Efrz+Esh+Evac+Eaux+Edef,
+      hCov, coldCov:0, Qw:Math.max(0,(Qice+Eice+Qfreeze+Efrz)-Qsh-hCov), Qhot:Qsh+hCov,
+      cop:{"HFC dwustopniowy":ci,"Mrożenie":cf},
+      levels:[{T:tCondB,q:Qice+Eice+Qfreeze+Efrz,lab:"skraplanie podniesione"}],
+      QthShelfEl:Qshelf-Qsh, arch:"odzysk ciepła skraplania na półki"};
+  }
+  /* ---------- C / D: kaskada ---------- */
+  const casc=(store,booster,shift)=>{
+    const b=store?p.storeBonus/100:0, eLo=eCO+b, eHi=eR+b;
+    const c1=copC(tEvIce,p.tCasc,eLo);
+    const QpreCov=Math.min(Qpre,Qdefr);
+    const Qlow=Qice+(Qfreeze-QpreCov);
+    const W1=Qlow/c1, Qcasc=Qlow+W1;
+    const tEvHi=p.tCasc-p.dTcasc;
+    const c2H=copC(tEvHi,p.tCondHT,eHi), c2L=copC(tEvHi,tDry,eHi);
+    const f=store?fMS:fM;
+    const demHT=(Qshelf+hHT)/f;
+    const QinHT=Math.min(demHT*c2H/(c2H+1),Qcasc);
+    const QoutHT=QinHT*(c2H+1)/c2H, WHT=QoutHT-QinHT;
+    const Qrem=Qcasc-QinHT, WLT=Qrem/c2L, QLT=Qrem+WLT;
+    let Qbo=0,Wbo=0,copBo=0;
+    if(booster && hVHT>0 && QLT>0){
+      const tlmK=(p.tW2-p.tW1)/Math.log((p.tW2+K0)/(p.tW1+K0));
+      copBo=eB*tlmK/Math.max(1,(tlmK-(tDry-5+K0)));
+      Qbo=Math.min(hVHT, QLT*copBo/Math.max(.1,copBo-1)); Wbo=Qbo/copBo;
+    }
+    const QdelHT=QoutHT*f, shDel=Math.min(Qshelf,QdelHT);
+    const Esh=Math.max(0,Qshelf-shDel)/etaHt;
+    const hCov=Math.min(hHT,Math.max(0,QdelHT-shDel))+Qbo;
+    const coldCov=Math.min(cSum,Math.max(0,Qdefr-QpreCov));
+    const cop={"CO₂ subkryt. −45 °C":c1,"R290 → poziom użytkowy":c2H,"R290 → odrzut":c2L};
+    if(copBo>0) cop["CO₂ transkryt. (grzejny)"]=copBo;
+    const levels=[{T:p.tCasc,q:Qcasc,lab:"poziom kaskadowy"},{T:p.tCondHT,q:QoutHT,lab:"R290 — półki i odbiorniki"}];
+    if(Qbo>0) levels.push({T:p.tW2,q:Qbo,lab:"booster CO₂ — wysoka temperatura"});
+    if(Qrem-(Qbo-Wbo)>0) levels.push({T:tDry,q:Math.max(0,QLT-Qbo+Wbo),lab:"odrzut do dry coolera",waste:true});
+    return {parts:{Eice:W1,Efrz:WHT,Esh,Evac,Eaux,Eoth:WLT+Wbo}, el:W1+WHT+WLT+Wbo+Esh+Evac+Eaux,
+      hCov, coldCov, Qw:Math.max(0,QLT-Qbo+Wbo), Qhot:shDel+hCov, cop, levels, shift,
+      QthShelfEl:Qshelf-shDel, W1,WHT,WLT,Wbo,Qbo,QoutHT,Qcasc,QLT,QpreCov,
+      arch: booster?"trójstopniowa kaskada CO₂ / R290 / CO₂ transkryt.":"kaskada CO₂ / R290, dwa poziomy odrzutu"};
+  };
+  R.C=casc(false,false,0); R.D=casc(true,true,p.shiftD/100);
+
+  /* --- domknięcie bilansu systemowego, koszty, emisje --- */
+  const cyclesYr=Math.floor(8760*(p.avail/100)/tCyc);
+  const chillA=copC(-15,tCondAir,eH), chillD=copC(-15,tDry,eR+p.storeBonus/100);
+  for(const k of ["A","B","C","D"]){
+    const s=R[k]; s.k=k;
+    if(Eiqf>0){ s.parts.Efrz+=Eiqf; s.el+=Eiqf; s.Eiqf=Eiqf; } else s.Eiqf=0;
+    s.gas=Math.max(0,hSum-s.hCov)/(p.etaBoiler/100);
+    s.elCold=Math.max(0,cSum-s.coldCov)/(k==="A"||k==="B"?chillA:chillD);
+    s.elTot=s.el+s.elCold;
+    s.perKgW=s.el/mWat; s.perKgP=s.elTot/mProd;
+    s.prof=profile(p,s,{Qice,Qfreeze,Qshelf,Evac,Eaux,tCyc,tFrzEff,subl,Eiqf,store:k==="D"});
+    s.peak=Math.max(...s.prof.map(x=>x.tot));
+    /* elastyczność: magazyny buforują pracę sprężarek (tylko wariant D ma tę architekturę) */
+    const Pl=s.parts.Eice/tCyc, Ph=(s.parts.Efrz+s.parts.Eoth-Eiqf)/tCyc;
+    const shiftable=k==="D" ? Math.min(s.parts.Eice+s.parts.Efrz+s.parts.Eoth, p.storeColdH*Pl+p.storeHeatH*Ph)
+                            : s.elTot*(p.flexBase/100);
+    s.flexShare=Math.max(0,Math.min(.92, shiftable/Math.max(1,s.elTot)));
+    /* bilans godzinowy w skali roku */
+    s.eDay=s.elTot*cyclesYr/365;
+    s.yr=yearly(p,s.eDay,s.peak,s.flexShare);
+    s.gasYr=s.gas*cyclesYr;
+    s.costYr=s.yr.C+s.gasYr*p.gasPrice;
+    s.cost=s.costYr/Math.max(1,cyclesYr);
+    s.co2=s.elTot*p.co2el+s.gas*p.co2gas;
+    s.costKg=s.cost/mProd; s.co2Kg=s.co2/mProd;
+    s.capex=p["capex"+k]*1000+(p.pvKwp*p.pvCapex);
+    /* --- koszt wytworzenia na kg produktu --- */
+    const lossF=(milled?gr.loss*(p.lossMilledRel/100):gr.loss)/100;
+    const rawBase=p.rawPrice*(1+(gr.d||0)/100)/Math.max(.05,1-lossF);   /* baza: upust gatunkowy i odpad sortowniczy */
+    const rawUnit=comps.reduce((a,c,i)=>a+c.f*(i===0?rawBase:c.rp),0); /* dodatki po cenie katalogowej */
+    const tYr=mProd*cyclesYr/1000;
+    s.cost5={
+      surowiec:rawUnit*(mTunel/mProd),
+      energia:s.costKg,
+      robocizna:p.labor, opakowanie:p.pack, ogolne:p.overhead,
+      amortyzacja:tYr>0?s.capex/(p.life*tYr*1000):0
+    };
+    s.cogs=Object.values(s.cost5).reduce((a,b)=>a+b,0);
+    /* --- wykrawanie kształtów z płyty --- */
+    if(p.format==="plyta"){
+      const cy=p.cutYield/100;
+      if(p.cutStage==="mrozona"){
+        s.cutEff=cy+(1-cy)*(p.scrapRecov/100);      /* ażur wraca do przecieru przed suszeniem */
+        s.scrapRev=0; s.scrapKg=(1-s.cutEff);
+      }else{
+        s.cutEff=cy;
+        s.scrapRev=(1-cy)*p.scrapPrice;             /* ażur suchy sprzedany jako proszek */
+        s.scrapKg=1-cy;
+      }
+      s.cogsPlyta=s.cogs;
+      s.cogs=(s.cogs-s.scrapRev)/Math.max(.05,s.cutEff);
+    } else { s.cutEff=1; s.scrapRev=0; s.scrapKg=0; s.cogsPlyta=s.cogs; }
+    s.marza=p.salePrice-s.cogs;
+    s.rawUnit=rawUnit; s.lossF=lossF; s.tYr=tYr;
+    /* wariant referencyjny bez PV oraz w pozostałych taryfach — pomijane w trybie lite */
+    if(!lite){
+      const noPv={...p,pvKwp:0};
+      s.yrNoPv=yearly(noPv,s.eDay,s.peak,s.flexShare);
+      s.byTariff={};
+      for(const t of ["flat","zone","dyn"]){
+        s.byTariff[t]={pv:yearly({...p,tariff:t},s.eDay,s.peak,s.flexShare).C,
+                       noPv:yearly({...noPv,tariff:t},s.eDay,s.peak,s.flexShare).C};
+      }
+    }
+  }
+  const trayNeed=mIn/dens, trayFit=p.trayArea*dens;
+  const fatRaw=pr.fat||0, fatProd=Math.min(95,fatRaw*(mTunel/mProd));
+  const proRaw=pr.pro||0, proProd=Math.min(95,proRaw*(mTunel/mProd));
+  /* --- wartości odżywcze: świeży / susz konwekcyjny / liofilizat --- */
+  let nutro=null;
+  if(pr.nu){
+    const wT=p.wEndTrad/100;
+    const concFD=(1-wEnd)>0?( (1-w)>0? (1-wEnd)/(1-w) :1):1;
+    const concTR=(1-w)>0?(1-wT)/(1-w):1;
+    nutro=NUTR.map(x=>{
+      const base=pr.nu[x.k]||0;
+      const rFD=x.ret[0]/100*(p.retFD/100), rTR=x.ret[1]/100*(p.retTrad/100);
+      let sw,tr,li;
+      if(p.basis==="sucha"){ const d=Math.max(.01,1-w); sw=base/d; tr=base*rTR/d; li=base*rFD/d; }
+      else if(p.basis==="porcja"){ sw=base; tr=base*rTR; li=base*rFD; }
+      else { sw=base; tr=base*rTR*concTR; li=base*rFD*concFD; }   /* na 100 g produktu */
+      return {...x, base, sw, tr, li, rFD:rFD*100, rTR:rTR*100};
+    });
+    nutro.concFD=concFD; nutro.concTR=concTR;
+  }
+  return {p,pr,gr,comps,mixed,rawMix,dmTot,fatRaw,fatProd,proRaw,proProd,nutro,mIn,mTunel,mProd,mWat,dm,yieldR:mTunel/mProd,trayNeed,trayFit,dens,milled,depth,
+    pieces,mPieceRaw,mPieceDry,tCyc,subl,tFrzEff,Eiqf,copIQF,QiqfTh,iqf,
+    vac,vacOpt,pressPen,tCollapse,collapse,mVap,vVap,vAir,pCond,dPdrive,pSafe,pWork,Qpre,Qlat,Qsen,Qfreeze,Qsubl,Qshelf,Qice,Qdefr,
+    tEvIce,tEvFrz,tCondAir,tDry,tCondB,hSum,cSum,hHT,hVHT,hHTlist,hVHTlist,sh,sc,cyclesYr,R,Evac,Eaux};
+}
+
+/* profil dobowy: 6 faz, moc elektryczna z rozdziałem proporcjonalnym do obciążenia cieplnego */
+function profile(p,s,q){
+  const dLoad=.5, dPull=.5, dUnload=1.0, frz=q.Qfreeze>0.5;
+  const ph=[
+    {n:"Załadunek",  d:dLoad,      fIce:0,   fFrz:0, fSh:0,   fV:0  },
+    {n:frz?"Mrożenie":"Temperowanie", d:q.tFrzEff, fIce:0, fFrz:1, fSh:0, fV:0 },
+    {n:"Próżnia",    d:dPull,      fIce:.02, fFrz:0, fSh:.05, fV:2.0},
+    {n:"Sublimacja", d:q.subl,     fIce:.86, fFrz:0, fSh:.83, fV:1.0},
+    {n:"Desorpcja",  d:p.tDes,     fIce:.12, fFrz:0, fSh:.12, fV:1.0},
+    {n:"Odszranianie i rozładunek", d:dUnload, fIce:0, fFrz:0, fSh:0, fV:.3}
+  ];
+  if(q.store){ const tot=ph.reduce((a,x)=>a+x.d,0); ph.forEach(x=>x.fFrz=x.d/tot); }
+  const iqfKw=(q.Eiqf||0)/q.tCyc;
+  const Eref=s.parts.Eice+s.parts.Efrz+s.parts.Eoth-(q.Eiqf||0);
+  const thTot=q.Qice+q.Qfreeze || 1;
+  const vBase=p.pVac*(p.dutyVac/100);
+  let t=0; const out=[];
+  for(const x of ph){
+    const th=q.Qice*x.fIce+q.Qfreeze*x.fFrz;
+    const ref=(Eref*th/thTot)/x.d + iqfKw;
+    const shp=(s.QthShelfEl/(p.etaHeat/100))*x.fSh/(x.fSh>0?x.d:1);
+    const vac=vBase*x.fV, aux=p.pAux;
+    out.push({n:x.n,t0:t,t1:t+x.d,ref,sh:x.fSh>0?shp:0,vac,aux,tot:ref+(x.fSh>0?shp:0)+vac+aux});
+    t+=x.d;
+  }
+  return out;
+}
+/* ============================================================
+   4. NARZĘDZIA PREZENTACJI
+   ============================================================ */
+const $=s=>document.querySelector(s);
+function densOf(){
+  const pr=PRODUCTS[P.product];
+  if(P.format==="warstwa"||P.format==="plyta") return P.layerMm*P.pureeDens;
+  if(P.format==="formy")   return P.moldDepth*P.pureeDens*(P.moldCover/100);
+  return pr.d||10;
+}
+function autoBatch(){
+  P.batch=Math.max(25,Math.floor(P.trayArea*densOf()/25)*25);
+  const r=document.getElementById("i_batch"); if(r) r.value=P.batch;
+}
+function fieldVisible(fd){
+  if(!fd.showIf) return true;
+  if(fd.showIf==="mielone")   return P.format!=="kawalki";
+  if(fd.showIf==="warstwa")   return P.format==="warstwa";
+  if(fd.showIf==="warstwaLub")return P.format==="warstwa"||P.format==="plyta";
+  if(fd.showIf==="plyta")     return P.format==="plyta";
+  if(fd.showIf==="mrozona")   return P.format==="plyta"&&P.cutStage==="mrozona";
+  if(fd.showIf==="sucha")     return P.format==="plyta"&&P.cutStage==="sucha";
+  if(fd.showIf==="formy")     return P.format==="formy";
+  if(fd.showIf==="iqf")     return P.frzMode==="iqf";
+  return true;
+}
+const f=(v,d=0)=>(isFinite(v)?v:0).toLocaleString("pl-PL",{minimumFractionDigits:d,maximumFractionDigits:d});
+const SVGNS="http://www.w3.org/2000/svg";
+function el(t,a={},kids=[]){const n=document.createElementNS(SVGNS,t);
+  for(const k in a) n.setAttribute(k,a[k]);
+  (Array.isArray(kids)?kids:[kids]).forEach(c=>n.appendChild(typeof c==="string"?document.createTextNode(c):c));
+  return n;}
+function txt(x,y,s,cls,extra={}){return el("text",{x,y,class:cls,...extra},String(s));}
+const CSSV=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+let SEL="D";
+
+const tipEl=$("#tip");
+function bindTip(node,html){
+  node.addEventListener("pointerenter",e=>{tipEl.innerHTML=html; tipEl.classList.add("on"); moveTip(e);});
+  node.addEventListener("pointermove",moveTip);
+  node.addEventListener("pointerleave",()=>tipEl.classList.remove("on"));
+}
+function moveTip(e){
+  const r=tipEl.getBoundingClientRect();
+  let x=e.clientX+14, y=e.clientY+14;
+  if(x+r.width>innerWidth-8) x=e.clientX-r.width-14;
+  if(y+r.height>innerHeight-8) y=e.clientY-r.height-14;
+  tipEl.style.left=x+"px"; tipEl.style.top=y+"px";
+}
+
+/* ---------- panel sterowania ---------- */
+function buildControls(){
+  const box=$("#ctlBody"); box.innerHTML="";
+  GROUPS.forEach((g,gi)=>{
+    const d=document.createElement("details"); d.className="grp"; if(g.open) d.open=true;
+    const sm=document.createElement("summary"); sm.textContent=g.t; d.appendChild(sm);
+    const b=document.createElement("div"); b.className="grp-body";
+    g.f.forEach(fd=>{
+      if(fd.type==="info"){
+        const box=document.createElement("div"); box.className="pinfo"; box.id="info_"+fd.k;
+        b.appendChild(box); return;
+      }
+      const wrap=document.createElement("div"); wrap.className="f"; wrap.id="w_"+fd.k;
+      const lab=document.createElement("label"); lab.textContent=fd.l; lab.htmlFor="i_"+fd.k;
+      const val=document.createElement("span"); val.className="val"; val.id="v_"+fd.k;
+      wrap.append(lab,val);
+      if(fd.type==="select"){
+        const s=document.createElement("select"); s.id="i_"+fd.k;
+        const groups={};
+        for(const key in fd.opts){const gg=fd.opts[key].g||""; (groups[gg]=groups[gg]||[]).push(key);}
+        for(const gn in groups){
+          const parent=gn?document.createElement("optgroup"):s; if(gn) parent.label=gn;
+          groups[gn].forEach(key=>{const o=document.createElement("option"); o.value=key; o.textContent=fd.opts[key].n; parent.appendChild(o);});
+          if(gn) s.appendChild(parent);
+        }
+        s.value=P[fd.k];
+        s.addEventListener("change",()=>{
+          P[fd.k]=s.value;
+          if(fd.k==="product"){
+            const pr=PRODUCTS[s.value];
+            P.tCycle=pr.t;
+            if(pr.sp) P.salePrice=pr.sp;
+            if(pr.rp) P.rawPrice=pr.rp;
+            if(pr.liq && P.format==="kawalki") P.format="warstwa";
+            ["i_tCycle","i_salePrice","i_rawPrice","i_format"].forEach(id=>{
+              const r=document.getElementById(id); if(r) r.value=P[id.slice(2)]; });
+          }
+          if(fd.k==="cutShape"){ P.cutYield=SHAPES[s.value].y;
+            const r=document.getElementById("i_cutYield"); if(r) r.value=P.cutYield; }
+          if(fd.k==="product"||fd.k==="format") autoBatch();
+          refresh();});
+        wrap.appendChild(s); val.textContent="";
+      }else{
+        const r=document.createElement("input"); r.type="range"; r.id="i_"+fd.k;
+        r.min=fd.min; r.max=fd.max; r.step=fd.step; r.value=P[fd.k];
+        r.addEventListener("input",()=>{P[fd.k]=parseFloat(r.value);
+          if(["layerMm","moldDepth","moldCover","pureeDens","trayArea"].indexOf(fd.k)>=0) autoBatch();
+          refresh();});
+        wrap.appendChild(r);
+        val.textContent=f(P[fd.k],fd.step<1?(fd.step<.5?1:1):0)+" "+(fd.u||"");
+      }
+      if(fd.h){const h=document.createElement("span"); h.className="hint"; h.textContent=fd.h; wrap.appendChild(h);}
+      b.appendChild(wrap);
+    });
+    d.appendChild(b); box.appendChild(d);
+  });
+  /* odbiorniki */
+  [["Odbiorniki ciepła","sinksH","kWh ciepła na cykl"],["Odbiorniki chłodu","sinksC","kWh chłodu na cykl"]].forEach(([title,key,unit])=>{
+    const d=document.createElement("details"); d.className="grp"; d.open=true;
+    const sm=document.createElement("summary"); sm.textContent=title; d.appendChild(sm);
+    const b=document.createElement("div"); b.className="grp-body";
+    const hint=document.createElement("span"); hint.className="hint";
+    hint.style.cssText="font-size:11px;color:var(--ink-3);margin-bottom:2px";
+    hint.textContent=unit+". Odbiorniki włączone wchodzą do granicy bilansu we wszystkich wariantach.";
+    b.appendChild(hint);
+    P[key].forEach((s,i)=>{
+      const row=document.createElement("div"); row.className="sink"+(s.on?"":" off");
+      const cb=document.createElement("input"); cb.type="checkbox"; cb.checked=s.on;
+      cb.setAttribute("aria-label",s.n);
+      const nm=document.createElement("div"); nm.className="nm";
+      nm.innerHTML=s.n+"<b>"+(s.T>0?"+":"")+s.T+" °C</b>";
+      const num=document.createElement("input"); num.type="number"; num.value=s.q; num.min=0; num.step=5;
+      num.setAttribute("aria-label",s.n+" — kWh na cykl");
+      cb.addEventListener("change",()=>{s.on=cb.checked; row.classList.toggle("off",!s.on); refresh();});
+      num.addEventListener("input",()=>{s.q=Math.max(0,parseFloat(num.value)||0); refresh();});
+      row.append(cb,nm,num); b.appendChild(row);
+    });
+    d.appendChild(b); $("#ctlBody").appendChild(d);
+  });
+}
+function syncControlLabels(){
+  GROUPS.forEach(g=>g.f.forEach(fd=>{
+    const wr=document.getElementById("w_"+fd.k);
+    if(wr) wr.style.display=fieldVisible(fd)?"":"none";
+    if(fd.type==="select"||fd.type==="info") return;
+    const v=document.getElementById("v_"+fd.k), i=document.getElementById("i_"+fd.k);
+    if(v) v.textContent=f(P[fd.k],fd.step<1?1:0)+" "+(fd.u||"");
+    if(i && parseFloat(i.value)!==P[fd.k]) i.value=P[fd.k];
+  }));
+}
+
+/* ---------- KPI ---------- */
+function renderProdInfo(M){
+  const box=$("#info__prod"); if(!box) return;
+  const p=M.p, over=M.trayNeed/p.trayArea;
+  const row=(a,b)=>'<div class="pr"><span>'+a+'</span><span>'+b+'</span></div>';
+  let html=
+    row("Uzysk", f(M.yieldR,2)+" : 1 → "+f(M.mProd,1)+" kg produktu")+
+    row("Woda do odparowania", f(M.mWat,0)+" kg")+
+    row("Gęstość załadunku tac", f(M.dens,1)+" kg/m²")+
+    row("Wymagana powierzchnia tac", f(M.trayNeed,0)+" m² z "+f(p.trayArea,0)+" m²")+
+    row("Czas cyklu", f(M.tCyc,1)+" h → "+f(M.cyclesYr,0)+" cykli/rok");
+  if(M.pieces) html+=
+    row("Sztuk na cykl", f(M.pieces,0)+" × "+f(p.moldMl,0)+" ml")+
+    row("Masa kostki", f(M.mPieceRaw*1000,0)+" g → "+f(M.mPieceDry*1000,1)+" g po suszeniu");
+  if(M.milled) html+=
+    row("Sublimacja", f(M.depth,0)+" mm, wykładnik "+f(p.sublExp,2)+" → "+f(M.subl,1)+" h");
+  if(p.format==="plyta"){
+    const s=M.R[SEL];
+    html+=row("Płyta z cyklu", f(M.mProd,1)+" kg, grubość "+f(M.depth,0)+" mm")+
+          row("Kształty z cyklu", f(M.mProd*s.cutEff,1)+" kg ("+f(s.cutEff*100,0)+" % płyty)")+
+          row("Ażur", f(M.mProd*s.scrapKg,1)+" kg — "+(p.cutStage==="mrozona"
+            ? f(p.scrapRecov,0)+" % wraca do przecieru"
+            : (p.scrapPrice>0?"sprzedany po "+f(p.scrapPrice,0)+" zł/kg":"odpad")));
+  }
+  if(M.mixed) html+=
+    row("Receptura", M.comps.map(c=>f(c.f*100,0)+" % "+c.p.n.split(",")[0].split(" (")[0]).join(" + "))+
+    row("Woda w mieszance", f(M.pr.w*100,1)+" % → uzysk "+f(M.yieldR,2)+" : 1")+
+    row("Temperatura zapadania", f(M.tCollapse,0)+" °C (ważona suchą masą)");
+  if(M.proProd>3) html+=
+    row("Białko w produkcie", f(M.proProd,0)+" % (z "+f(M.proRaw,1)+" % w surowcu)");
+  if(M.fatRaw>2) html+=
+    row("Tłuszcz w produkcie", f(M.fatProd,0)+" % (z "+f(M.fatRaw,1)+" % w surowcu)");
+  if(M.Eiqf>0) html+=
+    row("Tunel IQF", f(M.Eiqf,0)+" kWh/cykl · COP "+f(M.copIQF,2))+
+    row("Ubytek w tunelu", f(M.mTunel-M.mIn,1)+" kg z "+f(M.mTunel,0)+" kg");
+  let cls,msg;
+  if(M.pr.w<0.40){
+    return void(box.innerHTML=html+'<div class="pw bad">Mieszanka ma tylko '+f(M.pr.w*100,0)+
+      ' % wody — nie ma tu czego liofilizować. Suszenie sublimacyjne opłaca się dla materiału, z którego trzeba '+
+      'usunąć wodę; przy takim składzie taniej i sensowniej jest wymieszać składniki na sucho.</div>');
+  }
+  if(M.milled && M.pr.w<0.58){
+    return void(box.innerHTML=html+'<div class="pw warn">Mieszanka ma '+f(M.pr.w*100,0)+
+      ' % wody i przy tym składzie będzie gęstą pastą, nie masą rozlewną. Do wylania równej warstwy na tacę '+
+      'potrzeba około 60–75 % wody. Dolewanie wody odwraca zysk z uzysku — lepiej zmniejszyć udział składnika suchego '+
+      'albo przejść na formy, gdzie masę można nakładać, a nie rozlewać.</div>');
+  }
+  if(M.fatProd>25){
+    const ostro=M.fatProd>50;
+    return void(box.innerHTML=html+'<div class="pw '+(ostro?"bad":"warn")+'">Produkt wysokotłuszczowy — '+
+      f(M.fatProd,0)+' % tłuszczu. Tłuszcz nie sublimuje, więc jego udział rośnie dokładnie w stosunku uzysku. '+
+      (ostro?'<b>Powyżej połowy suchej masy matryca nie ma już z czego powstać</b> — strukturę porowatą buduje '+
+             'część nietłuszczowa (błonnik, węglowodany, białko), a jej zostaje '+f(100-M.fatProd,0)+' %. '+
+             'Realny produkt wymaga nośnika strukturalnego albo zmieszania z przecierem owocowym. ':'')+
+      'O trwałości decyduje utlenianie, nie wilgotność: porowaty liofilizat ma ogromną powierzchnię właściwą. '+
+      'Konieczne pakowanie w azocie, bariera przeciw tlenowi i światłu, ewentualnie przeciwutleniacz.</div>');
+  }
+  if(p.frzMode==="kupny"&&p.tIn>-1.5){
+    cls="bad"; msg="Surowiec kupowany mrożony nie może wchodzić w temperaturze "+f(p.tIn,0)+
+      " °C. Ustaw temperaturę wejścia poniżej −1,5 °C albo zmień sposób zamrażania.";
+  }else if(over>1){
+    cls="bad"; msg="Wsad nie mieści się w komorze — przy tej gęstości "+f(p.trayArea,0)+
+      " m² tac przyjmie "+f(M.trayFit,0)+" kg surowca. Zmniejsz wsad albo powiększ komorę.";
+  }else if(over>=.94){
+    cls="ok"; msg="Komora wykorzystana w pełni. Zmiana surowca lub postaci dobiera wsad do powierzchni tac.";
+  }else{
+    cls="warn"; msg="Zostaje "+f(p.trayArea-M.trayNeed,0)+" m² wolnych tac — wsad można zwiększyć do "+f(M.trayFit,0)+" kg.";
+  }
+  box.innerHTML=html+'<div class="pw '+cls+'">'+msg+'</div>';
+}
+
+function renderKPI(M){
+  const s=M.R[SEL], a=M.R.A, base=SEL==="A";
+  const d=(cur,ref)=>{const x=(cur-ref)/ref*100; return {t:(x>0?"+":"")+f(x,0)+" %", c:x<-0.5?"down":(x>0.5?"up":"flat")};};
+  const rows=[
+    {k:"Energia el. / kg wody", v:f(s.perKgW,2), u:"kWh", d:base?null:d(s.perKgW,a.perKgW), sub:"sam liofilizator"},
+    {k:"Energia el. / kg produktu", v:f(s.perKgP,1), u:"kWh", d:base?null:d(s.perKgP,a.perKgP)},
+    {k:"Koszt energii / kg produktu", v:f(s.costKg,2), u:"zł", d:base?null:d(s.costKg,a.costKg)},
+    {k:"Moc szczytowa", v:f(s.peak,0), u:"kW", d:base?null:d(s.peak,a.peak)},
+    {k:"Emisja CO₂ / kg produktu", v:f(s.co2Kg,1), u:"kg", d:base?null:d(s.co2Kg,a.co2Kg)},
+    {k:"Ciepło odzyskane / cykl", v:f(s.Qhot,0), u:"kWh", d:null, sub:s.Qhot>0?f(s.Qhot/(M.Qshelf+M.hSum)*100,0)+" % zapotrzebowania":"brak odzysku"},
+    {k:"Pokrycie zużycia z PV", v:f(s.yr.pokrycie,0), u:"%", d:null,
+     sub:M.p.pvKwp>0?("autokonsumpcja "+f(s.yr.autok,0)+" %"):"instalacja wyłączona"},
+    {k:"Średnia cena zakupu", v:f(s.yr.avgBuy,3), u:"zł/kWh", d:base?null:d(s.yr.avgBuy,a.yr.avgBuy),
+     sub:TARIFFS[M.p.tariff].n}
+  ];
+  $("#kpiRow").innerHTML=rows.map(r=>
+    `<div class="kpi"><div class="k">${r.k}</div><div class="v">${r.v}<small>${r.u}</small></div>
+     <div class="d ${r.d?r.d.c:"flat"}">${r.d?r.d.t+" vs wariant A":(r.sub||"&nbsp;")}</div></div>`).join("");
+}
+
+/* ---------- karty wariantów ---------- */
+function renderScen(M){
+  const row=$("#scenRow"); row.innerHTML="";
+  SCEN.forEach(sc=>{
+    const s=M.R[sc.k];
+    const b=document.createElement("button"); b.type="button";
+    b.setAttribute("aria-pressed",String(sc.k===SEL));
+    const rel=sc.k==="A"?"":((s.cost-M.R.A.cost)/M.R.A.cost*100);
+    b.innerHTML=`<span class="tag">WARIANT ${sc.k}</span><span class="nm">${sc.nm}</span>
+      <span class="ds">${sc.ds}</span>
+      <span class="fig">${f(s.perKgW,2)} kWh/kg H₂O · ${f(s.costKg,2)} zł/kg
+      ${sc.k==="A"?"":`<span class="${rel<0?"down":"up"}"> · ${(rel>0?"+":"")+f(rel,0)} % kosztu</span>`}</span>`;
+    b.addEventListener("click",()=>{SEL=sc.k; refresh();});
+    row.appendChild(b);
+  });
+}
+
+/* ---------- tabela ---------- */
+function renderTable(M){
+  const ks=["A","B","C","D"], R=M.R;
+  const r=(lab,fn,d=0,u="")=>`<tr><td>${lab}</td>${ks.map(k=>`<td class="num">${fn(R[k])===null?"—":f(fn(R[k]),d)}<span class="u">${u}</span></td>`).join("")}</tr>`;
+  const sec=t=>`<tr class="sec"><td colspan="5">${t}</td></tr>`;
+  const one=(lab,v,d=0,u="")=>`<tr><td>${lab}</td><td class="num" colspan="4" style="text-align:right">${f(v,d)}<span class="u">${u}</span></td></tr>`;
+  $("#fullTable").innerHTML=`
+  <thead><tr><th>Wielkość</th>${ks.map(k=>`<th>Wariant ${k}</th>`).join("")}</tr></thead>
+  <tbody>
+   ${sec("Bilans masowy (wspólny dla wariantów)")}
+   ${one("Masa wsadu",M.mIn,0," kg")}
+   ${one("Masa produktu",M.mProd,1," kg")}
+   ${one("Woda odparowana",M.mWat,1," kg")}
+   ${one("Uzysk (kg surowca na kg produktu)",M.yieldR,2," : 1")}
+   ${one("Gęstość załadunku tac",M.dens,1," kg/m²")}
+   ${one("Wymagana powierzchnia tac",M.trayNeed,0," m²")}
+   ${one("Produkcja w skali roku",M.mProd*M.cyclesYr/1000,1," t")}
+   ${sec("Zapotrzebowanie cieplne procesu (wspólne)")}
+   ${one("Schłodzenie wstępne",M.Qpre,1," kWh")}
+   ${one("Przemiana fazowa (zamrażanie)",M.Qlat,1," kWh")}
+   ${one("Dochłodzenie poniżej krioskopowej",M.Qsen,1," kWh")}
+   ${one("Ciepło sublimacji i desorpcji",M.Qsubl,1," kWh")}
+   ${one("Ciepło doprowadzone na półki",M.Qshelf,1," kWh")}
+   ${one("Obciążenie kondensatora lodu",M.Qice,1," kWh")}
+   ${one("Chłód dostępny z odszraniania",M.Qdefr,1," kWh")}
+   ${sec("Energia elektryczna na cykl")}
+   ${r("Sprężarki — stopień niski / kondensator lodu",s=>s.parts.Eice,0," kWh")}
+   ${r("Sprężarki — stopień wysoki / mrożenie",s=>s.parts.Efrz,0," kWh")}
+   ${r("Pozostałe sprężarki (odrzut, booster)",s=>s.parts.Eoth,0," kWh")}
+   ${r("Grzanie elektryczne półek (uzupełnienie)",s=>s.parts.Esh,0," kWh")}
+   ${r("Zespół próżniowy",s=>s.parts.Evac,0," kWh")}
+   ${r("Urządzenia pomocnicze",s=>s.parts.Eaux,0," kWh")}
+   <tr class="tot"><td>Razem liofilizator</td>${ks.map(k=>`<td class="num">${f(R[k].el,0)}<span class="u"> kWh</span></td>`).join("")}</tr>
+   ${r("Jednostkowo na kg odparowanej wody",s=>s.perKgW,3," kWh/kg")}
+   ${sec("Bilans systemowy — odbiorniki ciepła i chłodu")}
+   ${r("Ciepło pokryte z odzysku",s=>s.hCov,0," kWh")}
+   ${r("Ciepło z kotła gazowego",s=>s.gas,0," kWh")}
+   ${r("Chłód pokryty z odszraniania",s=>s.coldCov,0," kWh")}
+   ${r("Energia el. osobnej chłodnicy",s=>s.elCold,0," kWh")}
+   ${r("Ciepło odrzucone bezużytecznie",s=>s.Qw,0," kWh")}
+   ${sec("Rok energetyczny — fotowoltaika i taryfa")}
+   ${r("Zużycie energii elektrycznej",s=>s.eDay*365/1000,1," MWh/rok")}
+   ${r("Udział zużycia przesuwalnego w czasie",s=>s.flexShare*100,0," %")}
+   ${r("Pokryte z własnej produkcji",s=>s.yr.S/1000,1," MWh/rok")}
+   ${r("Kupione z sieci",s=>s.yr.I/1000,1," MWh/rok")}
+   ${r("Oddane do sieci",s=>s.yr.E/1000,1," MWh/rok")}
+   ${r("Średnia cena zakupu",s=>s.yr.avgBuy,3," zł/kWh")}
+   ${r("Koszt energii elektrycznej",s=>s.yr.C/1000,1," tys. zł/rok")}
+   ${r("Koszt bez instalacji PV",s=>s.yrNoPv.C/1000,1," tys. zł/rok")}
+   ${sec("Wynik")}
+   ${r("Energia elektryczna razem (system)",s=>s.elTot,0," kWh")}
+   ${r("Moc szczytowa",s=>s.peak,0," kW")}
+   ${r("Koszt energii na cykl",s=>s.cost,0," zł")}
+   ${r("Koszt energii na kg produktu",s=>s.costKg,2," zł/kg")}
+   ${r("Emisja CO₂ na kg produktu",s=>s.co2Kg,1," kg/kg")}
+   ${r("Koszt energii w skali roku",s=>s.costYr/1000,1," tys. zł")}
+   ${r("Nakład inwestycyjny (założony)",s=>s.capex/1000,0," tys. zł")}
+  </tbody>`;
+}
+/* ============================================================
+   5. WYKRESY
+   ============================================================ */
+const SER=[
+ {k:"Eice", n:"Stopień niski — kondensator lodu", c:"--s1"},
+ {k:"Esh",  n:"Grzanie elektryczne półek",        c:"--s2"},
+ {k:"Efrz", n:"Stopień wysoki / mrożenie",        c:"--s3"},
+ {k:"Evac", n:"Zespół próżniowy",                 c:"--s4"},
+ {k:"Eaux", n:"Urządzenia pomocnicze",            c:"--s5"},
+ {k:"Eoth", n:"Odrzut ciepła, booster, odszranianie", c:"--s6"}
+];
+
+function drawBars(M){
+  const svg=$("#barChart"); svg.textContent="";
+  const ks=["A","B","C","D"], W=Math.max(660,svg.parentNode.clientWidth||880), rowH=44, gap=20;
+  const mL=Math.round(W*0.155), mR=Math.round(W*0.21), H=ks.length*(rowH+gap)+44;
+  svg.setAttribute("viewBox",`0 0 ${W} ${H}`); svg.setAttribute("width",W); svg.setAttribute("height",H);
+  const max=Math.max(...ks.map(k=>M.R[k].el))*1.02, plot=W-mL-mR;
+  const sx=v=>v/max*plot;
+  /* siatka */
+  const step=max>1200?400:(max>600?200:100);
+  for(let v=0; v<=max; v+=step){
+    svg.appendChild(el("line",{x1:mL+sx(v),y1:26,x2:mL+sx(v),y2:H-16,class:"ax"}));
+    svg.appendChild(txt(mL+sx(v),18,f(v,0),"axtext",{"text-anchor":"middle"}));
+  }
+  svg.appendChild(txt(mL,H-2,"kWh energii elektrycznej na cykl","axlabel"));
+  ks.forEach((k,i)=>{
+    const s=M.R[k], y=36+i*(rowH+gap);
+    svg.appendChild(txt(0,y+19,"WARIANT "+k,"axlabel"));
+    svg.appendChild(txt(0,y+34,SCEN.find(x=>x.k===k).nm,"sname"));
+    let x=mL;
+    SER.forEach(se=>{
+      const v=s.parts[se.k]||0; if(v<=0) return;
+      const w=Math.max(0,sx(v)-2);
+      const rect=el("rect",{x,y,width:w,height:rowH,fill:CSSV(se.c),rx:1});
+      bindTip(rect,`<div class="t">${se.n}</div><div class="r"><span>Wariant ${k}</span><span>${f(v,0)} kWh</span></div>
+        <div class="r"><span>Udział</span><span>${f(v/s.el*100,1)} %</span></div>`);
+      svg.appendChild(rect);
+      if(w>52) svg.appendChild(txt(x+7,y+rowH/2+4,f(v,0),"vlabel",{fill:"#fff","fill-opacity":".95"}));
+      x+=sx(v);
+    });
+    const dl=k==="A"?null:(s.el-M.R.A.el)/M.R.A.el*100;
+    svg.appendChild(txt(x+10,y+18,f(s.el,0)+" kWh el.","vlabel"));
+    if(dl!==null) svg.appendChild(txt(x+10+String(f(s.el,0)).length*7.6+56,y+18,(dl>0?"+":"")+f(dl,0)+" %","vlabel",
+        {fill:CSSV(dl<0?"--good":"--bad")}));
+    const extra=[]; if(s.gas>1) extra.push(f(s.gas,0)+" kWh gazu"); if(s.elCold>1) extra.push(f(s.elCold,0)+" kWh chłodnicy");
+    svg.appendChild(txt(x+10,y+34,extra.length?"+ "+extra.join(" · "):"bez wsparcia zewnętrznego","slabel"));
+  });
+  $("#barUnit").textContent="wariant odniesienia: A";
+  $("#barLegend").innerHTML=SER.map(se=>{
+    const v=M.R[SEL].parts[se.k]||0;
+    return `<span class="li"><span class="sw" style="background:${CSSV(se.c)}"></span>${se.n}
+      <span class="lv">${f(v,0)} kWh</span></span>`;}).join("");
+}
+
+function decollide(items,minGap,yMin,yMax){
+  const a=items.map(it=>({...it})).sort((x,y)=>x.y0-y.y0);
+  let prev=-1e9; a.forEach(it=>{ it.y=Math.max(it.y0,prev+minGap); prev=it.y; });
+  const over=a.length?a[a.length-1].y-yMax:0;
+  if(over>0){ let p=1e9; for(let i=a.length-1;i>=0;i--){ a[i].y=Math.min(a[i].y-over,p-minGap); p=a[i].y; }
+    a.forEach(it=>it.y=Math.max(yMin,it.y)); }
+  return a;
+}
+function pct100(id,legId,rows,total,unit){
+  const svg=$(id); svg.textContent="";
+  const W=Math.max(300,svg.parentNode.clientWidth||440), H=54;
+  svg.setAttribute("viewBox","0 0 "+W+" "+H); svg.setAttribute("width",W); svg.setAttribute("height",H);
+  let x=0;
+  rows.forEach(r=>{
+    const frac=r.v/total, w=Math.max(0,frac*W-2);
+    if(w<=0) return;
+    const rect=el("rect",{x,y:6,width:w,height:30,fill:CSSV(r.c),rx:2});
+    bindTip(rect,'<div class="t">'+r.n+'</div><div class="r"><span>Energia</span><span>'+f(r.v,0)+' '+unit+'</span></div>'+
+      '<div class="r"><span>Udział</span><span>'+f(frac*100,1)+' %</span></div>');
+    svg.appendChild(rect);
+    if(w>44) svg.appendChild(txt(x+w/2,26,f(frac*100,0)+" %","vlabel",{"text-anchor":"middle",fill:"#fff","fill-opacity":".95"}));
+    x+=frac*W;
+  });
+  svg.appendChild(txt(0,50,f(total,0)+" "+unit+" na cykl","axlabel"));
+  $(legId).innerHTML=rows.filter(r=>r.v>0).map(r=>
+    '<span class="li"><span class="sw" style="background:'+CSSV(r.c)+'"></span>'+r.n+
+    '<span class="lv">'+f(r.v,0)+'</span></span>').join("");
+}
+
+const COGS=[
+  {k:"surowiec",   n:"Surowiec",                    c:"--s1"},
+  {k:"energia",    n:"Energia",                     c:"--s2"},
+  {k:"robocizna",  n:"Robocizna",                   c:"--s3"},
+  {k:"opakowanie", n:"Opakowanie",                  c:"--s4"},
+  {k:"ogolne",     n:"Kontrola jakości i ogólne",   c:"--s5"},
+  {k:"amortyzacja",n:"Amortyzacja",                 c:"--s6"}
+];
+
+const NSER=[{k:"sw",n:"Surowiec świeży",c:"--s1"},
+            {k:"tr",n:"Susz konwekcyjny",c:"--s2"},
+            {k:"li",n:"Liofilizat",c:"--s3"}];
+
+function drawNutr(M){
+  const p=M.p, blk=document.getElementById("nutrBlock");
+  if(!M.nutro){ blk.style.display="none"; return; }
+  blk.style.display="";
+  const N=M.nutro, rows=N.filter(n=>n.base>0);
+  const fmt=v=>v>=100?f(v,0):(v>=10?f(v,1):(v>=1?f(v,2):f(v,3)));
+  const nazwa = M.mixed ? "tej receptury" : ('„'+M.pr.n.split(",")[0].toLowerCase()+'”');
+
+  /* --- zakładki podstawy --- */
+  const tb=$("#nutrTabs"); tb.innerHTML="";
+  BASORD.forEach(k=>{
+    const b=document.createElement("button"); b.type="button";
+    b.setAttribute("aria-pressed",String(k===p.basis));
+    b.innerHTML='<span class="nm" style="margin-top:0">'+BASIS[k].t+'</span><span class="ds">'+BASIS[k].d+'</span>';
+    b.addEventListener("click",()=>{P.basis=k; refresh();});
+    tb.appendChild(b);
+  });
+  $("#basisNote").textContent=BASIS[p.basis].n;
+
+  /* --- wprowadzenie zależne od podstawy --- */
+  const skl = M.mixed
+    ? '<b>To jest receptura, nie pojedynczy surowiec:</b> '+
+      M.comps.map(c=>c.p.n.split(",")[0]+" "+f(c.f*100,0)+" %").join(" \u00b7 ")+
+      '. Skład liczony jest jako średnia ważona udziałami, a retencja stosowana do całej mieszaniny. '
+    : "";
+  const txt={
+    produkt:'<b>Uwaga na podstawę — na etykiecie liofilizat wygrywa o rząd wielkości, ale to nie jest zasługa technologii.</b> '+
+      'W '+f(N.concFD,1)+'-krotnym zagęszczeniu siedzi przede wszystkim usunięcie wody. Susz konwekcyjny zagęszcza tylko '+
+      f(N.concTR,1)+'-krotnie, bo zostaje przy '+f(p.wEndTrad,0)+' % wilgotności, podczas gdy liofilizat schodzi do '+
+      f(p.wEnd,1)+' %. Część przewagi widocznej na etykiecie bierze się właśnie z tej różnicy dosuszenia, a nie z tego, '+
+      'ile składnika przetrwało. Przełącz na suchą masę, żeby to rozdzielić.',
+    sucha:'<b>To jest uczciwe porównanie chemiczne — woda usunięta, zostaje sama retencja.</b> '+
+      'Widać wtedy, że przewaga nie rozkłada się równomiernie: minerały i błonnik przetrwają w każdej technologii, '+
+      'polifenole tracą umiarkowanie, a witamina C i antocyjany to miejsce, gdzie susz konwekcyjny traci połowę i więcej. '+
+      'Jeśli produkt ma się bronić wartością odżywczą, argument stoi na tych pozycjach, nie na całej tablicy.',
+    porcja:'<b>Tak to wygląda z perspektywy konsumenta — i to jedyne sformułowanie jednocześnie prawdziwe i korzystne.</b> '+
+      'Porcja odpowiadająca 100 g świeżego surowca to około '+f(100/Math.max(.01,N.concFD),0)+' g liofilizatu albo '+
+      f(100/Math.max(.01,N.concTR),0)+' g suszu. Liofilizat oddaje niemal tyle, co surowiec świeży; susz konwekcyjny oddaje ułamek.'
+  }[p.basis];
+  $("#nutrNote").innerHTML='<span class="lbl" style="display:block;margin-bottom:5px">'+BASIS[p.basis].t+'</span>'+skl+txt;
+
+  /* --- karty składników --- */
+  const box=$("#nutrGrid");
+  if(!rows.length){
+    box.innerHTML='<div class="nempty">Ten surowiec nie zawiera istotnych ilości żadnego ze śledzonych składników '+
+      '(witaminy C i B12, żelaza, wapnia, potasu, beta-karotenu, polifenoli, antocyjanów, błonnika). '+
+      'Nośniki i wypełniacze — maltodekstryna, skrobie — są tu z założenia puste odżywczo: ich rola jest technologiczna, '+
+      'a wartość odżywczą wnoszą pozostałe składniki receptury.</div>';
+  } else {
+    box.innerHTML=rows.map(n=>{
+      const max=Math.max(n.sw,n.tr,n.li)||1;
+      const bars=NSER.map(se=>{
+        const v=n[se.k], rws=n.nrv>0?(v/n.nrv*100):null;
+        const rt=rws===null?"":(rws<1?"&lt; 1 % RWS":f(rws,0)+" % RWS");
+        return '<div class="nrow"><span class="nm"><span class="dot" style="background:'+CSSV(se.c)+'"></span>'+se.n+'</span>'+
+          '<span class="ntrack"><span class="nfill" style="width:'+Math.max(1.5,v/max*100)+'%;background:'+CSSV(se.c)+'"></span></span>'+
+          '<span class="nval">'+fmt(v)+(rt?' <span class="rws">\u00b7 '+rt+'</span>':'')+'</span></div>';
+      }).join("");
+      const kr=n.li/Math.max(1e-6,n.tr);
+      const ft = n.rTR<=0 ? 'Susz konwekcyjny nie zachowuje tego składnika w mierzalnej ilości'
+        : (Math.abs(n.rFD-n.rTR)<.5 && p.basis==="sucha")
+          ? 'Wszystkie trzy identyczne — ten składnik nie zależy od technologii suszenia'
+          : 'W tej podstawie liofilizat ma <b>'+f(kr,kr>=10?0:1)+'×</b> tyle co susz konwekcyjny';
+      return '<div class="ncard"><div class="hd"><h4>'+n.n+'</h4>'+
+        '<span class="lbl" style="text-transform:none;letter-spacing:.02em">'+n.u+' · retencja '+f(n.rFD,0)+' / '+f(n.rTR,0)+' %</span></div>'+
+        bars+'<div class="ft">'+ft+'</div></div>';
+    }).join("");
+  }
+
+  $("#nutrLegend").innerHTML=NSER.map(se=>
+    '<span class="li"><span class="sw" style="background:'+CSSV(se.c)+'"></span>'+se.n+'</span>').join("")+
+    '<span class="li"><span class="lv">RWS = referencyjna wartość spożycia, rozp. 1169/2011 zał. XIII</span></span>';
+
+  /* --- pasek przewagi, zawsze na suchą masę --- */
+  const adv=rows.map(n=>{
+    const liP=n.base*(n.rFD/100)*N.concFD, trP=n.base*(n.rTR/100)*N.concTR;
+    return {n:n.n, u:n.u, r:n.rTR>0?n.rFD/n.rTR:0, dz:liP-trP,
+            dp:n.nrv>0?(liP-trP)/n.nrv*100:null};
+  }).sort((a,b)=>b.r-a.r||b.dz-a.dz);
+  const mx=Math.max(...adv.map(a=>a.r),1);
+  $("#nutrAdv").innerHTML=adv.length?adv.map(a=>{
+    const col=a.r>=2?"--s3":(a.r>=1.4?"--cold":"--ink-3");
+    const zysk=a.r<=1.001?"składnik odporny na ciepło, bez różnicy"
+      :("+"+fmt(a.dz)+" "+a.u+"/100 g produktu"+(a.dp!==null&&a.dp>=1?" \u00b7 "+f(a.dp,0)+" pkt % RWS":""));
+    return '<div class="advrow"><span class="n">'+a.n+
+      '<span style="display:block;font-family:var(--font-mono);font-size:9.5px;color:var(--ink-3);letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+zysk+'</span></span>'+
+      '<span class="b"><span style="width:'+(a.r/mx*100)+'%;background:'+CSSV(col)+';opacity:'+(a.r>=1.4?1:.45)+'"></span></span>'+
+      '<span class="x" style="color:'+CSSV(col)+'">'+f(a.r,1)+'×</span></div>';
+  }).join(""):'<div class="nempty">Brak składników do porównania.</div>';
+
+  /* --- oświadczenia żywieniowe, zawsze na 100 g produktu --- */
+  const cl=[], slabe=[];
+  NUTR.forEach(x=>{
+    const n=N.find(y=>y.k===x.k); if(!n||n.base<=0) return;
+    const li=n.base*(n.rFD/100)*N.concFD, tr=n.base*(n.rTR/100)*N.concTR;
+    const nm=x.g2||x.n.toLowerCase();
+    if(x.nrv>0){
+      const pl=li/x.nrv*100, pt=tr/x.nrv*100;
+      if(pl>=30) cl.push('<span class="chip">wysoka zawartość '+nm+' · '+f(pl,0)+' % RWS'+
+        (pt>=30?" (susz też)":pt>=15?" (susz: tylko źródło)":" (susz nie spełnia)")+'</span>');
+      else if(pl>=15) cl.push('<span class="chip mid">źródło '+nm+' · '+f(pl,0)+' % RWS</span>');
+      else slabe.push(nm);
+    }
+    if(x.k==="fib"){
+      if(li>=6) cl.push('<span class="chip">wysoka zawartość błonnika · '+f(li,1)+' g/100 g</span>');
+      else if(li>=3) cl.push('<span class="chip mid">źródło błonnika · '+f(li,1)+' g/100 g</span>');
+    }
+  });
+  const proProd=M.proProd||0;
+  if(proProd>=20) cl.push('<span class="chip">wysoka zawartość białka · '+f(proProd,0)+' g/100 g</span>');
+  else if(proProd>=12) cl.push('<span class="chip mid">źródło białka · '+f(proProd,0)+' g/100 g</span>');
+
+  $("#claimNote").innerHTML='<b>Co wolno napisać na etykiecie.</b> Oświadczenia żywieniowe wolno stosować wyłącznie '+
+    'w brzmieniu z załącznika do rozporządzenia 1924/2006, przy progach liczonych <b>na 100 g produktu</b>: '+
+    '„źródło” od 15 % referencyjnej wartości spożycia, „wysoka zawartość” od 30 %; dla białka progi liczy się od '+
+    'udziału energii, tu przybliżone zawartością 12 i 20 g/100 g. Dla liofilizatu '+nazwa+' kwalifikują się:'+
+    '<div style="margin-top:7px">'+(cl.length?cl.join(""):
+      '<span class="chip no">żadne — ten surowiec jest zbyt ubogi w składniki z listy</span>')+'</div>';
+
+  /* --- zastrzeżenia, dobrane do składu --- */
+  const li=[];
+  const has=k=>{const n=N.find(y=>y.k===k); return n&&n.base>0;};
+  if(has("pol")||has("ant")) li.push('<b>Polifenole i antocyjany nie mają</b> ani referencyjnej wartości spożycia, '+
+    'ani dopuszczonego oświadczenia zdrowotnego. Wolno podać ich zawartość jako informację — nie wolno przypisać im działania.');
+  li.push('<b>„Zachowuje więcej witamin niż susz tradycyjny” to oświadczenie porównawcze</b> i wymaga udokumentowania '+
+    'badaniem własnego produktu, nie odwołania do piśmiennictwa.');
+  if(has("pol")) li.push('<b>Polifenole potrafią po suszeniu gorącym wzrosnąć w pomiarze</b>, bo rozerwanie komórek uwalnia '+
+    'formy związane i poprawia ekstraktywność. Wynik rośnie mimo degradacji — ostrożnie z porównaniem opartym na jednym oznaczeniu.');
+  if(has("kar")) li.push('<b>Karotenoidy wygrywają tylko w dniu produkcji.</b> Porowata struktura liofilizatu ma ogromną '+
+    'powierzchnię właściwą i w przechowywaniu utlenia się szybciej niż zwarty susz. Bez bariery tlenowej przewaga znika.');
+  if(proProd>=10) li.push('<b>Białko nie ginie w żadnej technologii, ale zmienia jakość.</b> Suszenie gorące uruchamia '+
+    'reakcje Maillarda, które obniżają dostępność lizyny o 10–25 %, i denaturuje białko serwatkowe. Tego nie widać w tablicy '+
+    'składu — a przy '+f(proProd,0)+' g białka na 100 g produktu to jest właśnie ten argument, który tu działa.');
+  if((M.fatProd||0)>=15) li.push('<b>Przy '+f(M.fatProd,0)+' % tłuszczu w produkcie utlenianie jest ograniczeniem trwałości, '+
+    'nie retencja.</b> Rozwinięta powierzchnia liofilizatu przyspiesza jełczenie: bez pakowania w atmosferze modyfikowanej '+
+    'albo bariery tlenowej przewaga odżywcza nie doczeka konsumenta.');
+  if(has("b12")&&N.find(y=>y.k==="b12").base>=1) li.push('<b>Witamina B12 i żelazo hemowe są odporne na ciepło</b> — '+
+    'w tych pozycjach liofilizacja nie daje przewagi retencyjnej i nie warto na niej budować komunikatu. '+
+    'Przewaga tego surowca leży gdzie indziej: w braku obróbki termicznej, w strukturze i w rehydratacji.');
+  $("#cavNote").innerHTML='<b>Czego nie wolno i o czym łatwo zapomnieć.</b><ul style="margin:8px 0 0;padding-left:18px">'+
+    li.map(x=>'<li style="margin:5px 0;color:var(--ink-2)">'+x+'</li>').join("")+'</ul>';
+}
+
+function drawCogs(M){
+  const p=M.p, s=M.R[SEL], svg=$("#cogsChart"); svg.textContent="";
+  const W=Math.max(660,svg.parentNode.clientWidth||900), H=140, mL=12, mR=12;
+  svg.setAttribute("viewBox","0 0 "+W+" "+H); svg.setAttribute("width",W); svg.setAttribute("height",H);
+  const maxV=Math.max(s.cogs,p.salePrice)*1.06, pw=W-mL-mR;
+  const X=v=>mL+v/maxV*pw;
+  const step=maxV>400?100:(maxV>160?50:20);
+  for(let v=0;v<=maxV;v+=step){
+    svg.appendChild(el("line",{x1:X(v),y1:26,x2:X(v),y2:96,class:"ax"}));
+    svg.appendChild(txt(X(v),18,f(v,0),"axtext",{"text-anchor":v===0?"start":"middle"}));
+  }
+  let x=0;
+  COGS.forEach(c=>{
+    const v=s.cost5[c.k]||0; if(v<=0.01) return;
+    const w=Math.max(0,X(v)-X(0)-2);
+    const r=el("rect",{x:X(x),y:32,width:w,height:44,fill:CSSV(c.c),rx:1});
+    bindTip(r,'<div class="t">'+c.n+'</div><div class="r"><span>Koszt</span><span>'+f(v,2)+' zł/kg</span></div>'+
+      '<div class="r"><span>Udział w koszcie</span><span>'+f(v/s.cogs*100,1)+' %</span></div>'+
+      '<div class="r"><span>Udział w cenie</span><span>'+f(v/p.salePrice*100,1)+' %</span></div>');
+    svg.appendChild(r);
+    if(w>46) svg.appendChild(txt(X(x)+w/2,59,f(v,0),"vlabel",{"text-anchor":"middle",fill:"#fff","fill-opacity":".95"}));
+    x+=v;
+  });
+  /* marża do ceny sprzedaży */
+  if(p.salePrice>s.cogs){
+    svg.appendChild(el("rect",{x:X(s.cogs)+2,y:32,width:Math.max(0,X(p.salePrice)-X(s.cogs)-2),height:44,
+      fill:CSSV("--good"),"fill-opacity":".16",stroke:CSSV("--good"),"stroke-width":1}));
+    svg.appendChild(txt((X(s.cogs)+X(p.salePrice))/2,59,"marża "+f(M.R[SEL].marza,0)+" zł","vlabel",
+      {"text-anchor":"middle",fill:CSSV("--good")}));
+  }
+  svg.appendChild(el("line",{x1:X(p.salePrice),y1:26,x2:X(p.salePrice),y2:96,stroke:CSSV("--ink"),"stroke-width":2}));
+  svg.appendChild(txt(X(p.salePrice),110,"cena sprzedaży "+f(p.salePrice,0)+" zł/kg","vlabel",
+    {"text-anchor":X(p.salePrice)>W*.8?"end":"middle"}));
+  svg.appendChild(txt(0,110,"koszt wytworzenia "+f(s.cogs,0)+" zł/kg","vlabel"));
+  svg.appendChild(txt(mL,H-4,"zł na kg produktu","axlabel"));
+  $("#cogsLegend").innerHTML=COGS.filter(c=>(s.cost5[c.k]||0)>0.01).map(c=>
+    '<span class="li"><span class="sw" style="background:'+CSSV(c.c)+'"></span>'+c.n+
+    '<span class="lv">'+f(s.cost5[c.k],1)+' zł · '+f(s.cost5[c.k]/s.cogs*100,0)+' %</span></span>').join("");
+  $("#cogsNote").textContent=GRADES[p.grade].n+" · "+f(M.yieldR,2)+" : 1";
+
+  /* --- porównanie gatunków --- */
+  const g=$("#gradeChart"); g.textContent="";
+  const keys=Object.keys(GRADES);
+  const res=keys.map(k=>{const m=model({...p,grade:k},true); return {k,n:GRADES[k].n,c:m.R[SEL].cogs,
+    raw:m.R[SEL].cost5.surowiec, loss:m.R[SEL].lossF*100, u:m.R[SEL].rawUnit, y:m.yieldR};});
+  const GW=Math.max(320,g.parentNode.clientWidth||440), rowH=26, gap=13, gmL=8, gmR=92;
+  const GH=keys.length*(rowH+gap)+16;
+  g.setAttribute("viewBox","0 0 "+GW+" "+GH); g.setAttribute("width",GW); g.setAttribute("height",GH);
+  const gmax=Math.max(...res.map(r=>r.c))*1.02, gplot=GW-gmL-gmR;
+  res.forEach((r,i)=>{
+    const y=10+i*(rowH+gap);
+    g.appendChild(txt(gmL,y+1,r.n+(r.k===p.grade?" — wybrany":""),"slabel",
+      {"font-weight":r.k===p.grade?"600":"400"}));
+    const wRaw=Math.max(1,r.raw/gmax*gplot), wRest=Math.max(0,(r.c-r.raw)/gmax*gplot-2);
+    const a=el("rect",{x:gmL,y:y+4,width:wRaw-2,height:rowH-6,fill:CSSV("--s1"),rx:1});
+    bindTip(a,'<div class="t">'+r.n+'</div><div class="r"><span>Surowiec</span><span>'+f(r.raw,1)+' zł/kg</span></div>'+
+      '<div class="r"><span>Cena użyteczna</span><span>'+f(r.u,2)+' zł/kg surowca</span></div>'+
+      '<div class="r"><span>Odpad sortowniczy</span><span>'+f(r.loss,0)+' %</span></div>'+
+      '<div class="r"><span>Uzysk</span><span>'+f(r.y,2)+' : 1</span></div>');
+    g.appendChild(a);
+    g.appendChild(el("rect",{x:gmL+wRaw,y:y+4,width:wRest,height:rowH-6,fill:CSSV("--ink-3"),"fill-opacity":.35,rx:1}));
+    const dv=r.c-res[1].c;
+    g.appendChild(txt(GW-4,y+18,f(r.c,0)+" zł"+(i===1?"":" · "+(dv>0?"+":"")+f(dv,0)),"vlabel",
+      {"text-anchor":"end",fill:CSSV(i===1?"--ink":(dv<0?"--good":"--bad"))}));
+  });
+
+  /* --- udziały --- */
+  const sp=$("#sharePie"); sp.textContent="";
+  const SW=Math.max(300,sp.parentNode.clientWidth||440), SH=58;
+  sp.setAttribute("viewBox","0 0 "+SW+" "+SH); sp.setAttribute("width",SW); sp.setAttribute("height",SH);
+  let sx2=0;
+  COGS.forEach(c=>{const v=s.cost5[c.k]||0; if(v<=0.01) return;
+    const fr=v/s.cogs, w=Math.max(0,fr*SW-2);
+    const r=el("rect",{x:sx2,y:6,width:w,height:32,fill:CSSV(c.c),rx:2});
+    bindTip(r,'<div class="t">'+c.n+'</div><div class="r"><span>Udział</span><span>'+f(fr*100,1)+' %</span></div>');
+    sp.appendChild(r);
+    if(w>40) sp.appendChild(txt(sx2+w/2,27,f(fr*100,0)+" %","vlabel",{"text-anchor":"middle",fill:"#fff","fill-opacity":".95"}));
+    sx2+=fr*SW;});
+  sp.appendChild(txt(0,52,f(s.cogs,0)+" zł/kg kosztu wytworzenia","axlabel"));
+  $("#shareLegend").innerHTML='<span class="li"><span class="lv">surowiec '+
+    f(s.cost5.surowiec/s.cogs*100,0)+' % kosztu i '+f(s.cost5.surowiec/p.salePrice*100,0)+
+    ' % ceny sprzedaży · energia '+f(s.cost5.energia/s.cogs*100,0)+' %</span></span>';
+
+  const przem=res[1], wyb=res[keys.indexOf(p.grade)], naj=res[3];
+  const osz=przem.c-naj.c;
+  $("#rawNote").innerHTML=
+    'Surowiec to <b>'+f(s.cost5.surowiec/s.cogs*100,0)+' % kosztu wytworzenia</b> i '+
+    f(s.cost5.surowiec/p.salePrice*100,0)+' % ceny sprzedaży — energia dla porównania '+
+    f(s.cost5.energia/s.cogs*100,0)+' %. Przy uzysku '+f(M.yieldR,2)+' : 1 każda złotówka na kilogramie surowca '+
+    'to '+f(M.yieldR,1)+' zł na kilogramie produktu, więc gatunek działa z '+f(M.yieldR,0)+'-krotną dźwignią. '+
+    'Zejście z przemysłowego na przejrzałe i nadwyżki obniża koszt wytworzenia o <b>'+f(osz,0)+' zł/kg</b> '+
+    '('+f(osz/przem.c*100,0)+' %) — ale nie o pełną różnicę ceny, bo odpad sortowniczy rośnie z '+
+    f(przem.loss,0)+' do '+f(naj.loss,0)+' %'+
+    (M.milled?', a przy mieleniu i tak jest o '+f(100-p.lossMilledRel,0)+' % niższy niż przy kawałkach':'')+
+    '. Częściowo rekompensuje to wyższa sucha masa owoców przejrzałych: uzysk poprawia się z '+
+    f(przem.y,2)+' do '+f(naj.y,2)+' : 1.'+
+    (s.marza<0
+      ? ' <b>Przy cenie odniesienia '+f(p.salePrice,0)+' zł/kg ten produkt nie domyka się nawet na najtańszym surowcu: '+
+        'koszt wytworzenia '+f(naj.c,0)+' zł/kg przewyższa cenę o '+f(naj.c-p.salePrice,0)+
+        ' zł. To sygnał, że kategoria należy do innej technologii, a nie że trzeba szukać tańszego surowca.</b>'
+      : ' Marża przy cenie odniesienia wynosi '+f(s.marza,0)+' zł/kg, czyli '+f(s.marza/p.salePrice*100,0)+' % ceny.');
+  if(p.format==="plyta"){
+    const sh=SHAPES[p.cutShape], suchy=model({...p,cutStage:"sucha"},true).R[SEL].cogs;
+    const mroz=model({...p,cutStage:"mrozona"},true).R[SEL].cogs;
+    $("#riskNote").innerHTML=
+      '<b>Wykrawanie decyduje o koszcie bardziej niż cokolwiek w suszarni.</b> Kształt „'+sh.n.toLowerCase()+
+      '” wykorzystuje '+f(p.cutYield,0)+' % powierzchni płyty. Gdyby ażur szedł na odpad, koszt kilograma kształtów '+
+      'rósłby w odwrotnej proporcji: przy '+f(p.cutYield,0)+' % o '+f((100/p.cutYield-1)*100,0)+' %. '+
+      'Dlatego moment wykrawania jest ważniejszy od samego kształtu.<br><br>'+
+      '<b>Z płyty mrożonej</b> ażur wraca prosto do mieszalnika — przy '+f(p.scrapRecov,0)+' % odzysku efektywne '+
+      'wykorzystanie rośnie do '+f(model({...p,cutStage:"mrozona"},true).R[SEL].cutEff*100,0)+' % i kształt niemal '+
+      'przestaje mieć znaczenie ekonomiczne. Koszt: <b>'+f(mroz,0)+' zł/kg</b>. Cięcie mrożonej płyty jest też '+
+      'czystsze mechanicznie — materiał jest twardy i sprężysty, nie kruszy się.<br>'+
+      '<b>Z płyty suchej</b> liofilizat jest kruchy, wykrojnik generuje pył i okruchy, a ażur trzeba zagospodarować '+
+      'jako proszek albo spisać na straty. Koszt przy obecnej wycenie ażuru: <b>'+f(suchy,0)+' zł/kg</b>'+
+      (suchy>mroz?' — o '+f(suchy-mroz,0)+' zł/kg drożej':' — taniej, bo ażur ma wysoką wycenę jako proszek')+
+      '. Wykrawanie na sucho wymaga hali o wilgotności poniżej 20 % RH, bo płyta chłonie wodę z powietrza w minutach.';
+  } else $("#riskNote").innerHTML=
+    '<b>Gdzie jest granica.</b> Wady wyglądu — kształt, kaliber, wybarwienie, otarcia — po zmieleniu przestają '+
+    'mieć znaczenie i to jest realna przestrzeń oszczędności. Wady jakościowe nie: liofilizacja nie jest krokiem '+
+    'zabijającym, a przy uzysku '+f(M.yieldR,2)+' : 1 <b>wszystko zagęszcza się '+f(M.yieldR,0)+'-krotnie</b> — '+
+    'mikotoksyny, pozostałości pestycydów, metale ciężkie i ładunek mikrobiologiczny. Surowiec na granicy normy '+
+    'daje produkt '+f(M.yieldR,0)+' razy ponad normę, a rozporządzenie 2023/915 każe stosować do produktów suszonych '+
+    'współczynnik zagęszczenia. Drugi haczyk jest specyficzny dla mielenia: <b>po zmieleniu nie da się już nic '+
+    'odsortować</b>, a jeden spleśniały owoc zanieczyszcza całą partię patuliną. Przy plastrach wadliwy kawałek '+
+    'wypada na stole sortowniczym. Dlatego tańszy surowiec do mielenia wymaga ostrzejszej kontroli PRZED młynkiem, '+
+    'nie luźniejszej: sortownik optyczny, odkamieniacz, wejściowe badanie mikotoksyn na każdej dostawie. '+
+    'Do tego owoce przejrzałe szybciej brązowieją i mają więcej cukrów prostych, co obniża temperaturę zapadania — '+
+    'sprawdź blok o próżni po zmianie gatunku.';
+}
+
+function drawVac(M){
+  const p=M.p, svg=$("#vacChart"); svg.textContent="";
+  const P0v=6, P1v=250, N=123;
+  const pts=[]; for(let i=0;i<=N;i++){ const pp=P0v+(P1v-P0v)*i/N; pts.push(fluxAt(pp,p.tShelf,p.kC,p.kG,p.pHalf,p.dTdrive)); }
+  const qMax=Math.max(...pts.map(x=>x.q))||1;
+  const W=Math.max(660,svg.parentNode.clientWidth||900);
+  const mL=56,mR=18,HA=134,GAP=26,HB=150,H=HA+GAP+HB+34, pw=W-mL-mR;
+  svg.setAttribute("viewBox","0 0 "+W+" "+H); svg.setAttribute("width",W); svg.setAttribute("height",H);
+  const X=v=>mL+(v-P0v)/(P1v-P0v)*pw;
+  /* --- panel A: temperatura frontu --- */
+  const tLo=Math.min(-55,M.tCollapse-6), tHi=Math.max(0,p.tShelf>0?2:p.tShelf);
+  const YA=t=>16+(tHi-t)/(tHi-tLo)*(HA-22);
+  for(let t=Math.ceil(tLo/10)*10;t<=tHi;t+=10){
+    svg.appendChild(el("line",{x1:mL,y1:YA(t),x2:W-mR,y2:YA(t),class:"ax"}));
+    svg.appendChild(txt(mL-8,YA(t)+3.5,t,"axtext",{"text-anchor":"end"}));
+  }
+  svg.appendChild(txt(0,12,"°C — temperatura frontu","axlabel"));
+  /* strefa zapadania */
+  svg.appendChild(el("rect",{x:mL,y:YA(tHi),width:pw,height:Math.max(0,YA(M.tCollapse)-YA(tHi)),
+    fill:CSSV("--bad"),"fill-opacity":".10"}));
+  svg.appendChild(el("line",{x1:mL,y1:YA(M.tCollapse),x2:W-mR,y2:YA(M.tCollapse),
+    stroke:CSSV("--bad"),"stroke-width":1.5,"stroke-dasharray":"5 3"}));
+  svg.appendChild(txt(mL+8,YA(M.tCollapse)-6,"zapadanie struktury powyżej "+f(M.tCollapse,0)+" °C","vlabel",{fill:CSSV("--bad")}));
+  svg.appendChild(el("path",{d:pts.map((x,i)=>(i?"L":"M")+X(x.p)+","+YA(x.tFront)).join(" "),
+    fill:"none",stroke:CSSV("--cold"),"stroke-width":2}));
+  /* --- panel B: szybkość sublimacji --- */
+  const top=HA+GAP;
+  const YB=v=>top+HB-v/1.06*HB;
+  for(let v=0;v<=1;v+=.25){
+    svg.appendChild(el("line",{x1:mL,y1:YB(v),x2:W-mR,y2:YB(v),class:"ax"}));
+    svg.appendChild(txt(mL-8,YB(v)+3.5,f(v*100,0),"axtext",{"text-anchor":"end"}));
+  }
+  svg.appendChild(txt(0,top-8,"% — szybkość sublimacji względem optimum","axlabel"));
+  svg.appendChild(el("path",{d:pts.map((x,i)=>(i?"L":"M")+X(x.p)+","+YB(x.q/qMax)).join(" ")+
+    " L"+X(P1v)+","+YB(0)+" L"+X(P0v)+","+YB(0)+" Z", fill:CSSV("--hot"),"fill-opacity":".10"}));
+  svg.appendChild(el("path",{d:pts.map((x,i)=>(i?"L":"M")+X(x.p)+","+YB(x.q/qMax)).join(" "),
+    fill:"none",stroke:CSSV("--hot"),"stroke-width":2}));
+  /* optimum i punkt pracy */
+  const mark=(v,col,lab,dash,yo)=>{
+    svg.appendChild(el("line",{x1:X(v.p),y1:16,x2:X(v.p),y2:top+HB,stroke:CSSV(col),
+      "stroke-width":1.5,"stroke-dasharray":dash||"0"}));
+    svg.appendChild(el("circle",{cx:X(v.p),cy:YA(v.tFront),r:4,fill:CSSV(col),stroke:CSSV("--surface"),"stroke-width":2}));
+    svg.appendChild(el("circle",{cx:X(v.p),cy:YB(v.q/qMax),r:4,fill:CSSV(col),stroke:CSSV("--surface"),"stroke-width":2}));
+    svg.appendChild(txt(X(v.p)+(X(v.p)>W*.7?-7:7),top+(yo||16),lab,"vlabel",
+      {fill:CSSV(col),"text-anchor":X(v.p)>W*.7?"end":"start"}));
+  };
+  if(M.pSafe<P1v-2){
+    svg.appendChild(el("rect",{x:X(M.pSafe),y:16,width:Math.max(0,X(P1v)-X(M.pSafe)),height:top+HB-16,
+      fill:CSSV("--bad"),"fill-opacity":".05"}));
+    svg.appendChild(el("line",{x1:X(M.pSafe),y1:16,x2:X(M.pSafe),y2:top+HB,stroke:CSSV("--bad"),"stroke-width":1.5}));
+    svg.appendChild(txt(X(M.pSafe)-7,top+52,"granica jakości "+f(M.pSafe,0)+" Pa","vlabel",
+      {fill:CSSV("--bad"),"text-anchor":"end"}));
+  }
+  mark(M.vacOpt,"--good","optimum szybkości "+f(M.vacOpt.p,0)+" Pa","4 3",34);
+  mark(M.vac,"--ink","nastawa "+f(p.pCham,0)+" Pa",null,16);
+  for(let v=P0v;v<=P1v;v+=(P1v-P0v)/8) svg.appendChild(txt(X(v),H-14,f(v,0),"axtext",{"text-anchor":"middle"}));
+  svg.appendChild(txt(W-mR,H-2,"ciśnienie w komorze, Pa","axlabel",{"text-anchor":"end"}));
+  const hit=el("rect",{x:mL,y:16,width:pw,height:top+HB-16,fill:"transparent",style:"cursor:crosshair"});
+  bindTip(hit,'<div class="t">Krzywe ciśnieniowe</div><div class="r"><span>Optimum</span><span>'+
+    f(M.vacOpt.p,0)+' Pa, front '+f(M.vacOpt.tFront,1)+' °C</span></div>'+
+    '<div class="r"><span>Nastawa</span><span>'+f(p.pCham,0)+' Pa, front '+f(M.vac.tFront,1)+' °C</span></div>'+
+    '<div class="r"><span>Strata na czasie</span><span>'+f((M.pressPen-1)*100,0)+' %</span></div>');
+  svg.appendChild(hit);
+  $("#vacLegend").innerHTML=
+    '<span class="li"><span class="sw" style="background:'+CSSV("--cold")+'"></span>Temperatura frontu sublimacji</span>'+
+    '<span class="li"><span class="sw" style="background:'+CSSV("--hot")+'"></span>Szybkość sublimacji</span>'+
+    '<span class="li"><span class="sw" style="background:'+CSSV("--bad")+';opacity:.35"></span>Strefa zapadania struktury</span>'+
+    '<span class="li"><span class="sw" style="background:'+CSSV("--good")+'"></span>Optimum ciśnienia</span>';
+
+  /* --- kafle --- */
+  const k=[
+    ["Ciśnienie robocze", f(p.pCham,0), "Pa", "optimum "+f(M.vacOpt.p,0)+" Pa"],
+    ["Temperatura frontu", f(M.vac.tFront,1), "°C", "równowaga "+f(tIce(p.pCham),1)+" °C"],
+    ["Zapas do zapadania", f(M.tCollapse-M.vac.tFront,1), "K", M.collapse?"przekroczone":"bezpiecznie"],
+    ["Zalecana nastawa", f(M.pWork,0), "Pa", "granica jakości "+f(M.pSafe,0)+" Pa"],
+    ["Siła napędowa", f(M.dPdrive,1), "Pa", "front "+f(pIce(M.vac.tFront),1)+" → kondensator "+f(M.pCond,1)+" Pa"],
+    ["Strata na czasie cyklu", f((M.pressPen-1)*100,0), "%", M.pressPen<1.02?"praca w optimum":"odejście od optimum"],
+    ["Strumień pary do kondensatora", f(M.mVap*M.vVap,0), "m³/h", f(M.mVap,1)+" kg/h"],
+    ["Strumień powietrza do pompy", f(M.vAir*p.airLeak,0), "m³/h", f(p.airLeak,2)+" kg/h nieszczelności"]
+  ];
+  $("#vacKpi").innerHTML=k.map(x=>'<div class="kpi"><div class="k">'+x[0]+'</div><div class="v">'+x[1]+
+    '<small>'+x[2]+'</small></div><div class="d flat">'+x[3]+'</div></div>').join("");
+
+  const dev=Math.abs(p.pCham-M.pWork);
+  $("#vacNote").innerHTML=
+    '<b>Ciśnienie ustawia temperaturę produktu, temperatura półek ustawia szybkość.</b> Front sublimacji siedzi na '+
+    'równowadze lód–para przy ciśnieniu panującym w komorze, powiększonej o nadwyżkę potrzebną do przepchnięcia pary. '+
+    'Dlatego nastawa ciśnienia jest przede wszystkim decyzją o jakości, a dopiero potem o tempie.<br><br>'+
+    'Czysto wydajnościowe optimum wypada tu przy <b>'+f(M.vacOpt.p,0)+' Pa</b> — poniżej gaz przestaje przewodzić ciepło '+
+    'z półki i mimo głębszej próżni front stygnie, powyżej rośnie temperatura równowagi i maleje różnica napędzająca '+
+    'przepływ ciepła. Ale temperatura zapadania tego surowca to <b>'+f(M.tCollapse,0)+' °C</b>'+
+    (M.milled?' (obniżona o '+f(p.collapsePen,0)+' K wobec tkanki — po rozdrobnieniu zostaje sama faza amorficzna cukrów)':'')+
+    ', co ogranicza ciśnienie do <b>'+f(M.pSafe,0)+' Pa</b>. '+
+    (M.pSafe<M.vacOpt.p
+      ? 'Granica jakości leży poniżej optimum szybkości, więc to ona rządzi: <b>pracuj przy '+f(M.pWork,0)+' Pa</b> '+
+        'i pogódź się z '+f((fluxAt(M.vacOpt.p,p.tShelf,p.kC,p.kG,p.pHalf,p.dTdrive).q/fluxAt(M.pWork,p.tShelf,p.kC,p.kG,p.pHalf,p.dTdrive).q-1)*100,0)+
+        ' % dłuższą sublimacją. Podniesienie ciśnienia „dla tempa” kupuje godziny kosztem porowatości produktu.'
+      : 'Granica jakości leży powyżej optimum, więc można pracować w optimum szybkości — to komfortowa sytuacja, '+
+        'typowa dla mięsa i podrobów o wysokiej temperaturze zapadania.')+
+    ' '+(dev<6?'Obecna nastawa jest właściwa.'
+        :'Obecna nastawa '+f(p.pCham,0)+' Pa odbiega od zalecanej o '+f(dev,0)+' Pa'+
+         (M.collapse?' i <b>front przekracza granicę zapadania</b> — produkt straci porowatość, wolniej się nawodni i zmieni wygląd.':'.'));
+  $("#pumpNote").innerHTML=
+    '<b>Pompa próżniowa nie usuwa pary wodnej.</b> Przy '+f(p.pCham,0)+' Pa para z tego wsadu ma objętość właściwą '+
+    f(M.vVap,0)+' m³/kg, więc '+f(M.mVap,1)+' kg/h pary to <b>'+f(M.mVap*M.vVap,0)+' m³/h</b> — żadna pompa mechaniczna '+
+    'tego nie przerobi. Parę wymraża kondensator lodu i to on jest właściwym „urządzeniem próżniowym”. '+
+    'Pompa odbiera tylko powietrze wnikające przez nieszczelności: '+f(p.airLeak,2)+' kg/h to '+
+    f(M.vAir*p.airLeak,0)+' m³/h, czyli zestaw Rootsa z pompą wstępną w rozsądnym rozmiarze. '+
+    'Dlatego szczelność komory przekłada się na moc pompy wprost, a wydajność kondensatora — na szybkość suszenia.';
+}
+
+function drawSplits(M){
+  const s=M.R[SEL], p=M.p;
+  const mB=M.mWat*(p.boundFrac/100), mF=M.mWat-mB;
+  const th=[{n:"Sublimacja wody wolnej", v:mF*DHS/3600, c:"--s1"},
+            {n:"Desorpcja wody związanej", v:mB*DHD/3600, c:"--s2"},
+            {n:"Zamrażanie i schłodzenie wsadu", v:M.Qfreeze+(M.iqf?M.QiqfTh:0), c:"--s3"},
+            {n:"Odszranianie kondensatora", v:M.Qdefr, c:"--s4"}];
+  pct100("#thermSplit","#thermLegend",th,th.reduce((a,x)=>a+x.v,0),"kWh");
+  const elx=SER.map(se=>({n:se.n, v:s.parts[se.k]||0, c:se.c}));
+  pct100("#elecSplit","#elecLegend",elx,s.el,"kWh");
+
+  const dom=th.slice().sort((a,b)=>b.v-a.v)[0], thTot=th.reduce((a,x)=>a+x.v,0);
+  const domEl=elx.slice().sort((a,b)=>b.v-a.v)[0];
+  const spr=(s.parts.Eice+s.parts.Efrz+s.parts.Eoth)/s.el*100;
+  $("#dominNote").innerHTML=
+    'Po stronie fizyki odpowiedź jest jednoznaczna: <b>'+dom.n.toLowerCase()+'</b> to '+f(dom.v/thTot*100,0)+
+    ' % całego zapotrzebowania cieplnego ('+f(dom.v,0)+' z '+f(thTot,0)+' kWh). Zamrażanie, mimo że widowiskowe, '+
+    'to zaledwie '+f(th[2].v/thTot*100,0)+' %. Po stronie maszyny w wariancie '+SEL+' największą pozycją jest '+
+    '<b>'+domEl.n.toLowerCase()+'</b> ('+f(domEl.v/s.el*100,0)+' % prądu), a wszystkie sprężarki razem biorą '+f(spr,0)+' %. '+
+    'Kluczowa obserwacja: ciepło sublimacji pojawia się w bilansie <b>dwa razy</b> — raz jako ciepło, które trzeba doprowadzić '+
+    'na półki, i drugi raz jako chłód, którym trzeba je odebrać na kondensatorze lodu. Dlatego integracja tych dwóch strumieni '+
+    'jest ważniejsza niż jakakolwiek pojedyncza sprawność.';
+}
+
+function drawLevers(M){
+  const svg=$("#levers"); svg.textContent="";
+  const base=M.R[SEL].costKg, cyc=M.cyclesYr, prod=M.mProd;
+  const rows=LEVERS.map(L=>{
+    let dL=0,dG=0;
+    try{ dL=model({...M.p,...L.lepiej(M.p)},true).R[SEL].costKg-base; }catch(e){}
+    try{ dG=model({...M.p,...L.gorzej(M.p)},true).R[SEL].costKg-base; }catch(e){}
+    return {n:L.n, z:L.z, t:L.t, inv:L.inv, dL, dG, span:Math.max(Math.abs(dL),Math.abs(dG))};
+  }).sort((a,b)=>(a.dL-b.dL)||(b.span-a.span));
+  const W=Math.max(760,svg.parentNode.clientWidth||1000);
+  const nameW=Math.round(W*0.44), rowH=56, RM=178, H=rows.length*rowH+34;
+  svg.setAttribute("viewBox","0 0 "+W+" "+H); svg.setAttribute("width",W); svg.setAttribute("height",H);
+  const zero=nameW+16+Math.round((W-nameW-16-RM)*0.42), half=Math.min(zero-nameW-16, W-RM-zero);
+  const spans=rows.map(r=>r.span).sort((a,b)=>b-a);
+  const mx=Math.max(spans[1]||spans[0]||0.01,0.01)*1.06;
+  const sx=v=>Math.min(Math.abs(v),mx)/mx*half;
+  /* oś */
+  svg.appendChild(el("line",{x1:zero,y1:18,x2:zero,y2:H-16,stroke:CSSV("--line"),"stroke-width":1}));
+  svg.appendChild(txt(zero-8,14,"taniej","axlabel",{"text-anchor":"end",fill:CSSV("--good")}));
+  svg.appendChild(txt(zero+8,14,"drożej","axlabel",{fill:CSSV("--bad")}));
+  const chars=Math.floor(nameW/5.35);
+  const wrap2=(t)=>{
+    const w=t.split(" "); let a="",b="";
+    for(const x of w){ if((a+" "+x).trim().length<=chars) a=(a+" "+x).trim(); else b=(b+" "+x).trim(); }
+    if(b.length>chars) b=b.slice(0,chars-1)+"…";
+    return [a,b];
+  };
+  rows.forEach((r,i)=>{
+    const y=24+i*rowH;
+    svg.appendChild(txt(0,y+13,r.n,"sname"));
+    svg.appendChild(txt(nameW,y+13,(r.inv?"wymaga nakładu":"nastawa lub umowa"),"axlabel",
+      {"text-anchor":"end",fill:CSSV(r.inv?"--warn":"--good")}));
+    const ln=wrap2(r.t);
+    svg.appendChild(txt(0,y+28,ln[0],"slabel",{"fill-opacity":".85"}));
+    svg.appendChild(txt(0,y+41,ln[1],"slabel",{"fill-opacity":".85"}));
+    [[r.dL,"--good","Poprawa"],[r.dG,"--bad","Zaniedbanie"]].forEach(function(a){
+      const v=a[0]; if(Math.abs(v)<0.0005) return;
+      const w=sx(v), clipped=Math.abs(v)>mx, x0=v<0?zero-w:zero;
+      const rect=el("rect",{x:x0,y:y+4,width:Math.max(1,w-1),height:20,fill:CSSV(a[1]),"fill-opacity":.85,rx:1});
+      if(clipped) svg.appendChild(txt(v<0?x0+5:x0+w-5,y+18,"»","vlabel",
+        {fill:"#fff","fill-opacity":".9","text-anchor":v<0?"start":"end"}));
+      bindTip(rect,'<div class="t">'+r.n+' — '+a[2].toLowerCase()+'</div>'+
+        '<div class="r"><span>Zmiana</span><span>'+r.z+'</span></div>'+
+        '<div class="r"><span>Koszt na kg</span><span>'+(v>0?"+":"")+f(v,3)+' zł ('+(v>0?"+":"")+f(v/base*100,1)+' %)</span></div>'+
+        '<div class="r"><span>W skali roku</span><span>'+(v>0?"+":"")+f(v*prod*cyc/1000,1)+' tys. zł</span></div>'+
+        '<div style="margin-top:6px;color:var(--ink-2)">'+r.t+'</div>');
+      svg.appendChild(rect);
+    });
+    const best=r.dL<-0.0005?r.dL:null;
+    svg.appendChild(txt(W-4,y+11,r.z,"axlabel",{"text-anchor":"end","fill-opacity":".8"}));
+    svg.appendChild(txt(W-4,y+26, best!==null?(f(best*prod*cyc/1000,1)+" tys. zł/rok"):"bez zysku","vlabel",
+      {"text-anchor":"end",fill:CSSV(best!==null?"--good":"--ink-3")}));
+    if(best!==null) svg.appendChild(txt(W-4,y+39,f(best,3)+" zł/kg","slabel",
+      {"text-anchor":"end","fill-opacity":".8"}));
+    if(i<rows.length-1) svg.appendChild(el("line",{x1:0,y1:y+rowH-7,x2:W-4,y2:y+rowH-7,class:"ax"}));
+  });
+  $("#leverLegend").innerHTML=
+    '<span class="li"><span class="sw" style="background:'+CSSV("--good")+'"></span>Oszczędność po poprawie</span>'+
+    '<span class="li"><span class="sw" style="background:'+CSSV("--bad")+'"></span>Koszt zaniedbania</span>'+
+    '<span class="li"><span class="lv">wartości po prawej: roczna oszczędność przy '+f(cyc,0)+' cyklach</span></span>';
+  const gain=rows.filter(r=>r.dL<-0.0005);
+  const free=gain.filter(r=>!r.inv), paid=gain.filter(r=>r.inv);
+  const sumF=free.reduce((a,r)=>a+r.dL,0), sumP=paid.reduce((a,r)=>a+r.dL,0);
+  const risk=rows.slice().sort((a,b)=>b.dG-a.dG)[0];
+  const nm=a=>a.map(r=>r.n.toLowerCase()).join(", ");
+  $("#leverNote").innerHTML= gain.length===0
+    ? "Przy obecnych ustawieniach żadna z badanych dźwigni nie obniża kosztu — model jest w okolicy optimum dla tych parametrów."
+    : (free.length?'<b>Najpierw to, co nic nie kosztuje.</b> Same nastawy i umowy — '+nm(free)+
+      ' — dają razem około <b>'+f(-sumF,2)+' zł/kg</b> ('+f(-sumF/base*100,0)+' % kosztu energii, '+
+      f(-sumF*prod*cyc/1000,0)+' tys. zł rocznie) bez złotówki nakładu. ':'')+
+      (paid.length?'Dźwignie inwestycyjne — '+nm(paid)+' — dają łącznie do <b>'+f(-sumP,2)+' zł/kg</b>, '+
+      'ale każda z własnym nakładem, którego ten wykres nie pokazuje; fotowoltaika i magazyny mają swój rachunek zwrotu niżej. ':'')+
+      'Największe ryzyko po drugiej stronie to <b>'+risk.n.toLowerCase()+'</b> — zaniedbanie kosztuje '+
+      f(risk.dG,2)+' zł/kg. Efekty nie sumują się dokładnie: po zastosowaniu pierwszej dźwigni kolejne działają '+
+      'na mniejszej bazie, więc te sumy są górnym oszacowaniem.';
+}
+
+function drawLadder(M){
+  const svg=$("#ladder"); svg.textContent="";
+  const s=M.R[SEL], p=M.p;
+  const cut=(x,n)=>x.length>(n||34)?x.slice(0,(n||34)-1)+"…":x;
+  const cold=[{T:p.tIceSurf,q:M.Qice,n:"Kondensator lodu",kind:"proc"},
+              {T:p.tFreeze,q:M.Qfreeze-Math.min(M.Qpre,M.Qdefr),n:"Zamrażanie wsadu",kind:"proc"},
+              {T:0,q:Math.min(M.Qpre,M.Qdefr),n:"Schłodzenie wstępne z odzysku",kind:"rec"}]
+             .concat(M.sc.map(x=>({T:x.T,q:x.q,n:x.n,kind:"sink"})))
+             .filter(x=>x.q>0.5);
+  const supply=(s.levels||[]).filter(x=>x.q>0.5);
+  const demand=[{T:p.tShelf,q:M.Qshelf,n:"Grzanie półek"}]
+             .concat(M.sh.map(x=>({T:x.T,q:x.q,n:x.n}))).filter(d=>d.q>0.5);
+  const Ts=[...cold,...supply,...demand].map(x=>x.T);
+  const tMax=Math.max(...Ts)+10, tMin=Math.min(...Ts)-10;
+  const W=Math.max(1060,svg.parentNode.clientWidth||1060), H=548, TOP=58, BOT=H-34;
+  const CLX=48, CLW=Math.round(W*.148), CBW=Math.round(W*.138), axX=CLX+CLW+10+CBW;
+  const LANE=Math.round(W*.078), SX=axX+LANE, SBW=Math.round(W*.138), SLX=SX+SBW+10;
+  const DX=Math.round(W*.72), DBW=Math.round(W*.10), DLX=DX+DBW+10;
+  svg.setAttribute("viewBox","0 0 "+W+" "+H); svg.setAttribute("width",W); svg.setAttribute("height",H);
+  const y=T=>TOP+(tMax-T)/(tMax-tMin)*(BOT-TOP);
+  const qL=Math.max(...cold.map(x=>x.q),1), qR=Math.max(...supply.concat(demand).map(x=>x.q),1);
+  /* oś temperatur */
+  for(let T=Math.ceil(tMin/20)*20;T<=tMax;T+=20){
+    svg.appendChild(el("line",{x1:CLX,y1:y(T),x2:W-6,y2:y(T),class:"ax"}));
+    svg.appendChild(txt(40,y(T)+3.5,(T>0?"+":"")+T,"axtext",{"text-anchor":"end"}));
+  }
+  svg.appendChild(txt(40,TOP-16,"°C","axlabel",{"text-anchor":"end"}));
+  svg.appendChild(el("line",{x1:axX,y1:TOP-24,x2:axX,y2:BOT+10,stroke:CSSV("--line"),"stroke-width":1}));
+  svg.appendChild(txt(CLX,TOP-30,"Wymagane chłodzenie","axlabel"));
+  svg.appendChild(txt(SX,TOP-30,"Ciepło dostępne","axlabel"));
+  svg.appendChild(txt(DX,TOP-30,"Zapotrzebowanie na ciepło","axlabel"));
+  const leader=(x1,y1,x2,y2)=>el("path",{d:"M"+x1+","+y1+" L"+((x1+x2)/2)+","+y1+" L"+((x1+x2)/2)+","+y2+" L"+x2+","+y2,
+      fill:"none",stroke:CSSV("--line"),"stroke-width":1});
+  /* --- strona zimna --- */
+  decollide(cold.map(c=>({...c,y0:y(c.T)})),27,TOP-6,BOT-12).forEach(c=>{
+    const w=Math.max(3,c.q/qL*CBW), x0=axX-w;
+    const col=c.kind==="rec"?CSSV("--good"):(c.kind==="sink"?CSSV("--s1"):CSSV("--cold"));
+    const r=el("rect",{x:x0,y:c.y0-6,width:w,height:12,fill:col,"fill-opacity":c.kind==="sink"?".45":".9",rx:1});
+    bindTip(r,'<div class="t">'+c.n+'</div><div class="r"><span>Poziom</span><span>'+((c.T>0?"+":"")+f(c.T,0))+' °C</span></div>'+
+      '<div class="r"><span>Energia</span><span>'+f(c.q,0)+' kWh</span></div>'+
+      (c.kind==="sink"?'<div class="r"><span>Rodzaj</span><span>odbiornik chłodu</span></div>':''));
+    svg.appendChild(r);
+    if(Math.abs(c.y-c.y0)>2) svg.appendChild(leader(CLX+CLW+6,c.y-4,x0-4,c.y0));
+    svg.appendChild(txt(CLX,c.y-4,cut(c.n,30),"slabel"));
+    svg.appendChild(txt(CLX,c.y+10,f(c.q,0)+" kWh","vlabel"));
+  });
+  /* --- podaż ciepła --- */
+  decollide(supply.map(v=>({...v,y0:y(v.T)})),27,TOP-6,BOT-12).forEach(v=>{
+    const w=Math.max(3,v.q/qR*SBW);
+    const r=el("rect",{x:SX,y:v.y0-6,width:w,height:12,fill:v.waste?CSSV("--ink-3"):CSSV("--hot"),"fill-opacity":v.waste?".35":".9",rx:1});
+    bindTip(r,'<div class="t">'+v.lab+'</div><div class="r"><span>Poziom</span><span>'+((v.T>0?"+":"")+f(v.T,0))+' °C</span></div>'+
+      '<div class="r"><span>Ciepło</span><span>'+f(v.q,0)+' kWh</span></div>'+(v.waste?'<div class="r"><span>Status</span><span>odrzucone</span></div>':''));
+    svg.appendChild(r);
+    if(Math.abs(v.y-v.y0)>2) svg.appendChild(leader(SX+w+4,v.y0,SLX-4,v.y-4));
+    svg.appendChild(txt(SLX,v.y,f(v.q,0)+" kWh","vlabel",{"fill-opacity":v.waste?".6":"1"}));
+    svg.appendChild(txt(SLX,v.y+13,cut(v.lab,26),"slabel",{"fill-opacity":v.waste?".6":"1"}));
+  });
+  /* --- zapotrzebowanie --- */
+  decollide(demand.map(d=>({...d,y0:y(d.T)})),19,TOP-6,BOT).forEach(d=>{
+    const w=Math.max(3,d.q/qR*DBW);
+    const r=el("rect",{x:DX,y:d.y0-5,width:w,height:10,fill:CSSV("--hot"),"fill-opacity":".12",
+      stroke:CSSV("--hot"),"stroke-width":1,"stroke-dasharray":"3 2",rx:1});
+    bindTip(r,'<div class="t">'+d.n+'</div><div class="r"><span>Wymagane</span><span>'+f(d.q,0)+' kWh</span></div>'+
+      '<div class="r"><span>Poziom</span><span>'+((d.T>0?"+":"")+d.T)+' °C</span></div>');
+    svg.appendChild(r);
+    if(Math.abs(d.y-d.y0)>2) svg.appendChild(leader(DX+w+4,d.y0,DLX-4,d.y));
+    svg.appendChild(txt(DLX,d.y+3.5,cut(d.n,30),"slabel"));
+    svg.appendChild(txt(W-6,d.y+3.5,f(d.q,0),"vlabel",{"text-anchor":"end"}));
+  });
+  /* --- sprężarki --- */
+  const lifts=[];
+  if(SEL==="A"||SEL==="B"){
+    lifts.push({from:p.tIceSurf-p.dTe,to:SEL==="A"?M.tCondAir:M.tCondB,lab:"Agregat HFC dwustopniowy",
+      cop:s.cop[Object.keys(s.cop)[0]],e:s.parts.Eice+s.parts.Efrz});
+  }else{
+    lifts.push({from:p.tIceSurf-p.dTe,to:p.tCasc,lab:"CO₂ subkrytyczny",cop:s.cop["CO₂ subkryt. −45 °C"],e:s.W1});
+    lifts.push({from:p.tCasc-p.dTcasc,to:p.tCondHT,lab:"R290 — stopień wysoki",cop:s.cop["R290 → poziom użytkowy"],e:s.WHT});
+    if(s.WLT>1) lifts.push({from:p.tCasc-p.dTcasc,to:M.tDry,lab:"R290 — odrzut",cop:s.cop["R290 → odrzut"],e:s.WLT});
+    if(s.Wbo>1) lifts.push({from:M.tDry-5,to:p.tW2,lab:"CO₂ transkrytyczny (booster)",cop:s.cop["CO₂ transkryt. (grzejny)"],e:s.Wbo});
+  }
+  const step=Math.min(22,(LANE-18)/Math.max(1,lifts.length));
+  lifts.forEach((L,i)=>{
+    const x=axX+13+i*step, y1=y(L.from), y2=y(L.to);
+    svg.appendChild(el("line",{x1:x,y1:y1,x2:x,y2:y2+7,stroke:CSSV("--hot"),"stroke-width":2,"stroke-linecap":"round"}));
+    svg.appendChild(el("path",{d:"M"+(x-4)+","+(y2+8)+" L"+x+","+y2+" L"+(x+4)+","+(y2+8),fill:"none",
+      stroke:CSSV("--hot"),"stroke-width":2,"stroke-linejoin":"round"}));
+    svg.appendChild(el("circle",{cx:x,cy:y1,r:2.5,fill:CSSV("--hot")}));
+    const hit=el("rect",{x:x-9,y:Math.min(y1,y2)-6,width:18,height:Math.abs(y1-y2)+14,fill:"transparent",style:"cursor:help"});
+    bindTip(hit,'<div class="t">'+L.lab+'</div>'+
+      '<div class="r"><span>Podnosi</span><span>'+f(L.from,0)+" → "+f(L.to,0)+' °C</span></div>'+
+      '<div class="r"><span>Skok</span><span>'+f(L.to-L.from,0)+' K</span></div>'+
+      '<div class="r"><span>COP chłodniczy</span><span>'+f(L.cop,2)+'</span></div>'+
+      '<div class="r"><span>COP grzejny</span><span>'+f(L.cop+1,2)+'</span></div>'+
+      '<div class="r"><span>Praca sprężarki</span><span>'+f(L.e,0)+' kWh</span></div>');
+    svg.appendChild(hit);
+  });
+  svg.appendChild(txt(axX+8,BOT+26,lifts.length+" stopnie sprężania — najedź kursorem","axlabel"));
+  const lg=[["--cold","Obciążenie cieplne procesu"],["--s1","Odbiorniki chłodu"],["--good","Pokryte odzyskiem odszraniania"],
+            ["--hot","Ciepło dostępne z odzysku"],["--ink-3","Ciepło odrzucone"]];
+  $("#ladderLegend").innerHTML=lg.map(function(l){return '<span class="li"><span class="sw" style="background:'+CSSV(l[0])+'"></span>'+l[1]+'</span>';}).join("")
+    +'<span class="li"><span class="sw" style="border:1px dashed '+CSSV("--hot")+';background:transparent"></span>Zapotrzebowanie</span>';
+}
+function drawProfile(M){
+  const svg=$("#profile"); svg.textContent="";
+  const s=M.R[SEL], pr=s.prof, p=M.p;
+  const W=Math.max(660,svg.parentNode.clientWidth||880), H=286, mL=52, mR=18, mT=22, mB=52;
+  svg.setAttribute("viewBox",`0 0 ${W} ${H}`); svg.setAttribute("width",W); svg.setAttribute("height",H);
+  const pw=W-mL-mR, ph=H-mT-mB;
+  const maxP=Math.max(...["A","B","C","D"].map(k=>Math.max(...M.R[k].prof.map(x=>x.tot))))*1.08;
+  const X=t=>mL+t/p.tCycle*pw, Y=v=>mT+ph-v/maxP*ph;
+  const stepY=maxP>150?50:(maxP>60?20:10);
+  for(let v=0; v<=maxP; v+=stepY){
+    svg.appendChild(el("line",{x1:mL,y1:Y(v),x2:W-mR,y2:Y(v),class:"ax"}));
+    svg.appendChild(txt(mL-8,Y(v)+3.5,f(v,0),"axtext",{"text-anchor":"end"}));
+  }
+  svg.appendChild(txt(4,mT-8,"kW","axlabel"));
+  const lay=[{k:"ref",n:"Sprężarki",c:"--s1"},{k:"sh",n:"Grzanie półek",c:"--s2"},
+             {k:"vac",n:"Zespół próżniowy",c:"--s4"},{k:"aux",n:"Pomocnicze",c:"--s5"}];
+  pr.forEach(ph2=>{
+    let acc=0; const x0=X(ph2.t0), w=Math.max(1,X(ph2.t1)-x0-1.5);
+    lay.forEach(L=>{
+      const v=ph2[L.k]||0; if(v<=0.02) return;
+      const h=Math.max(0,(v/maxP*ph)-1.5);
+      const r=el("rect",{x:x0,y:Y(acc+v),width:w,height:h,fill:CSSV(L.c),rx:1});
+      bindTip(r,`<div class="t">${ph2.n}</div><div class="r"><span>${L.n}</span><span>${f(v,1)} kW</span></div>
+        <div class="r"><span>Moc łączna</span><span>${f(ph2.tot,1)} kW</span></div>
+        <div class="r"><span>Czas</span><span>${f(ph2.t0,1)}–${f(ph2.t1,1)} h</span></div>`);
+      svg.appendChild(r); acc+=v;
+    });
+    const short={"Odszranianie i rozładunek":"Rozładunek"}[ph2.n]||ph2.n;
+    if(w>44) svg.appendChild(txt(x0+w/2,H-30,short,"axtext",{"text-anchor":"middle"}));
+    if(w>30) svg.appendChild(txt(x0+w/2,H-18,f(ph2.t1-ph2.t0,1)+" h","axtext",{"text-anchor":"middle","fill-opacity":".7"}));
+  });
+  /* linia szczytu */
+  svg.appendChild(el("line",{x1:mL,y1:Y(s.peak),x2:W-mR,y2:Y(s.peak),stroke:CSSV("--hot"),"stroke-width":1.5}));
+  svg.appendChild(txt(W-mR-6,Y(s.peak)-6,"szczyt "+f(s.peak,0)+" kW","vlabel",{"text-anchor":"end",fill:CSSV("--hot")}));
+  const aPeak=M.R.A.peak;
+  if(SEL!=="A"){ svg.appendChild(el("line",{x1:mL,y1:Y(aPeak),x2:W-mR,y2:Y(aPeak),stroke:CSSV("--ink-3"),"stroke-width":1,"stroke-dasharray":"4 4"}));
+    svg.appendChild(txt(W-mR-6,Y(aPeak)-6,"wariant A: "+f(aPeak,0)+" kW","axtext",{"text-anchor":"end"})); }
+  $("#peakNote").textContent="opłata mocowa liczona od mocy szczytowej";
+  $("#profLegend").innerHTML=lay.map(L=>`<span class="li"><span class="sw" style="background:${CSSV(L.c)}"></span>${L.n}</span>`).join("")
+    + `<span class="li"><span class="sw" style="background:${CSSV("--hot")};height:2px;border-radius:0"></span>szczyt wybranego wariantu</span>`;
+}
+
+function miniBars(id,M,rows,unit,dec){
+  const svg=$(id); svg.textContent="";
+  const W=Math.max(300,svg.parentNode.clientWidth||420), rowH=26, gap=11, mL=26, mR=104;
+  const H=rows[0].seg.length?4*(rowH+gap)+14:120;
+  svg.setAttribute("viewBox",`0 0 ${W} ${H}`); svg.setAttribute("width",W); svg.setAttribute("height",H);
+  const max=Math.max(...rows.map(r=>r.seg.reduce((a,x)=>a+x.v,0)))*1.02, plot=W-mL-mR;
+  rows.forEach((r,i)=>{
+    const y=6+i*(rowH+gap);
+    svg.appendChild(txt(0,y+rowH/2+4,r.k,"axlabel"));
+    let x=mL, tot=0;
+    r.seg.forEach(sg=>{
+      if(sg.v<=0) return; const w=Math.max(0,sg.v/max*plot-2);
+      const rect=el("rect",{x,y,width:w,height:rowH,fill:CSSV(sg.c),rx:1});
+      bindTip(rect,`<div class="t">${sg.n}</div><div class="r"><span>Wariant ${r.k}</span><span>${f(sg.v,dec)} ${unit}</span></div>`);
+      svg.appendChild(rect); x+=sg.v/max*plot; tot+=sg.v;
+    });
+    svg.appendChild(txt(x+8,y+rowH/2+4,f(tot,dec)+" "+unit,"vlabel"));
+  });
+  return rows;
+}
+
+
+/* ---------- doba wzorcowa: cena + obciążenie ---------- */
+function drawDay(M){
+  const svg=$("#dayChart"); svg.textContent="";
+  const p=M.p, s=M.R[SEL], m=p.viewMonth, d=s.yr.mo[m].d;
+  const W=Math.max(660,svg.parentNode.clientWidth||880);
+  const mL=54,mR=16,H1=120,GAPY=32,H2=196,H=H1+GAPY+H2+40, pw=W-mL-mR;
+  svg.setAttribute("viewBox","0 0 "+W+" "+H); svg.setAttribute("width",W); svg.setAttribute("height",H);
+  const X=h=>mL+h/24*pw, bw=pw/24;
+  /* --- panel 1: cena --- */
+  const pMaxV=Math.max(...d.buy,0.01)*1.12, pMinV=Math.min(0,...d.mk.map(v=>v/1000));
+  const Y1=v=>18+(pMaxV-v)/(pMaxV-pMinV)*(H1-24);
+  const stepP=pMaxV>1.2?0.4:(pMaxV>0.6?0.2:0.1);
+  for(let v=Math.ceil(pMinV/stepP)*stepP; v<=pMaxV; v+=stepP){
+    svg.appendChild(el("line",{x1:mL,y1:Y1(v),x2:W-mR,y2:Y1(v),class:"ax"}));
+    svg.appendChild(txt(mL-8,Y1(v)+3.5,f(v,2),"axtext",{"text-anchor":"end"}));
+  }
+  svg.appendChild(txt(0,12,"zł/kWh — cena zakupu","axlabel"));
+  let dPath="M"+mL+","+Y1(d.buy[0]);
+  for(let h=0;h<24;h++){ dPath+=" L"+X(h)+","+Y1(d.buy[h])+" L"+X(h+1)+","+Y1(d.buy[h]); }
+  svg.appendChild(el("path",{d:dPath+" L"+(W-mR)+","+Y1(pMinV)+" L"+mL+","+Y1(pMinV)+" Z",
+    fill:CSSV("--hot"),"fill-opacity":".10"}));
+  svg.appendChild(el("path",{d:dPath,fill:"none",stroke:CSSV("--hot"),"stroke-width":2,"stroke-linejoin":"round"}));
+  let mPath="M"+mL+","+Y1(d.mk[0]/1000);
+  for(let h=0;h<24;h++){ mPath+=" L"+X(h)+","+Y1(d.mk[h]/1000)+" L"+X(h+1)+","+Y1(d.mk[h]/1000); }
+  svg.appendChild(el("path",{d:mPath,fill:"none",stroke:CSSV("--ink-3"),"stroke-width":1.5,"stroke-dasharray":"4 3"}));
+  const hMin=d.buy.indexOf(Math.min(...d.buy)), hMax=d.buy.indexOf(Math.max(...d.buy));
+  [[hMin,"najtaniej",1],[hMax,"najdrożej",-1]].forEach(function(a){
+    const h=a[0];
+    svg.appendChild(el("circle",{cx:X(h)+bw/2,cy:Y1(d.buy[h]),r:3.5,fill:CSSV("--hot"),
+      stroke:CSSV("--surface"),"stroke-width":2}));
+    svg.appendChild(txt(X(h)+bw/2,Y1(d.buy[h])+(a[2]>0?26:-10),a[1]+" "+f(d.buy[h],2),"vlabel",
+      {"text-anchor":X(h)>W*.75?"end":"middle"}));
+  });
+  /* --- panel 2: obciążenie --- */
+  const top=H1+GAPY;
+  const yMax=Math.max(...d.load,...d.pv,0.1)*1.14;
+  const Y2=v=>top+(H2-(v/yMax*H2));
+  const stepK=yMax>200?50:(yMax>80?20:10);
+  for(let v=0; v<=yMax; v+=stepK){
+    svg.appendChild(el("line",{x1:mL,y1:Y2(v),x2:W-mR,y2:Y2(v),class:"ax"}));
+    svg.appendChild(txt(mL-8,Y2(v)+3.5,f(v,0),"axtext",{"text-anchor":"end"}));
+  }
+  svg.appendChild(txt(0,top-8,"kW","axlabel"));
+  for(let h=0;h<24;h++){
+    const x=X(h)+1, w=Math.max(1,bw-2);
+    if(d.exp[h]>0.02){
+      const r=el("rect",{x,y:Y2(d.pv[h]),width:w,height:Math.max(0,Y2(d.load[h])-Y2(d.pv[h])),
+        fill:CSSV("--s4"),"fill-opacity":".26"});
+      bindTip(r,'<div class="t">'+h+':00 — nadwyżka</div><div class="r"><span>Do sieci</span><span>'+f(d.exp[h],1)+' kWh</span></div>'+
+        '<div class="r"><span>Wycena</span><span>'+f(d.sell[h],2)+' zł/kWh</span></div>');
+      svg.appendChild(r);
+    }
+    let acc=0;
+    [["self","--s3","Produkcja własna"],["imp","--s1","Zakup z sieci"]].forEach(function(L){
+      const v=d[L[0]][h]; if(v<=0.02) return;
+      const y0=Y2(acc+v), hh=Math.max(0,Y2(acc)-y0-1.5);
+      const r=el("rect",{x,y:y0,width:w,height:hh,fill:CSSV(L[1]),rx:1});
+      bindTip(r,'<div class="t">'+h+':00 — '+L[2]+'</div><div class="r"><span>Energia</span><span>'+f(v,1)+' kWh</span></div>'+
+        '<div class="r"><span>Obciążenie</span><span>'+f(d.load[h],1)+' kW</span></div>'+
+        '<div class="r"><span>PV</span><span>'+f(d.pv[h],1)+' kW</span></div>'+
+        '<div class="r"><span>Cena zakupu</span><span>'+f(d.buy[h],2)+' zł/kWh</span></div>');
+      svg.appendChild(r); acc+=v;
+    });
+  }
+  if(p.pvKwp>0){
+    let pv="M"+mL+","+Y2(d.pv[0]);
+    for(let h=0;h<24;h++){ pv+=" L"+X(h)+","+Y2(d.pv[h])+" L"+X(h+1)+","+Y2(d.pv[h]); }
+    svg.appendChild(el("path",{d:pv,fill:"none",stroke:CSSV("--s4"),"stroke-width":2,"stroke-linejoin":"round"}));
+  }
+  for(let h=0;h<=24;h+=3) svg.appendChild(txt(X(h),H-16,(h<10?"0":"")+h+":00","axtext",{"text-anchor":"middle"}));
+  svg.appendChild(txt(W-mR,H-16,"","axtext"));
+  $("#dayLegend").innerHTML=
+    '<span class="li"><span class="sw" style="background:'+CSSV("--s3")+'"></span>Zużyte z własnej produkcji<span class="lv">'+f(d.S,0)+' kWh</span></span>'+
+    '<span class="li"><span class="sw" style="background:'+CSSV("--s1")+'"></span>Kupione z sieci<span class="lv">'+f(d.I,0)+' kWh</span></span>'+
+    '<span class="li"><span class="sw" style="background:'+CSSV("--s4")+';opacity:.5"></span>Oddane do sieci<span class="lv">'+f(d.E,0)+' kWh</span></span>'+
+    '<span class="li"><span class="sw" style="background:'+CSSV("--hot")+';height:2px;border-radius:0"></span>Cena zakupu</span>'+
+    '<span class="li"><span class="sw" style="border-top:2px dashed '+CSSV("--ink-3")+';background:transparent;border-radius:0"></span>Cena rynkowa RCEt</span>';
+  const spread=Math.max(...d.buy)-Math.min(...d.buy);
+  $("#dayNote").innerHTML='W miesiącu <b>'+MONTHS[m]+'</b> rozpiętość ceny zakupu w dobie wynosi <b>'+f(spread,2)+' zł/kWh</b> '+
+    '('+f(Math.min(...d.buy),2)+' – '+f(Math.max(...d.buy),2)+'). Model przesuwa <b>'+f(s.flexShare*100,0)+' % zużycia</b> '+
+    (SEL==="D"?'dzięki magazynom ciepła i chłodu':'w granicach samego harmonogramu cykli, bez magazynów')+
+    ', co daje średnią cenę zakupu <b>'+f(s.yr.avgBuy,3)+' zł/kWh</b> wobec '+f(d.buy.reduce(function(a,b){return a+b;},0)/24,3)+' zł/kWh, gdyby zakład pobierał moc równomiernie.';
+}
+
+/* ---------- rok: bilans miesięczny ---------- */
+function drawYear(M){
+  const svg=$("#yearChart"); svg.textContent="";
+  const s=M.R[SEL], mo=s.yr.mo;
+  const W=Math.max(320,svg.parentNode.clientWidth||440), mL=44,mR=10,mT=16,mB=30, H=238;
+  svg.setAttribute("viewBox","0 0 "+W+" "+H); svg.setAttribute("width",W); svg.setAttribute("height",H);
+  const pw=W-mL-mR, ph=H-mT-mB, bw=pw/12;
+  const max=Math.max(...mo.map(x=>Math.max(x.S+x.I,x.PV)))*1.12||1;
+  const Y=v=>mT+ph-v/max*ph;
+  const st=max>9000?4000:(max>4000?2000:(max>1500?500:200));
+  for(let v=0;v<=max;v+=st){
+    svg.appendChild(el("line",{x1:mL,y1:Y(v),x2:W-mR,y2:Y(v),class:"ax"}));
+    svg.appendChild(txt(mL-7,Y(v)+3.5,f(v/1000,1),"axtext",{"text-anchor":"end"}));
+  }
+  svg.appendChild(txt(0,mT-4,"MWh","axlabel"));
+  mo.forEach((x,i)=>{
+    const bx=mL+i*bw+2, w=Math.max(1,bw-4);
+    if(x.E>1){
+      const r=el("rect",{x:bx,y:Y(x.S+x.E),width:w,height:Math.max(0,Y(x.S)-Y(x.S+x.E)),
+        fill:CSSV("--s4"),"fill-opacity":".26"});
+      bindTip(r,'<div class="t">'+MONTHS[x.m]+'</div><div class="r"><span>Oddane do sieci</span><span>'+f(x.E,0)+' kWh</span></div>');
+      svg.appendChild(r);
+    }
+    let acc=0;
+    [["S","--s3","Produkcja własna"],["I","--s1","Zakup z sieci"]].forEach(function(L){
+      const v=x[L[0]]; if(v<=0) return;
+      const y0=Y(acc+v), hh=Math.max(0,Y(acc)-y0-1.5);
+      const r=el("rect",{x:bx,y:y0,width:w,height:hh,fill:CSSV(L[1]),rx:1});
+      bindTip(r,'<div class="t">'+MONTHS[x.m]+' — '+L[2]+'</div><div class="r"><span>Energia</span><span>'+f(v,0)+' kWh</span></div>'+
+        '<div class="r"><span>Produkcja PV</span><span>'+f(x.PV,0)+' kWh</span></div>'+
+        '<div class="r"><span>Koszt</span><span>'+f(x.C,0)+' zł</span></div>');
+      svg.appendChild(r); acc+=v;
+    });
+    svg.appendChild(txt(bx+w/2,H-14,MSHORT[x.m],"axtext",{"text-anchor":"middle"}));
+  });
+  $("#yearLegend").innerHTML=
+    '<span class="li"><span class="sw" style="background:'+CSSV("--s3")+'"></span>Z własnej produkcji<span class="lv">'+f(s.yr.S/1000,1)+' MWh</span></span>'+
+    '<span class="li"><span class="sw" style="background:'+CSSV("--s1")+'"></span>Z sieci<span class="lv">'+f(s.yr.I/1000,1)+' MWh</span></span>'+
+    '<span class="li"><span class="sw" style="background:'+CSSV("--s4")+';opacity:.5"></span>Do sieci<span class="lv">'+f(s.yr.E/1000,1)+' MWh</span></span>';
+}
+
+/* ---------- porównanie taryf ---------- */
+function drawTariff(M){
+  const svg=$("#tariffChart"); svg.textContent="";
+  const s=M.R[SEL], ts=["flat","zone","dyn"];
+  const W=Math.max(320,svg.parentNode.clientWidth||440), mL=104,mR=96, rowH=17, gapIn=4, gapOut=20;
+  const H=ts.length*(rowH*2+gapIn+gapOut)+22;
+  svg.setAttribute("viewBox","0 0 "+W+" "+H); svg.setAttribute("width",W); svg.setAttribute("height",H);
+  const vals=ts.flatMap(t=>[s.byTariff[t].noPv,s.byTariff[t].pv]);
+  const max=Math.max(...vals)*1.02||1, plot=W-mL-mR;
+  ts.forEach((t,i)=>{
+    const y=8+i*(rowH*2+gapIn+gapOut);
+    svg.appendChild(txt(0,y+rowH,TARIFFS[t].n.replace(" (RCEt godzinowe)","").replace(" (jednostrefowa)","").replace(" (dzień / noc)",""),"sname"));
+    if(t===M.p.tariff) svg.appendChild(txt(0,y+rowH+14,"wybrana","axlabel"));
+    [["noPv","--s1","bez PV"],["pv","--s3","z instalacją PV"]].forEach(function(L,j){
+      const v=s.byTariff[t][L[0]], w=Math.max(1,v/max*plot);
+      const yy=y+j*(rowH+gapIn);
+      const r=el("rect",{x:mL,y:yy,width:w,height:rowH,fill:CSSV(L[1]),rx:1});
+      bindTip(r,'<div class="t">'+TARIFFS[t].n+'</div><div class="r"><span>'+L[2]+'</span><span>'+f(v/1000,1)+' tys. zł/rok</span></div>'+
+        '<div class="r"><span>Średnia cena</span><span>'+f(v/Math.max(1,s.eDay*365),3)+' zł/kWh</span></div>');
+      svg.appendChild(r);
+      svg.appendChild(txt(mL+w+7,yy+rowH-4,f(v/1000,1),"vlabel"));
+    });
+  });
+  const best=ts.reduce((a,b)=>s.byTariff[b].pv<s.byTariff[a].pv?b:a);
+  $("#tariffLegend").innerHTML=
+    '<span class="li"><span class="sw" style="background:'+CSSV("--s1")+'"></span>bez PV</span>'+
+    '<span class="li"><span class="sw" style="background:'+CSSV("--s3")+'"></span>z instalacją PV</span>'+
+    '<span class="li"><span class="lv">tys. zł rocznie · najtaniej: '+TARIFFS[best].n+'</span></span>';
+}
+
+function renderEnergyNotes(M){
+  const p=M.p, s=M.R[SEL];
+  $("#pvNote").textContent=p.pvKwp>0?(f(p.pvKwp,0)+" kWp · "+f(s.yr.PV/1000,1)+" MWh/rok"):"bez fotowoltaiki";
+  if(p.pvKwp<=0){
+    $("#pvPayback").innerHTML="Fotowoltaika jest wyłączona (0 kWp). Ustaw moc instalacji w panelu po lewej, żeby zobaczyć autokonsumpcję i zwrot.";
+    return;
+  }
+  const capexPv=p.pvKwp*p.pvCapex;
+  const save=s.yrNoPv.C-s.yr.C;
+  const pb=save>0?capexPv/save:Infinity;
+  const lcoe=s.yr.PV>0?capexPv/(s.yr.PV*25*0.92):0;
+  $("#pvPayback").innerHTML='Instalacja <b>'+f(p.pvKwp,0)+' kWp</b> produkuje <b>'+f(s.yr.PV/1000,1)+' MWh</b> rocznie, '+
+    'z czego <b>'+f(s.yr.autok,0)+' %</b> zużywa zakład na miejscu — to pokrywa '+f(s.yr.pokrycie,0)+' % jego zapotrzebowania. '+
+    'Przy nakładzie '+f(capexPv/1000,0)+' tys. zł oszczędność wynosi <b>'+f(save/1000,1)+' tys. zł rocznie</b>, '+
+    'czyli prosty zwrot <b>'+(isFinite(pb)?f(pb,1)+" roku":"brak")+'</b> (uzysk jednostkowy '+f(lcoe,2)+' zł/kWh przez 25 lat). '+
+    'Autokonsumpcja jest tu ważniejsza od wielkości instalacji: energia zużyta na miejscu jest warta pełną cenę zakupu, '+
+    'a oddana do sieci tylko cenę rynkową — w południe letnie te dwie wielkości różnią się kilkakrotnie.';
+}
+
+function renderCost(M){
+  const p=M.p, ks=["A","B","C","D"];
+  const cost=ks.map(k=>{const s=M.R[k];
+    return {k,seg:[
+      {n:"Energia elektryczna netto (po odjęciu eksportu PV)",v:s.yr.C/Math.max(1,M.cyclesYr),c:"--s1"},
+      {n:"Gaz ziemny",v:s.gas*p.gasPrice,c:"--s2"}]};});
+  miniBars("#costChart",M,cost,"zł",0);
+  const co2=ks.map(k=>{const s=M.R[k];
+    return {k,seg:[{n:"Energia elektryczna",v:s.elTot*p.co2el/M.mProd,c:"--s1"},
+                   {n:"Gaz ziemny",v:s.gas*p.co2gas/M.mProd,c:"--s2"}]};});
+  miniBars("#co2Chart",M,co2,"kg/kg",1);
+
+  const A=M.R.A,B=M.R.B,D=M.R[SEL];
+  const dCost=(A.costYr-D.costYr)/1000, dCap=(D.capex-A.capex)/1000;
+  const pb=dCost>0?dCap/dCost:Infinity;
+  const dCostB=(B.costYr-D.costYr)/1000, dCapB=(D.capex-B.capex)/1000;
+  const pbB=dCostB>0?dCapB/dCostB:Infinity;
+  const cls=SEL==="A"?"":(pb<8?"":"warm");
+  $("#paybackNote").className="note "+cls;
+  if(SEL==="A"){
+    $("#paybackNote").innerHTML=`Wariant A jest odniesieniem. Przy <b>${f(M.cyclesYr,0)} cyklach w roku</b> daje
+      <b>${f(M.mProd*M.cyclesYr/1000,1)} t produktu</b> i <b>${f(A.costYr/1000,0)} tys. zł</b> rocznych kosztów energii,
+      z czego ${f(A.gas*M.cyclesYr*M.p.gasPrice/1000,0)} tys. zł to gaz na odbiorniki ciepła.
+      Wybierz wariant B, C lub D, żeby zobaczyć zwrot.`;
+  }else{
+    $("#paybackNote").innerHTML=`Wariant <b>${SEL}</b> przy ${f(M.cyclesYr,0)} cyklach w roku
+      (${f(M.mProd*M.cyclesYr/1000,1)} t produktu) oszczędza <b>${f(dCost,0)} tys. zł rocznie</b> względem wariantu A
+      przy nakładzie wyższym o ${f(dCap,0)} tys. zł — prosty zwrot <b>${isFinite(pb)?f(pb,1)+" roku":"brak"}</b>.
+      Uczciwsze odniesienie to wariant B, bo prosty odzysk ciepła skraplania jest tani i powszechny:
+      względem B oszczędność wynosi <b>${f(dCostB,0)} tys. zł rocznie</b> przy nakładzie wyższym o ${f(dCapB,0)} tys. zł,
+      czyli zwrot <b>${isFinite(pbB)&&pbB>0?f(pbB,1)+" roku":"brak — B wypada lepiej"}</b>.
+      Nakłady są założeniem użytkownika, nie wynikiem modelu — do domknięcia zapytaniami ofertowymi.`;
+  }
+}
+
+function renderMethod(M){
+  const p=M.p, s=M.R[SEL];
+  $("#methodology").innerHTML=`
+  <h4>Skąd biorą się liczby</h4>
+  <p>Model jest bilansem energii, nie symulacją obiegu. Zapotrzebowanie cieplne liczone jest z entalpii przemian,
+  a każdy obieg chłodniczy z <b>COP Carnota przemnożonego przez sprawność egzergetyczną</b>:
+  <code>COP<sub>chł</sub> = η · T<sub>par</sub> / (T<sub>skr</sub> − T<sub>par</sub>)</code>, gdzie temperatury są bezwzględne.
+  Dla pomp ciepła obowiązuje bilans <code>COP<sub>grz</sub> = COP<sub>chł</sub> + 1</code> — praca sprężarki zawsze kończy w cieple.
+  Booster transkrytyczny liczony jest wzorem Lorenza, bo woda grzana jest z poślizgiem
+  ${f(p.tW1,0)} → ${f(p.tW2,0)} °C i średnia logarytmiczna jest właściwym odniesieniem.</p>
+  <h4>Przyjęte stałe</h4>
+  <ul>
+    <li>Ciepło sublimacji lodu <code>2838 kJ/kg</code> (−20 °C), desorpcji wody związanej <code>3000 kJ/kg</code>, topnienia <code>333,6 kJ/kg</code>.</li>
+    <li>Ciepło właściwe liczone z udziału wody: <code>c<sub>p</sub> = 4,187·w + 1,50·(1−w)</code> powyżej krioskopowej,
+        <code>2,05·w + 1,50·(1−w)</code> poniżej. Temperatura krioskopowa −1,5 °C.</li>
+    <li>Udziały wody w surowcach dobrane tak, by uzysk odtwarzał dane produkcyjne: filet z kurczaka 26 %, wołowina 27 %,
+        wątroba wieprzowa 26 %, serca kurze 20 % masy wyjściowej. Dla owoców uzysk wychodzi 6–11 : 1.</li>
+  </ul>
+  <h4>Kto płaci za zamrożenie</h4>
+  <p>Temperatura surowca na wejściu może zejść do −40 °C. Poniżej −1,5 °C materiał wchodzi już zamrożony
+  i komora nie ma czego mrozić — zostaje samo dochłodzenie do temperatury zadanej. Model rozróżnia trzy sytuacje.
+  <b>Szoker w linii</b> obciąża obieg zakładu pełnym zamrożeniem od temperatury wejścia.
+  <b>Tunel fluidyzacyjny IQF</b> to osobna maszyna wewnątrz granicy bilansu: chłodzi od temperatury wejścia do
+  ${f(M.p.tIQF,0)} °C własnym agregatem powietrznym (COP ${f(M.copIQF||0,2)} wobec ${f(M.R.D.cop["CO₂ subkryt. −45 °C"]||0,2)}
+  na stopniu niskim kaskady), doliczane są wentylatory fluidyzacji (${f(M.p.iqfFan,0)} % pracy sprężarek) oraz ubytek
+  masy ${f(M.p.iqfLoss,1)} %. <b>Surowiec kupowany mrożony</b> nie obciąża bilansu wcale — energia siedzi w cenie zakupu.</p>
+  <p>Zamrażanie poza komorą skraca cykl, bo faza mrożenia (${f(M.p.tFrz,1)} h) zastępowana jest półgodzinnym
+  temperowaniem. To przesunięcie przerobu, a nie oszczędność energii, jest tu efektem głównym.
+  Tunel IQF ma natomiast trzy kary: gorszy COP przy tej samej pracy cieplnej, wentylatory, oraz
+  <b>wydłużenie sublimacji o ${f(M.p.iqfCrystal,0)} %</b> — szybkie zamrażanie daje drobne kryształy lodu,
+  a więc drobne pory i większy opór przepływu pary. Lepszy wygląd i struktura produktu, dłuższe suszenie.
+  To jest realny kompromis technologiczny, nie artefakt modelu.</p>
+  <h4>Postać mielona: warstwa i foremki</h4>
+  <p>Dla przecieru gęstość załadunku wynika wprost z geometrii: <code>kg/m² = grubość [mm] × gęstość [kg/l]</code>,
+  a dla form dodatkowo razy pokrycie tacy. Obrys jednej formy to <code>objętość ÷ głębokość napełnienia</code>,
+  z czego wychodzi liczba sztuk na tacy i masa jednej kostki przed i po suszeniu — przy obecnych ustawieniach
+  ${M.pieces?f(M.pieces,0)+" sztuk po "+f(M.mPieceDry*1000,1)+" g":"—"}.</p>
+  <p>Czas sublimacji liczony jest jako <code>(10 / v) · (L/10)^n</code>, gdzie v to szybkość frontu przy 10 mm,
+  a n wykładnik grubości. Przy n = 1 front porusza się ze stałą prędkością; przy n = 2 suszenie jest w pełni
+  ograniczone dyfuzją przez wysuszony placek. Domyślne 1,6 odpowiada narastającemu oporowi warstwy wysuszonej
+  i to ono rządzi całą ekonomią postaci: <b>cieńsza warstwa zawsze schnie szybciej na kilogram</b>, a głębsza forma
+  obniża koszt jednostkowy energii kosztem przerobu. Przy 50 m² tac warstwa 6 mm daje ok. 14 t produktu rocznie
+  przy 6,8 zł/kg energii, warstwa 12 mm — 17 t przy 5,2 zł/kg, a forma 60 ml o głębokości 30 mm już tylko 10 t
+  przy 5,1 zł/kg. Głębokość formy jest więc decyzją produktową, nie procesową — narzędzie pokazuje, ile ona kosztuje.</p>
+  <h4>Załadunek tac — dlaczego zioła to inna maszyna</h4>
+  <p>Masa wsadu nie jest wielkością swobodną: ogranicza ją powierzchnia tac. Owoce w plastrach ładuje się
+  ok. 10 kg/m², owoce całe 6–9 kg/m², a <b>zioła w całych gałązkach 2,0–3,0 kg/m²</b>, bo są puszyste i nie dają się
+  usypać warstwą. Ta sama komora 50 m² przyjmie 500 kg truskawki w plastrach albo 100 kg bazylii.
+  Energia na kilogram odparowanej wody jest podobna, ale przerób w kilogramach produktu na cykl — nieporównywalny,
+  więc zioła liczą się opłacalnie tylko przy cenie produktu kilkakrotnie wyższej niż owoce.
+  Zmiana surowca automatycznie ogranicza wsad do pojemności komory; suwak powierzchni tac pokazuje, o jakiej
+  maszynie mowa (Cuddon FD600 — 57 m², FD1000 — 92 m², FD1800 — 170 m²).</p>
+  <p>Śliwki podawane są jako <b>miąższ bez pestki</b>, więc udział wody dotyczy samego miąższu i jest nieco wyższy niż
+  dla całych owoców z pestką. Truskawka występuje w dwóch pozycjach: plastry 5 mm i owoc cały — ten sam skład,
+  ale cykl dłuższy o połowę, bo nienaruszona skórka jest barierą dla pary. Badania wskazują nawet czterokrotną
+  różnicę szybkości suszenia; w praktyce przemysłowej różnica wynosi 1,5–2×, i tak jest przyjęta.</p>
+  <h4>Kalibracja modelu</h4>
+  <p>Przy ustawieniach domyślnych wariant A daje <b>${f(M.R.A.perKgW,2)} kWh/kg odparowanej wody</b>.
+  Karta katalogowa Cuddon FD1800GPC podaje 1,5 kWh/kg, a typowy pobór 110 kW przy 1800 kg lodu na 18 h daje 1,1 kWh/kg;
+  przeglądy literaturowe podają 4,7–11,7 kWh/kg dla skali laboratoryjnej. Model trafia w środek pasma przemysłowego,
+  ponieważ ujmuje także zamrażanie, próżnię i urządzenia pomocnicze, których karty katalogowe zwykle nie liczą.
+  Podniesienie sprawności egzergetycznej HFC do 52 % i obniżenie mocy pomocniczych sprowadza wynik do ok. 1,7 kWh/kg.</p>
+  <h4>Granica bilansu</h4>
+  <p>Do porównania wchodzą także włączone odbiorniki ciepła (${f(M.hSum,0)} kWh/cykl) i chłodu (${f(M.cSum,0)} kWh/cykl).
+  W wariantach A i B to, czego nie pokrywa odzysk, pokrywa kocioł gazowy o sprawności ${f(p.etaBoiler,0)} % i osobna chłodnica.
+  Bez tego rozszerzenia booster CO₂ wyglądałby na czysty koszt, bo zużywa prąd — a jego sens polega właśnie na tym,
+  że kasuje gaz. Odbiorniki o temperaturze do ${f(p.tCondHT-p.dTe,0)} °C obsługuje R290, powyżej — booster.</p>
+  <h4>Fotowoltaika i rozliczenie godzinowe</h4>
+  <p>Koszt energii elektrycznej nie jest liczony jako iloczyn zużycia i jednej ceny, tylko jako suma po
+  <b>12 dobach wzorcowych po 24 godziny</b>, ważonych liczbą dni w miesiącu. Produkcja PV liczona jest dla Krakowa,
+  35° na południe, z rozkładem miesięcznym o sumie ${f(M.p.pvYield,0)} kWh/kWp i dobowym kształtem sinusoidalnym
+  między wschodem a zachodem słońca (długość dnia dla 50° szerokości, południe słoneczne przesunięte o godzinę latem).
+  Rozliczenie jest net-billingiem: energia zużyta na miejscu unika pełnej ceny zakupu, nadwyżka wchodzi do depozytu
+  po cenie rynkowej (${f(M.p.sellShare,0)} % RCEt), a przy cenie ujemnej rozliczenie wynosi zero. To rozróżnienie jest
+  całą ekonomią PV w tym zakładzie — nie wielkość instalacji, tylko udział energii zużytej na miejscu.</p>
+  <h4>Kształt cen na rynku dnia następnego</h4>
+  <p>Ceny godzinowe są modelem parametrycznym, nie szeregiem historycznym: średnia roczna ${f(M.p.mktMean,0)} zł/MWh,
+  współczynniki miesięczne (zima drożej, maj–czerwiec najtaniej) i trzy kształty doby — zimowy z porannym i wieczornym
+  szczytem, przejściowy oraz letni z głęboką doliną południową. Suwak „głębokość doliny” skaluje odchylenie od średniej
+  dobowej: 100 % odpowiada kształtowi obserwowanemu w 2025 r., wartości wyższe to scenariusz dalszego przyrostu mocy PV
+  w systemie. Do ceny rynkowej doliczana jest marża sprzedawcy, składnik zmienny dystrybucji i opłata mocowa
+  w godzinach 7–22. <b>Model nie zastępuje analizy na danych rzeczywistych</b> — do decyzji o zmianie umowy trzeba
+  policzyć rzeczywisty profil zakładu na historycznych RCEt z TGE.</p>
+  <h4>Skąd bierze się elastyczność</h4>
+  <p>Obciążenie dzieli się na sztywne, rozłożone równomiernie (cykle idą jeden za drugim i nie są zsynchronizowane
+  z dobą, więc płaska podstawa jest fizycznie poprawna), oraz przesuwalne, które algorytm układa najpierw pod nadwyżkę
+  własnej produkcji, a potem w godziny najtańszego zakupu, z ograniczeniem mocy szczytowej.
+  Wielkość części przesuwalnej wynika z magazynów: ${f(M.p.storeColdH,1)} h buforu na stopniu niskim
+  i ${f(M.p.storeHeatH,1)} h na wysokim daje w wariancie D <b>${f(M.R.D.flexShare*100,0)} % zużycia</b> do przesunięcia.
+  Warianty A, B i C nie mają tej architektury i dysponują tylko elastycznością harmonogramu (${f(M.p.flexBase,0)} %).
+  W przeliczeniu na sprzęt ${f(M.p.storeHeatH*(M.R.D.parts.Efrz+M.R.D.parts.Eoth)/M.p.tCycle*(M.R.D.cop['R290 \u2192 poziom u\u017cytkowy']+1),0)} kWh ciepła to zasobnik wodny o objętości ok. ${f(M.p.storeHeatH*(M.R.D.parts.Efrz+M.R.D.parts.Eoth)/M.p.tCycle*(M.R.D.cop['R290 \u2192 poziom u\u017cytkowy']+1)/(1.163*25),1)} m³ przy różnicy 25 K. Magazyn ciepła to zwykły zasobnik wodny i jest tani; magazyn chłodu na poziomie kaskadowym (−5 °C) jest wykonalny,
+  natomiast buforowanie chłodu wprost na poziomie −45 °C nie jest — dlatego model buforuje pracę sprężarek,
+  nie sam kondensator lodu.</p>
+  <h4>Czego model nie robi</h4>
+  <ul>
+    <li>Nie liczy obiegów na rzeczywistych charakterystykach sprężarek ani strat w rurociągach i wymiennikach poza różnicami temperatur.</li>
+    <li>Nie modeluje kinetyki suszenia — czas cyklu jest wielkością zadaną, nie wynikającą z oporu dyfuzyjnego warstwy.</li>
+    <li>Nie uwzględnia wymagań ATEX dla R290 (ładunek, wentylacja maszynowni, strefy) ani ciśnień pracy CO₂ —
+        to są realne pozycje kosztowe po stronie nakładów.</li>
+    <li>Profil dobowy jest sześciofazowym uproszczeniem; rzeczywisty pobór ma ostrzejszy pik przy wytwarzaniu próżni.</li>
+    <li>Magazyny ciepła i chłodu ujęte są przez zgodność czasową i zysk pracy ustalonej, nie przez model dynamiczny zasobnika.</li>
+  </ul>
+  <h4>Co decyduje o wyniku</h4>
+  <p>Trzy dźwignie, w kolejności siły. Po pierwsze <b>poziom skraplania</b>: ciepło odrzucane przez obieg kondensatora lodu
+  jest niemal dokładnie tym, czego potrzebują półki — ${f(M.Qshelf,0)} kWh zapotrzebowania wobec ${f(M.Qice,0)} kWh odrzutu —
+  więc pytanie nie brzmi „skąd wziąć ciepło”, tylko „na jakim poziomie je oddać”. Po drugie <b>obłożenie komory</b>:
+  przy ${f(M.cyclesYr,0)} cyklach w roku każdy nakład rozkłada się na ${f(M.mProd*M.cyclesYr/1000,1)} t produktu.
+  Po trzecie <b>temperatura kondensatora lodu</b>: każde 5 K niżej to kilka procent COP stopnia niskiego.</p>
+  <h4>Materiały źródłowe</h4>
+  <ul>
+    <li>Cuddon Freeze Dry — karta FD1800GPC: 1800 kg lodu/18 h, 170,5 m², 110 kW roboczo, 1,5 kWh/kg, <b>odzysk ciepła 140 kW</b>, kondensator −40 °C.</li>
+    <li>RSC Sustainable Food Technology 2023 — zestawienie energochłonności technologii suszenia (4,72–11,67 kWh/kg wody dla liofilizacji).</li>
+    <li>MDPI Energies 2024 — praca ciągła zamiast wsadowej −40 % energii jednostkowej, naprzemienne kondensatory lodu −24 %.</li>
+    <li>MDPI Sustainability 2021 — rozdział zużycia: układ chłodniczy ~70 %, grzanie półek ~17 %, próżnia ~13 %.</li>
+    <li>FrostX 2026 — uzyski masowe mięsa i podrobów po liofilizacji.</li>
+    <li>Raport 21 ZMYSŁÓW <i>Liofilizacja przemysłowa owoców, warzyw i karmy premium z podrobów</i>, wrzesień 2026.</li>
+  </ul>`;
+}
+/* ============================================================
+   6. SPINANIE
+   ============================================================ */
+let M=null, raf=0;
+function refresh(){
+  if(raf) cancelAnimationFrame(raf);
+  raf=requestAnimationFrame(()=>{
+    M=model(P);
+    syncControlLabels();
+    $("#calibNote").textContent="A = "+f(M.R.A.perKgW,2)+" kWh/kg H₂O";
+    renderProdInfo(M); renderKPI(M); renderScen(M); drawBars(M); drawLadder(M); drawProfile(M);
+    drawSplits(M); drawLevers(M); drawVac(M); drawNutr(M); drawCogs(M);
+    drawDay(M); drawYear(M); drawTariff(M); renderEnergyNotes(M);
+    renderCost(M); renderMethod(M); renderTable(M);
+  });
+}
+$("#themeBtn").addEventListener("click",()=>{
+  const cur=document.documentElement.getAttribute("data-theme");
+  const sysDark=matchMedia("(prefers-color-scheme: dark)").matches;
+  const next=cur?(cur==="dark"?"light":"dark"):(sysDark?"light":"dark");
+  document.documentElement.setAttribute("data-theme",next);
+  refresh();
+});
+$("#resetBtn").addEventListener("click",()=>{
+  const fresh=JSON.parse(JSON.stringify(P0));
+  for(const k in fresh) P[k]=fresh[k];
+  buildControls(); refresh();
+});
+let rt=0;
+addEventListener("resize",()=>{clearTimeout(rt); rt=setTimeout(refresh,140);});
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",refresh);
+
+(function(){
+  const sel=$("#monthSel");
+  MONTHS.forEach((n,i)=>{const o=document.createElement("option"); o.value=i; o.textContent=n; sel.appendChild(o);});
+  sel.value=P.viewMonth;
+  sel.addEventListener("change",()=>{P.viewMonth=parseInt(sel.value,10); refresh();});
+})();
+buildControls();
+refresh();
+</script>
+</body>
+</html>
