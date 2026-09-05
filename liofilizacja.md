@@ -2,7 +2,7 @@
 
 Projekt 21 zmysłów. Cel: narzędzie decyzyjne do liofilizacji przemysłowej (bilans cieplny, próżnia, koszt wytworzenia, energia i PV), podane w języku wizualnym materiałów EMIX.
 
-Stan na 2026-09-05: **makieta zbudowana.** Klikalna makieta: `makieta/index.html` (hub + 6 podstron, router na hash, wykresy w monochromie). Propozycja architektury: `plan/plan-strony.html`. Oba opublikowane jako artefakty.
+Stan na 2026-09-05: **wersja 0.2 strony w katalogu głównym, gotowa pod GitHub Pages.** `index.html` + `assets/`. Silnik modelu podłączony do symulatora i do liczb na podstronach. Propozycja architektury: `plan/plan-strony.html`.
 
 ## Pliki w repo
 
@@ -14,9 +14,11 @@ Stan na 2026-09-05: **makieta zbudowana.** Klikalna makieta: `makieta/index.html
 | `referencje/budzet-EPI-I.13.5.2.pdf` + `.txt` | Szkic budżetu operacji EPI (PS WPR I.13.5.2): Emix + Uniwersytet Rolniczy + rolnik, 2,92 mln kosztów, 2,5 mln pomocy, 420 tys. wkładu. Nabór 1.10–2.11.2026. |
 | `referencje/emix-styl.css` | Arkusz stylu wyciągnięty ze strony EMIX „Piwnice 5500 m²”. Wzorzec prezentacji dla tego, co powstanie. |
 | `plan/plan-strony.html` | Propozycja architektury: zasady, 3 opcje + rekomendacja, mapa serwisu, makiety 6 podstron, kafle Granty, brief i prompty na render, decyzje. |
-| `makieta/index.html` | **Klikalna makieta** (573 kB z osadzonymi renderami). Jeden plik, router na hash, 7 widoków, wykresy SVG w monochromie, sterowanie symulatora bez podłączonego modelu. |
-| `makieta/index-src.html` | Źródło makiety bez osadzonych obrazów (placeholdery `__IMG_LINIA__`, `__IMG_MEDIA__`). Do edycji. |
-| `makieta/liczby-modelu.json` | Wynik modelu dla zestawu odniesienia, wyciągnięty z symulatora. Źródło wszystkich liczb w makiecie. |
+| `index.html` | **Strona v0.2.** Siedem widoków, router na hash. Liczby wstawiane z modelu przez `data-k`. |
+| `assets/style.css` | Styl: baza EMIX, kolory tylko w danych (paleta 6 serii zwalidowana, chłód niebieski, ciepło pomarańczowe). |
+| `assets/model.js` | Silnik bilansu, sekcje 1–3 symulatora v1.0 bez zmian. |
+| `assets/app.js` | Router, `REF` (zestaw odniesienia), wykresy SVG (energia, koszt, dźwignie, taryfa, profil, próżnia), symulator: tryb prosty 12 pól, pełny 100 pól. |
+| `assets/img/` | Rendery poglądowe: linia, media, komora (kadr), agregat (kadr). |
 
 ---
 
@@ -128,7 +130,17 @@ Granty na start: 1 kafel z danymi (EPI I.13.5.2), 4 kandydaci do weryfikacji (FE
 
 Render na otwarcie: produkt, nie instalacja. Trzy bryły (komora, moduł maszynowy, 2 kasety PCM), stal + grafit, białe tło, czytelny w szarości. Trzy kadry: hero, przekrój, linia. Prompty w `plan/plan-strony.html`.
 
-## 4. Makieta (2026-09-05)
+## 4. Wersja 0.2 (2026-09-05)
+
+Zbudowana w opcji B, w katalogu głównym repo pod GitHub Pages (`index.html`, `assets/`). Poprzednia makieta usunięta z repo, zastąpiona stroną właściwą.
+
+**Zestaw odniesienia `REF`** = P symulatora + `pCham: 69`, `frzMode: "iqf"`. Odtwarza dokładnie liczby ze schematu linii: cykl 24,6 h, sublimacja 19,1 h, 302 cykle, 83 t/rok z 6 komór, 906 t surowca, D 1,37 kWh/kg, A 2,05. Rozbieżność z poprzedniej wersji wyjaśniona: schemat liczył z tunelem IQF, symulator domyślnie z szokerem w linii.
+
+**Zmiany wobec makiety:** usunięte kafle „sześć pytań” i callout „status materiału” ze Startu; teksty skrócone; renders w czterech miejscach (Start ×2, Urządzenie, Linia); kolory na wykresach i schematach (chłód niebieski, ciepło pomarańczowe, 6 serii = paleta symulatora, zwalidowana walidatorem CVD); symulator liczy naprawdę: zmiana surowca, postaci, ciśnienia, wariantu przelicza KPI, karty wariantów, 7 zakładek wykresów i ostrzeżenia (wsad, zapadanie struktury).
+
+**Czego nie ma:** bramki z hasłem, docelowego renderu wg briefu (są zastępcze), odbiorników ciepła/chłodu w panelu pełnym (domyślne z modelu).
+
+## 4a. Makieta (2026-09-05, historyczna)
 
 Zbudowana w opcji B. Jeden plik HTML, router na hash (`#/`, `#/urzadzenie`, …), siedem widoków. Wysokość podstron 2 100 – 4 700 px wobec 13 500 px w symulatorze.
 
@@ -161,4 +173,5 @@ Nie rozstrzygam ich tu, tylko zapisuję. Zgodnie z zasadą: architektura przed k
 
 - **2026-09-04** – wgrany symulator v1.0, przeczytany w całości. Rozszyfrowana i przeanalizowana strona EMIX. Zapisane pliki referencyjne i te notatki. Nic nie zbudowane.
 - **2026-09-05** – nowe pliki: symulator z renderem, schemat linii, budżet EPI. Propozycja architektury strony (`plan/plan-strony.html`): hub + 6 podstron, zakładka Granty, brief na render.
-- **2026-09-05** – zbudowana klikalna makieta (`makieta/index.html`) w opcji B, z prawdziwymi liczbami z modelu. Czeka na decyzje 1–3 i na ocenę układu.
+- **2026-09-05** – zbudowana klikalna makieta w opcji B, z prawdziwymi liczbami z modelu.
+- **2026-09-05** – wersja 0.2: strona właściwa w katalogu głównym pod GitHub Pages, model podłączony do symulatora, kolory, ilustracje, treści skrócone. Do włączenia: Settings → Pages → branch, folder root.

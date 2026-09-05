@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Liofilizacja z integracją cieplną · 21 zmysłów</title>
+<meta name="description" content="Linia liofilizacji z jednym agregatem kaskadowym, magazynami energii i odzyskiem ciepła. Bilans, schemat linii, ekonomia, symulator i finansowanie.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav__in">
+    <a class="brand" href="#/"><span class="brand__m">Liofilizacja</span><span class="brand__s">21 zmysłów</span></a>
+    <div class="nav__links" id="navLinks">
+      <a href="#/urzadzenie"><i>01</i>Urządzenie</a>
+      <a href="#/linia"><i>02</i>Linia i hala</a>
+      <a href="#/ekonomia"><i>03</i>Ekonomia</a>
+      <a href="#/symulator"><i>04</i>Symulator</a>
+      <a href="#/granty"><i>05</i>Granty</a>
+      <a href="#/metodyka"><i>06</i>Metodyka</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+
+<!-- ============================================================ START -->
+<section class="view" id="view-index">
+  <header class="hero">
+    <p class="mono hero__eyebrow">Materiał wewnętrzny · wrzesień 2026 · 21 zmysłów × Emix</p>
+    <h1 class="hero__title">Ciepło, które liczy się dwa razy.</h1>
+    <p class="hero__sub">Liofilizacja pobiera ciepło na półkach i oddaje je na kondensatorze lodu.
+      <strong>To ten sam strumień, policzony dwukrotnie.</strong> Jedna maszyna kaskadowa zamyka pętlę
+      i schodzi z <b data-k="kgW_A"></b> do <b data-k="kgW_D"></b> kWh na kilogram odparowanej wody.</p>
+  </header>
+
+  <div class="section section--tight">
+    <div class="wrap">
+      <figure class="figframe">
+        <span class="mono mono--sm tag">Sześć komór · jeden agregat</span>
+        <img src="assets/img/linia.webp" alt="Wizualizacja komór liofilizacyjnych w dwóch rzędach, spiętych wspólnym kolektorem chłodu z jednym agregatem po prawej stronie" width="1360" height="597">
+      </figure>
+    </div>
+  </div>
+
+  <div class="section section--tight">
+    <div class="wrap">
+      <div class="facts">
+        <div class="facts__i"><div class="facts__n"><b data-k="kgW_D"></b><small>kWh/kg H₂O</small></div>
+          <p class="mono mono--sm facts__l">Zintegrowany wobec <b data-k="kgW_A"></b> w układzie tradycyjnym</p></div>
+        <div class="facts__i"><div class="facts__n"><b data-k="tLinia"></b><small>t/rok</small></div>
+          <p class="mono mono--sm facts__l">Liofilizatu z sześciu komór po 500 kg wsadu</p></div>
+        <div class="facts__i"><div class="facts__n"><b data-k="marza"></b><small>zł/kg</small></div>
+          <p class="mono mono--sm facts__l">Marży przy cenie odniesienia <b data-k="sale"></b> zł</p></div>
+        <div class="facts__i"><div class="facts__n">2,50<small>mln zł</small></div>
+          <p class="mono mono--sm facts__l">Pomocy w naborze EPI otwartym 1 października</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="wrap duo">
+      <figure class="figframe">
+        <span class="mono mono--sm tag">Komora · 500 kg · 50 m² tac</span>
+        <img src="assets/img/komora.webp" alt="Komora liofilizacyjna z widocznym stosem półek grzewczych i kondensatorem lodu" width="326" height="298" loading="lazy">
+      </figure>
+      <div>
+        <h2>Jak to działa w trzech zdaniach</h2>
+        <p>Produkt zamrożony do −35 °C trafia na grzane półki w próżni <b data-k="pWork"></b> Pa. Lód sublimuje,
+          para osiada na kondensatorze o temperaturze −40 °C. <strong>Ciepło potrzebne do sublimacji i chłód
+          potrzebny do wymrożenia pary to ta sama energia</strong>, więc jeden agregat kaskadowy obsługuje
+          oba końce i zamienia koszt w produkt: ciepło odpadowe zasila zakład.</p>
+        <a class="more-link" href="#/urzadzenie">Zobacz, skąd bierze się różnica →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 01 URZĄDZENIE -->
+<section class="view" id="view-urzadzenie" hidden>
+  <header class="ph-head">
+    <p class="mono ph-head__k">01 · Urządzenie</p>
+    <h1>Dlaczego jedna maszyna liczy ten sam strumień raz, a nie dwa razy?</h1>
+    <p class="ph-head__lede">Ciepło sublimacji wchodzi do wsadu przez półki i wychodzi na kondensatorze lodu.
+      Układ tradycyjny obsługuje obie strony osobno: grzałką z sieci i skraplaczem do atmosfery.
+      <strong>Kaskada CO₂ / R290 spina je w jedną pętlę.</strong></p>
+  </header>
+
+  <div class="section section--tight">
+    <div class="wrap">
+      <figure class="figframe figframe--dark">
+        <span class="mono mono--sm tag">Obieg zimny po lewej · ciepły po prawej</span>
+        <img src="assets/img/media.webp" alt="Wizualizacja układu mediów: komora w centrum, niebieski obieg chłodu z kondensatorem lodu i pompami próżniowymi po lewej, pomarańczowy obieg ciepła z wymiennikami, zasobnikiem i odbiornikami po prawej" width="1360" height="765">
+      </figure>
+    </div>
+  </div>
+
+  <div class="section section--tight">
+    <div class="wrap">
+      <div class="facts facts--3">
+        <div class="facts__i"><div class="facts__n"><b data-k="kgW_A"></b> <em>→</em> <b data-k="kgW_D"></b><small>kWh/kg</small></div>
+          <p class="mono mono--sm facts__l">Energia na kilogram odparowanej wody</p></div>
+        <div class="facts__i"><div class="facts__n"><b data-k="Qshelf"></b><small>kWh</small></div>
+          <p class="mono mono--sm facts__l">Ciepła na półki w cyklu, w całości z odzysku</p></div>
+        <div class="facts__i"><div class="facts__n"><b data-k="peak_A"></b> <em>→</em> <b data-k="peak_D"></b><small>kW</small></div>
+          <p class="mono mono--sm facts__l">Moc szczytowa komory, podstawa opłaty mocowej</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="wrap--doc">
+
+      <div class="block">
+        <p class="mono block__n">Węzeł komory</p>
+        <div class="block__b">
+          <h3>Ten sam strumień, dwa razy</h3>
+          <p>Półki grzeją, para idzie na kondensator, odebrany chłód wraca do agregatu, a ciepło skraplania wraca
+            na półki. Baterie materiału zmiennofazowego stoją na obu gałęziach, więc szczyt komory nie trafia
+            wprost na sprężarkę.</p>
+          <figure>
+            <div class="scroll-x">
+            <svg class="chart" viewBox="0 0 900 300" role="img" aria-label="Węzeł jednej komory jako zamknięta pętla: półki grzeją produkt, para wodna idzie na kondensator lodu, chłód wraca do agregatu kaskadowego, ciepło skraplania wraca górą na półki. Na obu gałęziach stoją baterie PCM.">
+              <defs>
+                <marker id="u-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,1 L9,5 L0,9 z" fill="#eb6834"/></marker>
+                <marker id="u-ac" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,1 L9,5 L0,9 z" fill="#2a78d6"/></marker>
+                <marker id="u-ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,1 L9,5 L0,9 z" fill="#737373"/></marker>
+              </defs>
+              <path class="hot" d="M700,56 L700,30 L180,30 L180,54" marker-end="url(#u-ah)"/>
+              <path class="cold" d="M455,208 L455,250 L735,250 L735,153" marker-end="url(#u-ac)"/>
+              <rect class="box" x="30" y="56" width="300" height="150"/>
+              <text class="t" x="46" y="82">Komora K1</text>
+              <text class="m" x="46" y="100">500 KG · 50 M² TAC · 69 PA</text>
+              <rect x="58" y="120" width="234" height="7" fill="#eb6834"/><rect x="68" y="110" width="214" height="9" fill="#c9c9c9"/>
+              <rect x="58" y="148" width="234" height="7" fill="#eb6834"/><rect x="68" y="138" width="214" height="9" fill="#c9c9c9"/>
+              <rect x="58" y="176" width="234" height="7" fill="#eb6834"/><rect x="68" y="166" width="214" height="9" fill="#c9c9c9"/>
+              <text class="m" x="46" y="200">PÓŁKI GRZANE · PRODUKT NA TACACH</text>
+              <path class="vac" d="M332,140 L394,140" marker-end="url(#u-ag)"/>
+              <text class="m" x="336" y="132">PARA</text>
+              <rect class="box" x="398" y="56" width="112" height="150"/>
+              <text class="t" x="412" y="82" style="font-size:12px">Kondensator</text>
+              <text class="m" x="412" y="100">−40 °C</text>
+              <path d="M412,118 L496,118 L496,136 L412,136 L412,154 L496,154 L496,172 L412,172" fill="none" stroke="#2a78d6" stroke-width="2.2"/>
+              <text class="m" x="412" y="196"><tspan data-k="Qice"></tspan> KWH LODU</text>
+              <rect class="box" x="600" y="56" width="270" height="97"/>
+              <text class="t" x="616" y="82">Agregat kaskadowy</text>
+              <text class="s" x="616" y="102">CO₂ subkryt. −45 °C · R290 +50 °C</text>
+              <text class="s" x="616" y="120">booster CO₂ +85 °C</text>
+              <text class="m" x="616" y="140">COP CHŁ. 3,14 · COP GRZ. 3,11</text>
+              <text class="v" x="196" y="24" style="fill:#eb6834">ciepło +50 °C na półki</text>
+              <rect class="box-s" x="452" y="16" width="196" height="28"/>
+              <text class="m" x="462" y="34">6B · PCM +35 °C · 105 KWH</text>
+              <text class="v" x="466" y="244" style="fill:#2a78d6">chłód −45 °C</text>
+              <rect class="box-s" x="620" y="236" width="196" height="28"/>
+              <text class="m" x="630" y="254">6A · PCM −40 °C · 120 KWH</text>
+              <text class="m" x="0" y="290">PĘTLA ZAMYKA SIĘ W JEDNEJ MASZYNIE · BATERIE STOJĄ MIĘDZY KOMORĄ A SPRĘŻARKAMI</text>
+            </svg>
+            </div>
+          </figure>
+        </div>
+      </div>
+
+      <div class="block">
+        <p class="mono block__n">Porównanie</p>
+        <div class="block__b">
+          <h3>Tradycyjny obok zintegrowanego</h3>
+          <p>Ta sama komora, ten sam wsad. Różni się tylko to, dokąd idzie ciepło skraplania i skąd bierze się
+            ciepło na półkach.</p>
+          <figure>
+            <div class="scroll-x">
+            <svg class="chart" viewBox="0 0 900 250" role="img" aria-label="W wariancie tradycyjnym grzałka pobiera prąd z sieci, a skraplacz oddaje ciepło do atmosfery. W wariancie zintegrowanym ciepło skraplania wraca na półki i grzanie elektryczne wynosi zero.">
+              <defs>
+                <marker id="c-ak" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,1 L9,5 L0,9 z" fill="#000"/></marker>
+                <marker id="c-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,1 L9,5 L0,9 z" fill="#eb6834"/></marker>
+                <marker id="c-ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,1 L9,5 L0,9 z" fill="#737373"/></marker>
+              </defs>
+              <text class="m" x="0" y="14">WARIANT A · TRADYCYJNY</text>
+              <rect class="box-s" x="0" y="26" width="110" height="46"/><text class="s" x="12" y="47">Sieć</text><text class="m" x="12" y="63"><tspan data-k="Esh_A"></tspan> KWH</text>
+              <path class="ln" d="M112,49 L156,49" marker-end="url(#c-ak)"/>
+              <rect class="box" x="158" y="26" width="120" height="46"/><text class="s" x="170" y="47">Grzałka</text><text class="m" x="170" y="63">η 98 %</text>
+              <path class="hot" d="M280,49 L324,49" marker-end="url(#c-ah)"/>
+              <rect class="box" x="326" y="14" width="150" height="70"/><text class="t" x="338" y="40" style="font-size:12px">Komora</text><text class="m" x="338" y="58"><tspan data-k="Qshelf"></tspan> KWH NA PÓŁKI</text><text class="m" x="338" y="74"><tspan data-k="Qice"></tspan> KWH NA KONDENS.</text>
+              <path class="cold" d="M478,49 L522,49" marker-end="url(#c-ah)" style="stroke:#2a78d6;marker-end:url(#c-ak)"/>
+              <rect class="box" x="524" y="26" width="130" height="46"/><text class="s" x="536" y="47">Sprężarki</text><text class="m" x="536" y="63"><tspan data-k="Eice_A"></tspan> KWH EL.</text>
+              <path d="M656,49 L700,49" stroke="#737373" stroke-width="1.6" fill="none" stroke-dasharray="5 3" marker-end="url(#c-ag)"/>
+              <rect x="702" y="26" width="130" height="46" fill="none" stroke="#737373" stroke-width="1" stroke-dasharray="4 3"/>
+              <text class="s" x="714" y="47" fill="#737373">Atmosfera</text><text class="m" x="714" y="63">CIEPŁO ODRZUCONE</text>
+              <text class="v" x="900" y="53" text-anchor="end"><tspan data-k="el_A"></tspan> kWh</text>
+              <line class="ax" x1="0" y1="118" x2="900" y2="118"/>
+              <text class="m" x="0" y="146">WARIANT D · ZINTEGROWANY</text>
+              <rect x="0" y="158" width="110" height="46" fill="none" stroke="#737373" stroke-width="1" stroke-dasharray="4 3"/>
+              <text class="s" x="12" y="179" fill="#737373">Sieć</text><text class="m" x="12" y="195">0 KWH NA GRZANIE</text>
+              <rect class="box" x="326" y="146" width="150" height="70"/><text class="t" x="338" y="172" style="font-size:12px">Komora</text><text class="m" x="338" y="190"><tspan data-k="Qshelf"></tspan> KWH NA PÓŁKI</text><text class="m" x="338" y="206"><tspan data-k="Qice"></tspan> KWH NA KONDENS.</text>
+              <path class="cold" d="M478,181 L522,181" marker-end="url(#c-ak)"/>
+              <rect class="box" x="524" y="158" width="130" height="46"/><text class="s" x="536" y="179">Kaskada</text><text class="m" x="536" y="195"><tspan data-k="Eice_D"></tspan> KWH EL.</text>
+              <path class="hot" d="M589,156 L589,132 L401,132 L401,144" marker-end="url(#c-ah)"/>
+              <text class="v" x="495" y="126" text-anchor="middle" style="fill:#eb6834">ciepło skraplania wraca na półki</text>
+              <path class="hot" d="M656,181 L700,181" marker-end="url(#c-ah)"/>
+              <rect class="box-s" x="702" y="158" width="130" height="46"/>
+              <text class="s" x="714" y="179">Odbiorniki</text><text class="m" x="714" y="195">130 KW ODPADOWE</text>
+              <text class="v" x="900" y="185" text-anchor="end"><tspan data-k="el_D"></tspan> kWh</text>
+            </svg>
+            </div>
+            <p class="figcap">Wartości na cykl jednej komory. <b>Grzanie elektryczne półek spada z <span data-k="Esh_A"></span> kWh do zera</b>,
+              bo ciepło skraplania pokrywa całe zapotrzebowanie.</p>
+          </figure>
+        </div>
+      </div>
+
+      <div class="block">
+        <p class="mono block__n">Energia</p>
+        <div class="block__b">
+          <h3>Na co idzie prąd</h3>
+          <p>W układzie tradycyjnym największą pozycją jest grzanie półek. W zintegrowanym ta pozycja znika,
+            a jej miejsce zajmują sprężarki pracujące na obu poziomach naraz.</p>
+          <figure>
+            <div class="scroll-x"><svg id="refEnergy" class="chart" role="img" aria-label="Energia elektryczna na cykl w czterech wariantach układu, w podziale na węzły"></svg></div>
+            <div class="legend" data-legend="refEnergy"></div>
+          </figure>
+          <details class="more">
+            <summary>Pełne rozbicie energii i ciepła na cykl</summary>
+            <div class="more__b"><div class="table-scroll" id="refBilansTable"></div></div>
+          </details>
+        </div>
+      </div>
+
+      <div class="block">
+        <p class="mono block__n">Temperatury</p>
+        <div class="block__b">
+          <h3>Drabina temperatur</h3>
+          <p>Pytanie nie brzmi „skąd wziąć ciepło”, tylko „na jakim poziomie je oddać”. Każda strzałka to sprężarka,
+            która podnosi ciepło o różnicę temperatur i płaci za to pracą.</p>
+          <figure>
+            <div class="scroll-x">
+            <svg class="chart" viewBox="0 0 900 360" role="img" aria-label="Drabina temperatur: po lewej strumienie wymagające chłodzenia, kondensator lodu na minus 45 i tunel z mroźnią na minus 35 stopni. Po prawej ciepło dostępne: poziom kaskadowy na minus 5, R290 na plus 50, booster na plus 85. Zapotrzebowanie półek leży na plus 40. Trzy strzałki sprężarek podnoszą ciepło między poziomami.">
+              <defs><marker id="l-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,1 L9,5 L0,9 z" fill="#000"/></marker></defs>
+              <text class="m" x="44" y="24" text-anchor="end">°C</text>
+              <text class="m" x="56" y="24">WYMAGANE CHŁODZENIE</text>
+              <text class="m" x="490" y="24">CIEPŁO DOSTĘPNE I ZAPOTRZEBOWANIE</text>
+              <line class="ax" x1="50" y1="50" x2="900" y2="50"/><text class="m" x="44" y="54" text-anchor="end">+85</text>
+              <line class="ax" x1="50" y1="110" x2="900" y2="110"/><text class="m" x="44" y="114" text-anchor="end">+50</text>
+              <line class="ax" x1="50" y1="140" x2="900" y2="140"/><text class="m" x="44" y="144" text-anchor="end">+40</text>
+              <line class="ax" x1="50" y1="210" x2="900" y2="210"/><text class="m" x="44" y="214" text-anchor="end">−5</text>
+              <line class="ax" x1="50" y1="278" x2="900" y2="278"/><text class="m" x="44" y="282" text-anchor="end">−35</text>
+              <line class="ax" x1="50" y1="310" x2="900" y2="310"/><text class="m" x="44" y="314" text-anchor="end">−45</text>
+              <line x1="480" y1="34" x2="480" y2="334" stroke="#000" stroke-width="1"/>
+              <rect x="270" y="304" width="200" height="12" fill="#2a78d6" rx="2"/>
+              <text class="s" x="262" y="306" text-anchor="end">Kondensator lodu</text><text class="v" x="262" y="322" text-anchor="end"><tspan data-k="Qice"></tspan> kWh</text>
+              <rect x="400" y="272" width="70" height="12" fill="#6da7ec" rx="2"/>
+              <text class="s" x="392" y="274" text-anchor="end">Tunel IQF i mroźnia</text><text class="v" x="392" y="290" text-anchor="end"><tspan data-k="Qiqf"></tspan> kWh</text>
+              <rect x="490" y="204" width="180" height="12" fill="#c9c9c9" rx="2"/>
+              <text class="s" x="678" y="214">Poziom kaskadowy CO₂ / R290</text>
+              <rect x="490" y="104" width="220" height="12" fill="#eb6834" rx="2"/>
+              <text class="s" x="718" y="106">R290 · półki i odbiorniki</text><text class="v" x="718" y="122"><tspan data-k="Qhot50"></tspan> kWh</text>
+              <rect x="490" y="44" width="90" height="12" fill="#f19a70" rx="2"/>
+              <text class="s" x="588" y="54">Booster CO₂ · +85 °C</text>
+              <rect x="490" y="134" width="140" height="12" fill="none" stroke="#eb6834" stroke-width="1.2" stroke-dasharray="4 3" rx="2"/>
+              <text class="s" x="638" y="146">Zapotrzebowanie półek · <tspan data-k="Qshelf"></tspan> kWh</text>
+              <path class="ln" d="M484,310 L484,218" marker-end="url(#l-ar)" stroke-width="2"/>
+              <text class="v" x="472" y="258" text-anchor="end" style="font-size:10.5px">CO₂ · 40 K</text>
+              <path class="ln" d="M690,204 L690,122" marker-end="url(#l-ar)" stroke-width="2"/>
+              <text class="v" x="698" y="170" style="font-size:10.5px">R290 · 55 K</text>
+              <path class="ln" d="M600,102 L600,62" marker-end="url(#l-ar)" stroke-width="2"/>
+              <text class="v" x="608" y="86" style="font-size:10.5px">booster · 35 K</text>
+              <text class="m" x="0" y="350">KAŻDA STRZAŁKA TO SPRĘŻARKA · PODNOSI CIEPŁO O RÓŻNICĘ TEMPERATUR I PŁACI ZA TO PRACĄ</text>
+            </svg>
+            </div>
+          </figure>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <nav class="pager">
+    <a href="#/"><p class="mono mono--sm pager__k">← Poprzednia</p><p class="pager__t">Start</p></a>
+    <a href="#/linia"><p class="mono mono--sm pager__k">Następna →</p><p class="pager__t">02 · Linia i hala</p></a>
+  </nav>
+</section>
+
+<!-- ============================================================ 02 LINIA -->
+<section class="view" id="view-linia" hidden>
+  <header class="ph-head">
+    <p class="mono ph-head__k">02 · Linia i hala</p>
+    <h1>Jak to stoi w hali i dlaczego sześć komór pracuje na jednym agregacie?</h1>
+    <p class="ph-head__lede">Przesunięcie faz o 4,1 godziny to <strong>warunek, pod którym jeden agregat
+      i jeden zespół próżniowy wystarczają dla całej linii</strong>. Rozłożenie komór w czasie zastępuje moc zainstalowaną.</p>
+  </header>
+
+  <div class="section section--tight">
+    <div class="wrap">
+      <div class="facts">
+        <div class="facts__i"><div class="facts__n"><b data-k="tSurowiec"></b><small>t/rok</small></div><p class="mono mono--sm facts__l">Przerobu surowca, <b data-k="cykli"></b> cykle na komorę</p></div>
+        <div class="facts__i"><div class="facts__n"><b data-k="tLinia"></b><small>t/rok</small></div><p class="mono mono--sm facts__l">Liofilizatu, uzysk <b data-k="yield"></b> : 1</p></div>
+        <div class="facts__i"><div class="facts__n">150<small>kW</small></div><p class="mono mono--sm facts__l">Średniej mocy elektrycznej całej linii</p></div>
+        <div class="facts__i"><div class="facts__n">1 152<small>m²</small></div><p class="mono mono--sm facts__l">Hali w rzucie 48 × 24 m</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="wrap--doc">
+
+      <div class="block">
+        <p class="mono block__n">Schemat</p>
+        <div class="block__b">
+          <h3>Droga produktu górą, media dołem</h3>
+          <figure>
+            <div class="scroll-x">
+            <svg class="chart" viewBox="0 0 900 360" role="img" aria-label="Schemat technologiczny: surowiec idzie od mycia przez sortowanie, porcjowanie, tunel IQF i mroźnię do sześciu komór, a stamtąd do pakowania. Dołem agregat rozprowadza chłód na kondensatory i mroźnię oraz ciepło na półki i do magazynu ciepła odpadowego.">
+              <defs>
+                <marker id="s-ak" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,1 L9,5 L0,9 z" fill="#000"/></marker>
+                <marker id="s-ac" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,1 L9,5 L0,9 z" fill="#2a78d6"/></marker>
+                <marker id="s-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,1 L9,5 L0,9 z" fill="#eb6834"/></marker>
+              </defs>
+              <text class="m" x="0" y="12">DROGA PRODUKTU</text>
+              <rect class="box" x="0" y="24" width="104" height="54"/><text class="m" x="10" y="40">1</text><text class="t" x="10" y="56" style="font-size:11.5px">Mycie</text><text class="m" x="10" y="70">150 KG/H</text>
+              <path class="ln" d="M106,51 L128,51" marker-end="url(#s-ak)"/>
+              <rect class="box" x="130" y="24" width="104" height="54"/><text class="m" x="140" y="40">2</text><text class="t" x="140" y="56" style="font-size:11.5px">Sortowanie</text><text class="m" x="140" y="70">OPTYCZNE</text>
+              <path class="ln" d="M236,51 L258,51" marker-end="url(#s-ak)"/>
+              <rect class="box" x="260" y="24" width="104" height="54"/><text class="m" x="270" y="40">3</text><text class="t" x="270" y="56" style="font-size:11.5px">Porcjowanie</text><text class="m" x="270" y="70">KROJENIE</text>
+              <path class="ln" d="M366,51 L388,51" marker-end="url(#s-ak)"/>
+              <rect class="box" x="390" y="24" width="104" height="54"/><text class="m" x="400" y="40">4</text><text class="t" x="400" y="56" style="font-size:11.5px">Tunel IQF</text><text class="m" x="400" y="70">−35 °C</text>
+              <path class="ln" d="M496,51 L518,51" marker-end="url(#s-ak)"/>
+              <rect class="box" x="520" y="24" width="104" height="54"/><text class="m" x="530" y="40">5</text><text class="t" x="530" y="56" style="font-size:11.5px">Mroźnia</text><text class="m" x="530" y="70">10 T · 3 DOBY</text>
+              <path class="ln" d="M626,51 L648,51" marker-end="url(#s-ak)"/>
+              <rect class="box" x="650" y="18" width="150" height="66" stroke-width="2"/><text class="m" x="660" y="36">6</text><text class="t" x="660" y="52">Komory K1–K6</text><text class="m" x="660" y="68">6 × 500 KG · CYKL <tspan data-k="tCyc"></tspan> H</text>
+              <path class="ln" d="M802,51 L824,51" marker-end="url(#s-ak)"/>
+              <rect class="box" x="826" y="24" width="74" height="54"/><text class="m" x="836" y="40">10</text><text class="t" x="836" y="56" style="font-size:11.5px">MAP</text><text class="m" x="836" y="70"><tspan data-k="tLinia"></tspan> T/ROK</text>
+              <rect class="box-s" x="650" y="112" width="72" height="44"/><text class="m" x="658" y="128">6A · PCM</text><text class="s" x="658" y="146" style="font-size:10.5px;fill:#2a78d6">−40 °C</text>
+              <rect class="box-s" x="728" y="112" width="72" height="44"/><text class="m" x="736" y="128">6B · PCM</text><text class="s" x="736" y="146" style="font-size:10.5px;fill:#eb6834">+35 °C</text>
+              <path class="cold" d="M686,110 L686,88" marker-end="url(#s-ac)"/><path class="hot" d="M764,110 L764,88" marker-end="url(#s-ah)"/>
+              <text class="m" x="0" y="206">MEDIA</text>
+              <rect class="box" x="0" y="218" width="330" height="84" stroke-width="2"/>
+              <text class="m" x="12" y="236">7</text><text class="t" x="12" y="254">Agregat kaskadowy</text>
+              <text class="s" x="12" y="272" style="font-size:11px">CO₂ subkryt. −45 °C · R290 +50 °C · booster +85 °C</text>
+              <text class="s" x="12" y="288" style="font-size:11px">112 kW chłodu · około 100 kW elektrycznych</text>
+              <rect class="box" x="352" y="218" width="150" height="84"/>
+              <text class="m" x="364" y="236">8</text><text class="t" x="364" y="254" style="font-size:11.5px">Zespół próżniowy</text>
+              <text class="s" x="364" y="272" style="font-size:11px">69 Pa · 24 kW</text><text class="s" x="364" y="288" style="font-size:11px">kolektor wspólny</text>
+              <rect class="box-s" x="530" y="218" width="170" height="84"/>
+              <text class="m" x="542" y="236">9</text><text class="t" x="542" y="254" style="font-size:11.5px">Magazyn PCM ciepła</text>
+              <text class="s" x="542" y="272" style="font-size:11px">+50 °C · 1 500 kWh</text><text class="s" x="542" y="288" style="font-size:11px">12 h buforu · około 30 t</text>
+              <rect x="728" y="218" width="172" height="84" fill="none" stroke="#737373" stroke-dasharray="4 3"/>
+              <text class="m" x="740" y="236">11</text><text class="t" x="740" y="254" style="font-size:11.5px" fill="#737373">Odbiorniki zakładu</text>
+              <text class="s" x="740" y="272" style="font-size:11px" fill="#737373">CWU, hala, regeneracja</text><text class="s" x="740" y="288" style="font-size:11px" fill="#737373">130 kW odpadowe</text>
+              <path class="cold" d="M120,216 L120,180 L686,180 L686,158" marker-end="url(#s-ac)"/>
+              <text class="v" x="300" y="174" style="font-size:10.5px;fill:#2a78d6">90 kW @ −45 °C na kondensatory</text>
+              <path class="cold" d="M60,216 L60,100 L442,100 L442,80" marker-end="url(#s-ac)"/>
+              <text class="v" x="70" y="114" style="font-size:10.5px;fill:#2a78d6">22 kW @ −35 °C na IQF i mroźnię</text>
+              <path class="hot" d="M240,216 L240,196 L764,196 L764,158" marker-end="url(#s-ah)"/>
+              <text class="v" x="450" y="192" style="font-size:10.5px;fill:#eb6834">82 kW @ +50 °C na półki</text>
+              <path class="vac" d="M427,216 L427,96 L725,96 L725,84" marker-end="url(#s-ak)" style="stroke-dasharray:4 3;stroke-width:1.2"/>
+              <path class="hot" d="M504,262 L528,262" marker-end="url(#s-ah)"/>
+              <path class="hot" d="M702,262 L726,262" marker-end="url(#s-ah)"/>
+              <text class="v" x="330" y="318" style="font-size:10.5px;fill:#eb6834">130 kW ciepła odpadowego →</text>
+            </svg>
+            </div>
+            <div class="legend">
+              <span class="li"><span class="sw" style="background:#000"></span>Produkt</span>
+              <span class="li"><span class="sw" style="background:#2a78d6"></span>Chłód, CO₂ subkrytyczny</span>
+              <span class="li"><span class="sw" style="background:#eb6834"></span>Ciepło, R290 i booster</span>
+              <span class="li"><span class="sw" style="background:repeating-linear-gradient(90deg,#737373 0 3px,#fff 3px 6px)"></span>Próżnia</span>
+            </div>
+            <p class="figcap"><b>Odbiorniki po prawej są warunkiem, nie dodatkiem.</b> Bez realnego odbioru magazyn ciepła
+              kończy jako chłodnica wentylatorowa.</p>
+          </figure>
+        </div>
+      </div>
+
+      <div class="block">
+        <p class="mono block__n">Harmonogram</p>
+        <div class="block__b">
+          <h3>Sześć komór przesuniętych o 4,1 h</h3>
+          <p>Sublimacja trwa <b data-k="subl"></b> godziny, więc w każdej chwili sublimują cztery albo pięć komór.
+            Zapotrzebowanie półek waha się o ±11 %. Bez przesunięcia faz ta sama linia miałaby przebieg od zera do 106 kW.</p>
+          <figure>
+            <div class="scroll-x">
+            <svg class="chart" viewBox="0 0 900 300" role="img" aria-label="Harmonogram sześciu komór przesuniętych o 4,1 godziny w cyklu 24,6 godziny. W każdej chwili sublimuje cztery albo pięć komór, zapowietrzanie nigdy się nie nakłada.">
+              <text class="m" x="76" y="12">GODZINY CYKLU</text>
+              <g>
+                <line class="ax" x1="76" y1="20" x2="76" y2="250"/><text class="m" x="76" y="266" text-anchor="middle">0</text>
+                <line class="ax" x1="213" y1="20" x2="213" y2="250"/><text class="m" x="213" y="266" text-anchor="middle">4</text>
+                <line class="ax" x1="350" y1="20" x2="350" y2="250"/><text class="m" x="350" y="266" text-anchor="middle">8</text>
+                <line class="ax" x1="487" y1="20" x2="487" y2="250"/><text class="m" x="487" y="266" text-anchor="middle">12</text>
+                <line class="ax" x1="625" y1="20" x2="625" y2="250"/><text class="m" x="625" y="266" text-anchor="middle">16</text>
+                <line class="ax" x1="762" y1="20" x2="762" y2="250"/><text class="m" x="762" y="266" text-anchor="middle">20</text>
+                <line class="ax" x1="899" y1="20" x2="899" y2="250"/><text class="m" x="890" y="266" text-anchor="middle">24</text>
+              </g>
+              <g id="gantt"></g>
+              <line x1="0" y1="278" x2="899" y2="278" stroke="#000" stroke-width="1"/>
+              <text class="m" x="0" y="294">CZTERY ALBO PIĘĆ KOMÓR SUBLIMUJE JEDNOCZEŚNIE · ZAPOWIETRZANIE NIGDY SIĘ NIE NAKŁADA</text>
+            </svg>
+            </div>
+            <div class="legend">
+              <span class="li"><span class="sw" style="background:#eb6834"></span>Sublimacja</span>
+              <span class="li"><span class="sw" style="background:#eda100"></span>Desorpcja</span>
+              <span class="li"><span class="sw" style="background:#e87ba4"></span>Zapowietrzanie</span>
+              <span class="li"><span class="sw" style="background:#2a78d6"></span>Temperowanie</span>
+              <span class="li"><span class="sw" style="background:#c9c9c9"></span>Załadunek i rozładunek</span>
+            </div>
+          </figure>
+          <div class="callout">
+            <p class="mono mono--sm">Cena tego rozwiązania</p>
+            <p>Harmonogram trzeba utrzymać. Awaria jednej komory albo wsad o innym czasie cyklu przenosi szczyt
+              na sprężarki. To argument za kampaniami jednorodnymi surowcowo.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="block">
+        <p class="mono block__n">Agregat</p>
+        <div class="block__b">
+          <h3>Jedna maszynownia na trzy poziomy temperatur</h3>
+          <div class="duo" style="align-items:start">
+            <figure class="figframe">
+              <span class="mono mono--sm tag">Agregat kaskadowy · 112 kW chłodu</span>
+              <img src="assets/img/agregat.webp" alt="Wizualizacja agregatu kaskadowego z chłodnicą, sprężarkami i kolektorem chłodu" width="490" height="328" loading="lazy">
+            </figure>
+            <div>
+              <p>CO₂ subkrytyczny schodzi do −45 °C na kondensatory lodu. R290 podnosi ciepło do +50 °C na półki
+                i odbiorniki zakładu. Booster CO₂ transkrytyczny wychodzi na +85 °C dla mycia i regeneracji osuszaczy.
+                Około 100 kW elektrycznych ze 150 kW mocy całej linii.</p>
+              <p>Maszynownia leży między komorami a resztą zakładu, bo najdroższe rurociągi to te na −45 °C i próżniowe.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block">
+        <p class="mono block__n">Rzut hali</p>
+        <div class="block__b">
+          <h3>48 × 24 m, strefa mokra oddzielona od suchej</h3>
+          <figure>
+            <div class="scroll-x">
+            <svg class="chart" viewBox="0 0 900 470" role="img" aria-label="Rzut hali 48 na 24 metry. Górnym pasem idzie surowiec od przyjęcia przez mycie, sortowanie i porcjowanie do tunelu IQF i mroźni. Dolnym pasem wraca wyrób przez halę sześciu komór, maszynownię, pakowanie i magazyn wyrobu do ekspedycji.">
+              <defs><marker id="h-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,1 L9,5 L0,9 z" fill="#000"/></marker></defs>
+              <rect x="30" y="30" width="840" height="380" fill="#fff" stroke="#000" stroke-width="2"/>
+              <g stroke="#000" stroke-width="1" opacity=".55">
+                <rect x="30" y="30" width="105" height="190" fill="#2a78d6" fill-opacity=".06"/><rect x="135" y="30" width="140" height="190" fill="#2a78d6" fill-opacity=".06"/>
+                <rect x="275" y="30" width="140" height="190" fill="#2a78d6" fill-opacity=".06"/><rect x="415" y="30" width="140" height="190" fill="#2a78d6" fill-opacity=".06"/>
+                <rect x="555" y="30" width="140" height="190" fill="#2a78d6" fill-opacity=".14"/><rect x="695" y="30" width="175" height="190" fill="#2a78d6" fill-opacity=".14"/>
+                <rect x="30" y="220" width="140" height="190" fill="#1baf7a" fill-opacity=".08"/><rect x="170" y="220" width="210" height="190" fill="#1baf7a" fill-opacity=".08"/>
+                <rect x="380" y="220" width="175" height="110" fill="#eb6834" fill-opacity=".1"/><rect x="380" y="330" width="175" height="80" fill="#eb6834" fill-opacity=".1"/>
+                <rect x="555" y="220" width="315" height="190" fill="#eb6834" fill-opacity=".05"/>
+              </g>
+              <text class="t" x="40" y="50" style="font-size:11px">Przyjęcie</text><text class="m" x="40" y="64">+2 °C · 72 M²</text>
+              <text class="t" x="145" y="50" style="font-size:11px">Mycie i płukanie</text><text class="m" x="145" y="64">96 M² · 150 KG/H</text>
+              <text class="t" x="285" y="50" style="font-size:11px">Sortowanie</text><text class="m" x="285" y="64">96 M² · OPTYCZNE</text>
+              <text class="t" x="425" y="50" style="font-size:11px">Porcjowanie</text><text class="m" x="425" y="64">96 M² · MIESZALNIK</text>
+              <text class="t" x="565" y="50" style="font-size:11px">Tunel IQF</text><text class="m" x="565" y="64">96 M² · −35 °C</text>
+              <text class="t" x="705" y="50" style="font-size:11px">Mroźnia −25 °C</text><text class="m" x="705" y="64">120 M² · 10 T</text>
+              <text class="t" x="40" y="240" style="font-size:11px">Magazyn wyrobu</text><text class="m" x="40" y="254">96 M² · EKSPEDYCJA</text>
+              <text class="t" x="180" y="240" style="font-size:11px">Pakowanie MAP</text><text class="m" x="180" y="254">144 M² · KONTROLA</text>
+              <text class="t" x="390" y="240" style="font-size:11px">Maszynownia</text><text class="m" x="390" y="254">70 M² · AGREGAT</text>
+              <text class="t" x="390" y="350" style="font-size:11px">Magazyn PCM</text><text class="m" x="390" y="364">50 M² · 1 500 KWH</text>
+              <text class="t" x="565" y="240" style="font-size:11px">Hala komór K1–K6</text><text class="m" x="565" y="254">216 M²</text>
+              <g fill="#fff" stroke="#eb6834" stroke-width="1.6">
+                <rect x="575" y="266" width="90" height="42"/><rect x="675" y="266" width="90" height="42"/><rect x="775" y="266" width="85" height="42"/>
+                <rect x="575" y="352" width="90" height="42"/><rect x="675" y="352" width="90" height="42"/><rect x="775" y="352" width="85" height="42"/>
+              </g>
+              <text class="t" x="585" y="284" style="font-size:11px">K1</text><text class="m" x="585" y="298">500 KG</text>
+              <text class="t" x="685" y="284" style="font-size:11px">K2</text><text class="m" x="685" y="298">500 KG</text>
+              <text class="t" x="785" y="284" style="font-size:11px">K3</text><text class="m" x="785" y="298">500 KG</text>
+              <text class="t" x="585" y="370" style="font-size:11px">K4</text><text class="m" x="585" y="384">500 KG</text>
+              <text class="t" x="685" y="370" style="font-size:11px">K5</text><text class="m" x="685" y="384">500 KG</text>
+              <text class="t" x="785" y="370" style="font-size:11px">K6</text><text class="m" x="785" y="384">500 KG</text>
+              <text class="m" x="577" y="334">KORYTARZ ROBOCZY 5,1 M</text>
+              <path d="M52,206 L820,206 L820,258" fill="none" stroke="#000" stroke-width="1.8" stroke-dasharray="8 4" marker-end="url(#h-ar)"/>
+              <text class="m" x="300" y="200">DROGA SUROWCA</text>
+              <path d="M560,402 L96,402" fill="none" stroke="#000" stroke-width="1.8" stroke-dasharray="8 4" marker-end="url(#h-ar)"/>
+              <text class="m" x="380" y="396">DROGA WYROBU</text>
+              <rect x="18" y="100" width="12" height="54" fill="#000"/><rect x="18" y="300" width="12" height="54" fill="#000"/>
+              <text class="m" x="10" y="127" text-anchor="end" transform="rotate(-90 10 127)">PRZYJĘCIE</text>
+              <text class="m" x="10" y="327" text-anchor="end" transform="rotate(-90 10 327)">EKSPEDYCJA</text>
+              <line x1="30" y1="436" x2="870" y2="436" stroke="#737373" stroke-width="1" marker-start="url(#h-ar)" marker-end="url(#h-ar)"/>
+              <text class="m" x="450" y="454" text-anchor="middle">48,0 M · 1 152 M²</text>
+            </svg>
+            </div>
+            <div class="legend">
+              <span class="li"><span class="sw" style="background:#2a78d6;opacity:.35"></span>Strefa mokra i chłodnicza</span>
+              <span class="li"><span class="sw" style="background:#eb6834;opacity:.4"></span>Komory i maszynownia</span>
+              <span class="li"><span class="sw" style="background:#1baf7a;opacity:.4"></span>Strefa sucha, pakowanie</span>
+            </div>
+          </figure>
+
+          <details class="more">
+            <summary>Wykaz aparatów</summary>
+            <div class="more__b"><div class="table-scroll">
+              <table>
+                <thead><tr><th>Nr</th><th>Aparat</th><th class="n">Parametr</th><th>Uwaga doboru</th></tr></thead>
+                <tbody>
+                  <tr><td class="id">1</td><td>Przyjęcie i mycie</td><td class="n">150 kg/h</td><td class="sub">Myjka flotacyjna, chłodnia buforowa na dostawę dobową.</td></tr>
+                  <tr><td class="id">2</td><td>Sortowanie optyczne</td><td class="n">150 kg/h</td><td class="sub">Odrzut idzie na przecier, nie jest stratą.</td></tr>
+                  <tr><td class="id">3</td><td>Porcjowanie i mieszalnik</td><td class="n">150 kg/h</td><td class="sub">Krojenie, drylowanie, linia przecieru dla płyt.</td></tr>
+                  <tr><td class="id">4</td><td>Tunel fluidyzacyjny IQF</td><td class="n">0,5 t/h</td><td class="sub">Pracuje kampaniami około 25 % czasu, można je stawiać na tanie godziny.</td></tr>
+                  <tr><td class="id">5</td><td>Mroźnia −25 °C</td><td class="n">10 t</td><td class="sub">Rozprzęga tunel od komór.</td></tr>
+                  <tr><td class="id">6</td><td>Komory K1–K6</td><td class="n">6 × 500 kg</td><td class="sub">50 m² tac każda, cykl 24,6 h przy przesunięciu 4,1 h.</td></tr>
+                  <tr><td class="id">6a</td><td>Bateria PCM zimna</td><td class="n">120 kWh</td><td class="sub">Około 2 t eutektyku na komorę, poziom −40 °C.</td></tr>
+                  <tr><td class="id">6b</td><td>Bateria PCM ciepła</td><td class="n">105 kWh</td><td class="sub">Około 2 t na komorę, bufor grzania półek.</td></tr>
+                  <tr><td class="id">7</td><td>Agregat kaskadowy</td><td class="n">112 kW chłodu</td><td class="sub">CO₂ do −45 °C, R290 do +50 °C, booster do +85 °C.</td></tr>
+                  <tr><td class="id">8</td><td>Zespół próżniowy</td><td class="n">69 Pa</td><td class="sub">Pompy śrubowe suche z dmuchawami Rootsa, kolektor wspólny.</td></tr>
+                  <tr><td class="id">9</td><td>Magazyn PCM ciepła</td><td class="n">1 500 kWh</td><td class="sub">Narzędzie do przesuwania pracy sprężarek, nie do oszczędzania ciepła.</td></tr>
+                  <tr><td class="id">10</td><td>Pakowanie MAP</td><td class="n"><span data-k="tLinia"></span> t/rok</td><td class="sub">Bez bariery tlenowej przewaga odżywcza nie doczeka konsumenta.</td></tr>
+                  <tr><td class="id">11</td><td>Odbiorniki ciepła</td><td class="n">130 kW</td><td class="sub">CWU, ogrzewanie hali, regeneracja i suszenie opakowań.</td></tr>
+                </tbody>
+              </table>
+            </div></div>
+          </details>
+
+          <details class="more">
+            <summary>Uwagi projektowe: gdzie założone poziomy temperatur się nie spinają</summary>
+            <div class="more__b">
+              <h4>1. Zimna bateria: −30 °C nie obsłuży kondensatora lodu</h4>
+              <p>Przy 69 Pa front sublimacji odpowiada około −38,6 °C. Kondensator −40 °C daje siłę napędową 83 Pa,
+                kondensator −25 °C tylko 33 Pa. Cykl wydłuża się o rząd 40 % i cały zysk znika.
+                <strong>Rekomendacja: bateria przy komorze na −40 °C</strong>, poziom −30 °C zostaje dla mroźni i tunelu.</p>
+              <h4 style="margin-top:20px">2. Ciepła bateria: +35 °C oznacza półki około 33 °C, a nie 40 °C</h4>
+              <p>Półka 33 °C zamiast 40 °C daje o 11,5 % mniejszą różnicę do frontu, cykl 24,6 → 26,8 h
+                i około 8 % mniej przerobu. <strong>Najtańsze wyjście: materiał zmiennofazowy na +45 °C</strong>,
+                bo booster i tak wychodzi na +85 °C.</p>
+            </div>
+          </details>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <nav class="pager">
+    <a href="#/urzadzenie"><p class="mono mono--sm pager__k">← Poprzednia</p><p class="pager__t">01 · Urządzenie</p></a>
+    <a href="#/ekonomia"><p class="mono mono--sm pager__k">Następna →</p><p class="pager__t">03 · Ekonomia</p></a>
+  </nav>
+</section>
+
+<!-- ============================================================ 03 EKONOMIA -->
+<section class="view" id="view-ekonomia" hidden>
+  <header class="ph-head">
+    <p class="mono ph-head__k">03 · Ekonomia</p>
+    <h1>Ile kosztuje kilogram i co w tym koszcie waży najwięcej?</h1>
+    <p class="ph-head__lede">Energia to jedna pozycja i nie największa. <strong>Surowiec odpowiada za
+      <b data-k="surowiecPct"></b> % kosztu wytworzenia, energia za <b data-k="energiaPct"></b> %.</strong>
+      Przy uzysku <b data-k="yield"></b> : 1 każda złotówka na kilogramie surowca to prawie jedenaście złotych na kilogramie produktu.</p>
+  </header>
+
+  <div class="section section--tight">
+    <div class="wrap">
+      <div class="facts">
+        <div class="facts__i"><div class="facts__n"><b data-k="cogs"></b><small>zł/kg</small></div><p class="mono mono--sm facts__l">Koszt wytworzenia przy surowcu przemysłowym</p></div>
+        <div class="facts__i"><div class="facts__n"><b data-k="marza"></b><small>zł/kg</small></div><p class="mono mono--sm facts__l">Marża przy cenie odniesienia <b data-k="sale"></b> zł</p></div>
+        <div class="facts__i"><div class="facts__n"><b data-k="surowiecPct"></b><small>%</small></div><p class="mono mono--sm facts__l">Udział surowca w koszcie wytworzenia</p></div>
+        <div class="facts__i"><div class="facts__n"><b data-k="saveA"></b><small>tys. zł/rok</small></div><p class="mono mono--sm facts__l">Oszczędność energii na komorę wobec układu tradycyjnego</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="wrap--doc">
+
+      <div class="block">
+        <p class="mono block__n">Koszt</p>
+        <div class="block__b">
+          <h3>Struktura kosztu kilograma</h3>
+          <p>Jeden pasek od zera do ceny sprzedaży. Energia i cała integracja cieplna mieszczą się w wąskim segmencie.
+            Jej sens leży gdzie indziej: w mocy przyłączeniowej, emisji i niezależności od gazu.</p>
+          <figure>
+            <div class="scroll-x"><svg id="refCost" class="chart" role="img" aria-label="Struktura kosztu wytworzenia kilograma liofilizatu na tle ceny sprzedaży"></svg></div>
+            <div class="legend" data-legend="refCost"></div>
+          </figure>
+          <details class="more">
+            <summary>Gatunek surowca: gdzie naprawdę są pieniądze</summary>
+            <div class="more__b">
+              <div class="table-scroll" id="refGrades"></div>
+              <div class="callout callout--soft">
+                <p class="mono mono--sm">Granica</p>
+                <p>Przy uzysku 11 : 1 wszystko zagęszcza się jedenastokrotnie: mikotoksyny, pestycydy, metale ciężkie.
+                  Tańszy surowiec wymaga ostrzejszej kontroli przed młynkiem, nie luźniejszej.</p>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <div class="block">
+        <p class="mono block__n">Dźwignie</p>
+        <div class="block__b">
+          <h3>Co obniża koszt energii</h3>
+          <p>Każda dźwignia przeliczona pełnym modelem w obie strony: ile daje poprawa, ile kosztuje zaniedbanie.</p>
+          <figure>
+            <div class="scroll-x"><svg id="refLevers" class="chart" role="img" aria-label="Dźwignie kosztu energii na kilogram produktu, uszeregowane według efektu"></svg></div>
+            <div class="legend" data-legend="refLevers"></div>
+          </figure>
+        </div>
+      </div>
+
+      <div class="block">
+        <p class="mono block__n">Taryfa i PV</p>
+        <div class="block__b">
+          <h3>Roczny koszt energii jednej komory</h3>
+          <p>Model liczy koszt po dwunastu dobach wzorcowych, godzina po godzinie, z produkcją własną i przesunięciem
+            obciążenia w tanie godziny. Zmiana umowy nie wymaga inwestycji i jest najtańszą pozycją na liście.</p>
+          <figure>
+            <div class="scroll-x"><svg id="refTariff" class="chart" role="img" aria-label="Roczny koszt energii jednej komory w trzech taryfach, z fotowoltaiką i bez"></svg></div>
+            <div class="legend" data-legend="refTariff"></div>
+            <p class="figcap">Instalacja <span data-k="pvKwp"></span> kWp pokrywa <span data-k="pokrycie"></span> % zapotrzebowania komory,
+              a <span data-k="autok"></span> % jej produkcji zużywane jest na miejscu. <b>Autokonsumpcja jest ważniejsza od wielkości instalacji.</b></p>
+          </figure>
+          <div class="callout">
+            <p class="mono mono--sm">Zwrot nakładu</p>
+            <p>Względem układu tradycyjnego wariant zintegrowany oszczędza <strong><span data-k="saveA"></span> tysięcy złotych rocznie
+              na jednej komorze</strong>. Uczciwsze odniesienie to wariant z prostym odzyskiem ciepła skraplania:
+              tam różnica wynosi <span data-k="saveB"></span> tysięcy. Nakłady inwestycyjne są założeniem, nie wynikiem modelu.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <nav class="pager">
+    <a href="#/linia"><p class="mono mono--sm pager__k">← Poprzednia</p><p class="pager__t">02 · Linia i hala</p></a>
+    <a href="#/symulator"><p class="mono mono--sm pager__k">Następna →</p><p class="pager__t">04 · Symulator</p></a>
+  </nav>
+</section>
+
+<!-- ============================================================ 04 SYMULATOR -->
+<section class="view" id="view-symulator" hidden>
+  <header class="ph-head">
+    <p class="mono ph-head__k">04 · Symulator</p>
+    <h1>Co się stanie z kosztem i cyklem, gdy zmienię surowiec?</h1>
+    <p class="ph-head__lede">Ten sam model, który liczy wszystkie liczby na tej stronie, tylko z suwakami.
+      <strong>Tryb prosty pokazuje dwanaście parametrów</strong>, które faktycznie zmieniają wynik. Tryb pełny odsłania wszystkie.</p>
+  </header>
+
+  <div class="section section--tight">
+    <div class="wrap">
+      <div class="sim">
+        <aside class="simctl">
+          <div class="simctl__h"><span class="mono mono--sm">Parametry</span><button class="btn" type="button" id="simReset">Reset</button></div>
+          <div class="modes">
+            <button type="button" aria-pressed="true" data-mode="prosty">Prosty · 12</button>
+            <button type="button" aria-pressed="false" data-mode="pelny">Pełny</button>
+          </div>
+          <div class="simctl__b">
+            <div id="simSimple"></div>
+            <div id="simFull" hidden></div>
+            <div class="pinfo" id="simInfo"></div>
+          </div>
+        </aside>
+
+        <div class="simres">
+          <div class="scen" id="simScen"></div>
+          <div class="kpis" id="simKpi"></div>
+          <div>
+            <div class="tabs" role="tablist" id="simTabs">
+              <button type="button" role="tab" aria-selected="true" data-panel="tEnergy">Energia</button>
+              <button type="button" role="tab" aria-selected="false" data-panel="tProfile">Profil mocy</button>
+              <button type="button" role="tab" aria-selected="false" data-panel="tVac">Próżnia</button>
+              <button type="button" role="tab" aria-selected="false" data-panel="tCost">Koszt kg</button>
+              <button type="button" role="tab" aria-selected="false" data-panel="tLevers">Dźwignie</button>
+              <button type="button" role="tab" aria-selected="false" data-panel="tTariff">Taryfa i PV</button>
+              <button type="button" role="tab" aria-selected="false" data-panel="tTable">Bilans</button>
+            </div>
+            <div class="panel" id="tEnergy"><figure><div class="scroll-x"><svg id="simEnergy" class="chart" role="img" aria-label="Energia elektryczna na cykl w czterech wariantach"></svg></div><div class="legend" data-legend="simEnergy"></div></figure></div>
+            <div class="panel" id="tProfile" hidden><figure><div class="scroll-x"><svg id="simProfile" class="chart" role="img" aria-label="Profil mocy elektrycznej w cyklu"></svg></div><div class="legend" data-legend="simProfile"></div><p class="note" id="simProfileNote"></p></figure></div>
+            <div class="panel" id="tVac" hidden><figure><div class="scroll-x"><svg id="simVac" class="chart" role="img" aria-label="Wpływ ciśnienia w komorze na temperaturę frontu i szybkość sublimacji"></svg></div><div class="legend" data-legend="simVac"></div><p class="note" id="simVacNote"></p></figure></div>
+            <div class="panel" id="tCost" hidden><figure><div class="scroll-x"><svg id="simCost" class="chart" role="img" aria-label="Struktura kosztu wytworzenia"></svg></div><div class="legend" data-legend="simCost"></div><p class="note" id="simCostNote"></p></figure></div>
+            <div class="panel" id="tLevers" hidden><figure><div class="scroll-x"><svg id="simLevers" class="chart" role="img" aria-label="Dźwignie kosztu energii"></svg></div><div class="legend" data-legend="simLevers"></div></figure></div>
+            <div class="panel" id="tTariff" hidden><figure><div class="scroll-x"><svg id="simTariff" class="chart" role="img" aria-label="Roczny koszt energii w trzech taryfach"></svg></div><div class="legend" data-legend="simTariff"></div><p class="note" id="simTariffNote"></p></figure></div>
+            <div class="panel" id="tTable" hidden><div class="table-scroll" id="simTable"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="pager">
+    <a href="#/ekonomia"><p class="mono mono--sm pager__k">← Poprzednia</p><p class="pager__t">03 · Ekonomia</p></a>
+    <a href="#/granty"><p class="mono mono--sm pager__k">Następna →</p><p class="pager__t">05 · Granty</p></a>
+  </nav>
+</section>
+
+<!-- ============================================================ 05 GRANTY -->
+<section class="view" id="view-granty" hidden>
+  <header class="ph-head">
+    <p class="mono ph-head__k">05 · Granty</p>
+    <h1>Z czego to sfinansować, kto składa wniosek i w jakiej kolejności?</h1>
+    <p class="ph-head__lede">Jeden nabór jest otwarty i ma datę, cztery kierunki wymagają sprawdzenia.
+      <strong>Operacja Grupy Operacyjnej EPI daje 2,5 mln zł pomocy przy 420 tys. wkładu własnego</strong>,
+      ale w formie refundacji: całość trzeba najpierw wyłożyć.</p>
+  </header>
+
+  <div class="section section--tight">
+    <div class="wrap">
+      <figure>
+        <div class="scroll-x">
+        <svg class="chart" viewBox="0 0 900 170" role="img" aria-label="Oś czasu naborów. Nabór EPI otwarty od 1 października do 2 listopada 2026, dziś jest 5 września. Cztery pozostałe programy mają terminy do potwierdzenia.">
+          <text class="m" x="0" y="12">OŚ CZASU · WRZESIEŃ 2026 – LUTY 2027</text>
+          <line x1="0" y1="60" x2="900" y2="60" stroke="#000" stroke-width="1"/>
+          <g>
+            <line class="ax" x1="0" y1="54" x2="0" y2="66"/><text class="m" x="0" y="82">IX</text>
+            <line class="ax" x1="150" y1="54" x2="150" y2="66"/><text class="m" x="150" y="82">X</text>
+            <line class="ax" x1="300" y1="54" x2="300" y2="66"/><text class="m" x="300" y="82">XI</text>
+            <line class="ax" x1="450" y1="54" x2="450" y2="66"/><text class="m" x="450" y="82">XII</text>
+            <line class="ax" x1="600" y1="54" x2="600" y2="66"/><text class="m" x="600" y="82">I</text>
+            <line class="ax" x1="750" y1="54" x2="750" y2="66"/><text class="m" x="750" y="82">II</text>
+          </g>
+          <line x1="25" y1="30" x2="25" y2="72" stroke="#000" stroke-width="2"/>
+          <text class="v" x="33" y="26">dziś · 5 września</text>
+          <rect x="150" y="36" width="160" height="20" fill="#eb6834" rx="2"/>
+          <text class="v vw" x="160" y="51">EPI · nabór</text>
+          <text class="m" x="150" y="104">1 X – 2 XI 2026 · 26 DNI DO OTWARCIA</text>
+          <rect x="0" y="122" width="900" height="40" fill="none" stroke="#737373" stroke-width="1" stroke-dasharray="5 4"/>
+          <text class="m" x="14" y="140">TERMINY DO POTWIERDZENIA</text>
+          <text class="s" x="14" y="155" style="font-size:11.5px">FENG Ścieżka SMART · kredyt ekologiczny BGK · NFOŚiGW i FE Małopolska · Horyzont Europa</text>
+        </svg>
+        </div>
+      </figure>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="wrap">
+      <div class="sec-head"><h2>Kierunki finansowania</h2><p class="mono">1 z danymi · 4 do weryfikacji</p></div>
+      <div class="grants">
+        <article class="g">
+          <div class="g__k"><span class="mono mono--sm">PS WPR · I.13.5.2</span><span class="mono mono--sm st">Dane z budżetu</span></div>
+          <h3>Współpraca Grup Operacyjnych EPI</h3>
+          <p class="who"><b>Konsorcjum:</b> Emix jako lider i przetwórca, Uniwersytet Rolniczy, rolnik jako producent owoców</p>
+          <div class="big">
+            <div><div class="n">2,92<small>mln</small></div><div class="l mono">Koszty kwalifikowalne</div></div>
+            <div><div class="n">2,50<small>mln</small></div><div class="l mono">Pomoc, sufit</div></div>
+            <div><div class="n">0,42<small>mln</small></div><div class="l mono">Wkład własny</div></div>
+          </div>
+          <dl>
+            <dt>Nabór</dt><dd>1 października – 2 listopada 2026</dd>
+            <dt>Forma</dt><dd>Refundacja</dd>
+            <dt>Badania</dt><dd>100 %, maks. 50 % pomocy</dd>
+            <dt>Inwestycje</dt><dd>65 %, do 100 % dla nieprodukcyjnych</dd>
+            <dt>Próg</dt><dd>67 ze 134 punktów</dd>
+          </dl>
+          <p class="fit"><b>Dopasowanie:</b> liofilizator pilotażowy, magazyny i automatyka po stronie przetwórcy.
+            Element innowacyjny mieszka w części badawczej, bo sama liofilizacja owoców nie obroni się jako innowacja.</p>
+        </article>
+        <article class="g g--draft">
+          <div class="g__k"><span class="mono mono--sm">FENG · Ścieżka SMART</span><span class="mono mono--sm st st--d">Do weryfikacji</span></div>
+          <h3>Moduł badawczo-rozwojowy i wdrożenie</h3>
+          <p class="who"><b>Kto składa:</b> przedsiębiorca MŚP, konsorcjum z uczelnią możliwe</p>
+          <div class="big"><div><div class="n">?</div><div class="l mono">Budżet</div></div><div><div class="n">?</div><div class="l mono">Poziom</div></div><div><div class="n">?</div><div class="l mono">Termin</div></div></div>
+          <dl><dt>Na co</dt><dd>prace badawcze nad integracją cieplną, potem wdrożenie linii</dd><dt>Relacja</dt><dd>kolejny etap po EPI; ten sam koszt nie może iść dwa razy</dd></dl>
+          <p class="fit"><b>Dopasowanie:</b> naturalny drugi krok po pilotażu.</p>
+        </article>
+        <article class="g g--draft">
+          <div class="g__k"><span class="mono mono--sm">FENG · BGK</span><span class="mono mono--sm st st--d">Do weryfikacji</span></div>
+          <h3>Kredyt ekologiczny na efektywność energetyczną</h3>
+          <p class="who"><b>Kto składa:</b> przedsiębiorca inwestujący we własny zakład</p>
+          <div class="big"><div><div class="n">?</div><div class="l mono">Budżet</div></div><div><div class="n">?</div><div class="l mono">Premia</div></div><div><div class="n">?</div><div class="l mono">Termin</div></div></div>
+          <dl><dt>Na co</dt><dd>odzysk ciepła, magazyny, agregat jako modernizacja energetyczna</dd><dt>Warunek</dt><dd>audyt energetyczny i wykazana oszczędność</dd></dl>
+          <p class="fit"><b>Dopasowanie:</b> instrument pod tezę projektu, czyli spadek z <span data-k="kgW_A"></span> do <span data-k="kgW_D"></span> kWh/kg.</p>
+        </article>
+        <article class="g g--draft">
+          <div class="g__k"><span class="mono mono--sm">NFOŚiGW · FE Małopolska</span><span class="mono mono--sm st st--d">Do weryfikacji</span></div>
+          <h3>Energia odnawialna i magazyny na terenie zakładu</h3>
+          <p class="who"><b>Kto składa:</b> przetwórca albo rolnik w programach dla gospodarstw</p>
+          <div class="big"><div><div class="n">?</div><div class="l mono">Budżet</div></div><div><div class="n">?</div><div class="l mono">Poziom</div></div><div><div class="n">?</div><div class="l mono">Termin</div></div></div>
+          <dl><dt>Na co</dt><dd>fotowoltaika, magazyn energii, ewentualnie magazyn ciepła</dd><dt>Relacja</dt><dd>komplementarne, EPI nie finansuje fotowoltaiki</dd></dl>
+          <p class="fit"><b>Dopasowanie:</b> fotowoltaika jest najsilniejszą dźwignią kosztową w modelu.</p>
+        </article>
+        <article class="g g--draft">
+          <div class="g__k"><span class="mono mono--sm">Horyzont Europa · EIT Food</span><span class="mono mono--sm st st--d">Do weryfikacji</span></div>
+          <h3>Konsorcjum międzynarodowe wokół retencji składników</h3>
+          <p class="who"><b>Kto składa:</b> uczelnia jako lider, studio i przetwórca jako partnerzy</p>
+          <div class="big"><div><div class="n">?</div><div class="l mono">Budżet</div></div><div><div class="n">?</div><div class="l mono">Poziom</div></div><div><div class="n">?</div><div class="l mono">Termin</div></div></div>
+          <dl><dt>Na co</dt><dd>retencja witaminy C, antocyjanów i polifenoli, oświadczenia żywieniowe</dd><dt>Horyzont</dt><dd>2027 i dalej</dd></dl>
+          <p class="fit"><b>Dopasowanie:</b> model liczy już retencję i progi oświadczeń. Długi horyzont, wysoka konkurencja.</p>
+        </article>
+        <article class="g g--draft">
+          <div class="g__k"><span class="mono mono--sm">Wolne miejsce</span><span class="mono mono--sm st st--d">Szablon</span></div>
+          <h3>Kolejny program z tymi samymi polami</h3>
+          <dl><dt>Kto składa</dt><dd>–</dd><dt>Na co</dt><dd>–</dd><dt>Poziom i sufit</dt><dd>–</dd><dt>Termin</dt><dd>–</dd><dt>Relacja</dt><dd>–</dd></dl>
+          <p class="fit"><b>Zasada:</b> brak danych to znak zapytania, nigdy szacunek wyglądający jak fakt.</p>
+        </article>
+      </div>
+    </div>
+  </div>
+
+  <div class="section section--tight">
+    <div class="wrap--doc">
+      <div class="block">
+        <p class="mono block__n">Budżet EPI</p>
+        <div class="block__b">
+          <h3>Podział na podmioty</h3>
+          <p>Reguła jest jedna: <strong>wszystko, co da się uczciwie nazwać badaniem, idzie do uczelni</strong>,
+            bo tam finansowanie jest stuprocentowe. Limit 50 % pomocy na badania jest wiążący, więc budżet buduje się od tej liczby w dół.</p>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>Podmiot</th><th class="n">Koszty kwalifikowalne</th><th class="n">Pomoc</th><th class="n">Wkład własny</th><th>Główne pozycje</th></tr></thead>
+              <tbody>
+                <tr><td>Uniwersytet Rolniczy</td><td class="n">1 250 000</td><td class="n">1 250 000</td><td class="n">0</td><td class="sub">Zespół badawczy 600 tys., analizy laboratoryjne 250 tys., protokoły 150 tys., badania energetyczne 120 tys.</td></tr>
+                <tr><td>Emix</td><td class="n">1 300 000</td><td class="n">950 000</td><td class="n">350 000</td><td class="sub">Liofilizator pilotażowy 550 tys., magazyny i odzysk 250 tys., automatyka 120 tys., koordynacja 180 tys., ogólne 120 tys.</td></tr>
+                <tr><td>Rolnik</td><td class="n">370 000</td><td class="n">300 000</td><td class="n">70 000</td><td class="sub">Komora buforowa 110 tys., surowiec i partie testowe 90 tys., upowszechnianie 80 tys., mycie i sortowanie 60 tys.</td></tr>
+                <tr class="tot"><td>Razem</td><td class="n">2 920 000</td><td class="n">2 500 000</td><td class="n">420 000</td><td class="sub">złotych, kwoty poglądowe do podmiany na oferty</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="callout">
+            <p class="mono mono--sm">Płynność, nie budżet</p>
+            <p>Wkład własny leży w całości na przetwórcy i rolniku, i to przy refundacji. Najpierw trzeba wyłożyć
+              pełne 2,92 mln, dopiero potem je odzyskać. <strong>Bez linii kredytowej albo zaliczkowania to jest
+              realne wąskie gardło operacji.</strong></p>
+          </div>
+          <details class="more">
+            <summary>Warunki formalne i dwie rzeczy do sprawdzenia</summary>
+            <div class="more__b"><div class="table-scroll">
+              <table><tbody>
+                <tr><td>Skład grupy</td><td class="sub">Co najmniej dwa podmioty z różnych kategorii, obowiązkowy rolnik. Przy kosztach badań obowiązkowa jednostka naukowa.</td></tr>
+                <tr><td>Brak powiązań</td><td class="sub">Podmioty nie mogą być powiązane osobowo ani kapitałowo.</td></tr>
+                <tr><td>PKD przetwórcy</td><td class="sub">Adekwatne do operacji, dla przetwórstwa owoców zwykle 10.39.Z.</td></tr>
+                <tr><td>Koszty bieżące</td><td class="sub">100 %, ryczałt do 20 % kosztów inwestycyjnych i badań.</td></tr>
+                <tr><td>Koszty ogólne</td><td class="sub">100 %, maksymalnie 10 % pozostałych kosztów.</td></tr>
+                <tr><td>Inwestycje nieprodukcyjne</td><td class="sub">Sprawdzić, czy część nakładów rolnika nie kwalifikuje się do 100 %. To potrafi zdjąć kilkadziesiąt tysięcy z wkładu własnego.</td></tr>
+                <tr><td>Wariant ryczałtowy</td><td class="sub">Do 350 tys., 3 punkty w ocenie. Za te pieniądze nie kupi się liofilizatora.</td></tr>
+              </tbody></table>
+            </div></div>
+          </details>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="pager">
+    <a href="#/symulator"><p class="mono mono--sm pager__k">← Poprzednia</p><p class="pager__t">04 · Symulator</p></a>
+    <a href="#/metodyka"><p class="mono mono--sm pager__k">Następna →</p><p class="pager__t">06 · Metodyka</p></a>
+  </nav>
+</section>
+
+<!-- ============================================================ 06 METODYKA -->
+<section class="view" id="view-metodyka" hidden>
+  <header class="ph-head">
+    <p class="mono ph-head__k">06 · Metodyka</p>
+    <h1>Skąd te liczby i czego ten model nie robi?</h1>
+    <p class="ph-head__lede">Model jest bilansem energii, nie symulacją obiegu. Nadaje się do porównywania wariantów
+      i badania wrażliwości. <strong>Nie nadaje się do doboru urządzeń ani do wyceny.</strong></p>
+  </header>
+
+  <div class="section">
+    <div class="wrap--doc">
+      <div class="block">
+        <p class="mono block__n">Zestaw odniesienia</p>
+        <div class="block__b">
+          <h3>Jeden zestaw założeń dla całej strony</h3>
+          <p>Wszystkie liczby na stronach 01–03 i wartości startowe symulatora pochodzą z jednego przeliczenia.
+            Zmiana założenia w symulatorze nie zmienia stron 01–03; te pokazują punkt projektowy linii.</p>
+          <div class="table-scroll" id="refParamsTable"></div>
+        </div>
+      </div>
+      <div class="block">
+        <p class="mono block__n">Metoda</p>
+        <div class="block__b">
+          <h3>Skąd biorą się liczby</h3>
+          <p>Zapotrzebowanie cieplne z entalpii przemian: sublimacja 2 838 kJ/kg, desorpcja 3 000 kJ/kg.
+            Każdy obieg chłodniczy ze sprawności Carnota przemnożonej przez sprawność egzergetyczną; sprawność grzejna
+            jest o jeden wyższa od chłodniczej. Booster transkrytyczny wzorem Lorenza. Prężność pary nad lodem
+            według Murphy i Koop 2005. Ciśnienie robocze wyznacza granica jakości, czyli temperatura zapadania struktury
+            <b data-k="tCollapse"></b> °C, nie możliwości pomp.</p>
+          <p>Kalibracja: układ tradycyjny daje <b data-k="kgW_A"></b> kWh na kilogram odparowanej wody. Karta katalogowa
+            maszyny przemysłowej podaje 1,5, typowy pobór roboczy 1,1, przeglądy literaturowe od 4,7 do 11,7 dla skali
+            laboratoryjnej. Model trafia w środek pasma, bo ujmuje zamrażanie, próżnię i urządzenia pomocnicze.</p>
+        </div>
+      </div>
+      <div class="block">
+        <p class="mono block__n">Granice</p>
+        <div class="block__b">
+          <h3>Czego model nie robi</h3>
+          <ul>
+            <li>Nie liczy obiegów na rzeczywistych charakterystykach sprężarek ani strat w rurociągach.</li>
+            <li>Nie modeluje kinetyki suszenia dla kawałków; czas cyklu jest wielkością zadaną.</li>
+            <li>Nie uwzględnia wymagań dla propanu (strefy zagrożenia wybuchem, wentylacja) ani ciśnień pracy CO₂.</li>
+            <li>Profil dobowy jest sześciofazowym uproszczeniem, rzeczywisty pik przy wytwarzaniu próżni jest ostrzejszy.</li>
+            <li>Ceny godzinowe są modelem parametrycznym, nie szeregiem historycznym.</li>
+            <li>Nakłady inwestycyjne są założeniem użytkownika, nie wynikiem modelu.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="block">
+        <p class="mono block__n">Źródła</p>
+        <div class="block__b">
+          <h3>Materiały</h3>
+          <ul>
+            <li>Karta katalogowa liofilizatora 170 m²: 1 800 kg lodu na 18 h, 110 kW, odzysk ciepła 140 kW, kondensator −40 °C.</li>
+            <li>Zestawienie energochłonności technologii suszenia, 4,72–11,67 kWh/kg wody dla liofilizacji, 2023.</li>
+            <li>Praca ciągła zamiast wsadowej: −40 % energii jednostkowej, naprzemienne kondensatory −24 %, 2024.</li>
+            <li>Rozdział zużycia: układ chłodniczy ~70 %, grzanie półek ~17 %, próżnia ~13 %, 2021.</li>
+            <li>Uzyski masowe mięsa i podrobów po liofilizacji, dane produkcyjne 2026.</li>
+            <li>Raport własny „Liofilizacja przemysłowa owoców, warzyw i karmy premium z podrobów”, wrzesień 2026.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="pager">
+    <a href="#/granty"><p class="mono mono--sm pager__k">← Poprzednia</p><p class="pager__t">05 · Granty</p></a>
+    <a href="#/"><p class="mono mono--sm pager__k">Wróć na →</p><p class="pager__t">Start</p></a>
+  </nav>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="foot__g">
+    <div class="foot__b">
+      <p class="m">21 zmysłów</p>
+      <p>Materiał koncepcyjny: linia liofilizacji z integracją cieplną, magazynami energii i odzyskiem ciepła odpadowego.
+        Do wewnętrznej dyskusji i rozmów z dostawcami.</p>
+    </div>
+    <div class="foot__c">
+      <h4>Strony</h4>
+      <ul>
+        <li><a href="#/urzadzenie">01 · Urządzenie</a></li>
+        <li><a href="#/linia">02 · Linia i hala</a></li>
+        <li><a href="#/ekonomia">03 · Ekonomia</a></li>
+        <li><a href="#/symulator">04 · Symulator</a></li>
+        <li><a href="#/granty">05 · Granty</a></li>
+        <li><a href="#/metodyka">06 · Metodyka</a></li>
+      </ul>
+    </div>
+    <div class="foot__c">
+      <h4>Kontakt</h4>
+      <ul>
+        <li><a href="mailto:studio@21zmyslow.pl">studio@21zmyslow.pl</a></li>
+        <li><span>21 zmysłów LAB</span></li>
+        <li><span>Kraków</span></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot__bar">
+    <span>Wersja 0.2 · wrzesień 2026</span>
+    <span>Model uproszczony do analizy wariantów, nie do doboru urządzeń</span>
+  </div>
+</footer>
+
+<div class="tip" id="tip" role="status" aria-live="polite"></div>
+<script src="assets/model.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
