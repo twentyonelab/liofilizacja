@@ -1,8 +1,10 @@
 # Liofilizacja z integracją cieplną
 
-Strona prezentacyjna linii liofilizacji 21 zmysłów × Emix: urządzenie, linia i hala, ekonomia, symulator bilansu, finansowanie, metodyka.
+Strona prezentacyjna linii liofilizacji 21 zmysłów × Emix: czym jest liofilizacja, urządzenie, linia i hala, ekonomia, symulator bilansu, finansowanie, metodyka.
 
 ## Uruchomienie
+
+Na żywo: https://twentyonelab.github.io/liofilizacja/
 
 Strona statyczna, bez budowania. Otwórz `index.html` albo włącz GitHub Pages:
 
@@ -14,7 +16,7 @@ Po kilku minutach strona będzie pod `https://twentyonelab.github.io/liofilizacj
 
 | Ścieżka | Rola |
 |---|---|
-| `index.html` | Cała strona, siedem widoków przełączanych routerem na hash (`#/`, `#/urzadzenie`, `#/linia`, `#/ekonomia`, `#/symulator`, `#/granty`, `#/metodyka`). |
+| `index.html` | Cała strona, osiem widoków przełączanych routerem na hash (`#/`, `#/liofilizacja`, `#/urzadzenie`, `#/linia`, `#/ekonomia`, `#/symulator`, `#/granty`, `#/metodyka`). |
 | `assets/style.css` | Styl. Baza z materiałów EMIX (biel, czerń, Inter), kolory tylko w danych. |
 | `assets/model.js` | Silnik bilansu cieplnego, sekcje 1–3 symulatora v1.0 bez zmian. |
 | `assets/app.js` | Router, podpięcie liczb do treści (`data-k`), wykresy SVG, symulator. |

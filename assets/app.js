@@ -322,7 +322,10 @@
       tLinia: f(KOMORY * M.mProd * M.cyclesYr / 1000, 0), tSurowiec: f(KOMORY * M.mTunel * M.cyclesYr / 1000, 0),
       saveA: f((a.costYr - s.costYr) / 1000, 0), saveB: f((b.costYr - s.costYr) / 1000, 0),
       surowiecPct: f(s.cost5.surowiec / s.cogs * 100, 0), energiaPct: f(s.cost5.energia / s.cogs * 100, 0),
-      pokrycie: f(s.yr.pokrycie, 0), autok: f(s.yr.autok, 0), pvKwp: f(M.p.pvKwp, 0), pWork: f(M.pWork, 0), tCollapse: f(M.tCollapse, 0)
+      pokrycie: f(s.yr.pokrycie, 0), autok: f(s.yr.autok, 0), pvKwp: f(M.p.pvKwp, 0), pWork: f(M.pWork, 0), tCollapse: f(M.tCollapse, 0),
+      wEnd: f(M.p.wEnd, 0), wEndTrad: f(M.p.wEndTrad, 0),
+      retC_li: f((NUTR.find(x => x.k === "c") || { ret: [0, 0] }).ret[0] * M.p.retFD / 100, 0),
+      retC_tr: f((NUTR.find(x => x.k === "c") || { ret: [0, 0] }).ret[1] * M.p.retTrad / 100, 0)
     };
     $$("[data-k]").forEach(n => { const v = K[n.getAttribute("data-k")]; if (v !== undefined) n.textContent = v; });
   }
@@ -351,8 +354,51 @@
     }
   }
 
+  /* ---------- wykres: wartości odżywcze ---------- */
+  const NSER = [{ k: "sw", n: "Surowiec świeży", c: C.s1 }, { k: "tr", n: "Susz gorącym powietrzem", c: C.s2 }, { k: "li", n: "Liofilizat", c: C.s3 }];
+  const fmtN = v => v >= 100 ? f(v, 0) : (v >= 10 ? f(v, 1) : (v >= 1 ? f(v, 2) : f(v, 3)));
+  function drawNutr(svg, M, legId) {
+    const rows = (M.nutro || []).filter(n => n.base > 0);
+    const W = 900, mL = 190, mR = 170, barH = 11, gap = 3, rowH = NSER.length * (barH + gap) + 16, top = 8;
+    const H = top + rows.length * rowH + 4;
+    prep(svg, W, H);
+    const plot = W - mL - mR;
+    rows.forEach((n, i) => {
+      const y = top + i * rowH, max = Math.max(n.sw, n.tr, n.li) || 1;
+      svg.appendChild(txt(0, y + 14, n.n, "t", { style: "font-size:12.5px" }));
+      svg.appendChild(txt(0, y + 28, n.u + " · RETENCJA " + f(n.rFD, 0) + " / " + f(n.rTR, 0) + " %", "m"));
+      NSER.forEach((se, j) => {
+        const v = n[se.k], yy = y + j * (barH + gap), w = Math.max(2, v / max * plot);
+        const r = el("rect", { x: mL, y: yy, width: w, height: barH, fill: CSSV(se.c), rx: 2 });
+        const rws = n.nrv > 0 ? row("% RWS", (v / n.nrv * 100 < 1 ? "< 1" : f(v / n.nrv * 100, 0)) + " %") : "";
+        bindTip(r, '<div class="t">' + n.n + ' · ' + se.n + '</div>' + row("Zawartość", fmtN(v) + " " + n.u) + rws);
+        svg.appendChild(r);
+        svg.appendChild(txt(mL + w + 8, yy + barH - 2, fmtN(v) + (n.nrv > 0 ? "  ·  " + (v / n.nrv * 100 < 1 ? "<1" : f(v / n.nrv * 100, 0)) + " % RWS" : ""), "v", { style: "font-size:10.5px" }));
+      });
+      if (i < rows.length - 1) svg.appendChild(el("line", { x1: 0, y1: y + rowH - 6, x2: W, y2: y + rowH - 6, class: "ax" }));
+    });
+    legend(legId, NSER.map(se => ({ n: se.n, c: CSSV(se.c) })).concat([{ n: "RWS = referencyjna wartość spożycia", c: "#fff" }]));
+  }
+  function nutrNote(M) {
+    const N = M.nutro, b = M.p.basis;
+    if (!N) return "";
+    if (b === "produkt") return "<b>Na etykiecie liofilizat wygrywa o rząd wielkości, ale to głównie zagęszczenie.</b> Liofilizat zagęszcza " + f(N.concFD, 1) + "-krotnie, susz konwekcyjny tylko " + f(N.concTR, 1) + "-krotnie, bo zostaje przy " + f(M.p.wEndTrad, 0) + " % wody. Przełącz na suchą masę, żeby oddzielić retencję od dosuszenia.";
+    if (b === "sucha") return "<b>Uczciwe porównanie chemiczne: woda usunięta, zostaje sama retencja.</b> Minerały i błonnik przetrwają każdą technologię, polifenole tracą umiarkowanie, a witamina C i antocyjany to miejsce, w którym susz gorący traci połowę i więcej.";
+    return "<b>Perspektywa konsumenta.</b> Porcja odpowiadająca 100 g świeżej truskawki to około " + f(100 / Math.max(.01, N.concFD), 0) + " g liofilizatu albo " + f(100 / Math.max(.01, N.concTR), 0) + " g suszu. Liofilizat oddaje niemal tyle, co owoc świeży.";
+  }
+  function refreshNutr(basis) {
+    const M = model(Object.assign({}, REF, { basis }), true);
+    drawNutr($("#refNutr"), M, "refNutr");
+    $("#refNutrNote").innerHTML = nutrNote(M);
+  }
+
   /* ---------- strony 01–03 ---------- */
   const M0 = model(REF);
+  refreshNutr("sucha");
+  $$("#nutrBasis button").forEach(b => b.addEventListener("click", () => {
+    $$("#nutrBasis button").forEach(x => x.setAttribute("aria-selected", String(x === b)));
+    refreshNutr(b.dataset.basis);
+  }));
   fillK(M0);
   drawGantt(M0);
   drawEnergy($("#refEnergy"), M0, "D", "refEnergy");
@@ -512,7 +558,7 @@
 
   /* ---------- router ---------- */
   const views = $$(".view"), links = $$("#navLinks a");
-  const MAP = { "": "index", "/": "index", "/urzadzenie": "urzadzenie", "/linia": "linia", "/ekonomia": "ekonomia", "/symulator": "symulator", "/granty": "granty", "/metodyka": "metodyka" };
+  const MAP = { "": "index", "/": "index", "/liofilizacja": "liofilizacja", "/urzadzenie": "urzadzenie", "/linia": "linia", "/ekonomia": "ekonomia", "/symulator": "symulator", "/granty": "granty", "/metodyka": "metodyka" };
   function route() {
     const h = location.hash.replace(/^#/, ""), key = MAP[h] !== undefined ? MAP[h] : "index";
     views.forEach(v => { v.hidden = (v.id !== "view-" + key); });
