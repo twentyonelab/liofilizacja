@@ -2,7 +2,7 @@
 
 Projekt 21 zmysłów. Cel: narzędzie decyzyjne do liofilizacji przemysłowej (bilans cieplny, próżnia, koszt wytworzenia, energia i PV), podane w języku wizualnym materiałów EMIX.
 
-Stan na 2026-09-05: **wersja 0.3 na GitHub Pages: https://twentyonelab.github.io/liofilizacja/** `index.html` + `assets/`. Silnik modelu podłączony do symulatora i do liczb na podstronach. Propozycja architektury: `plan/plan-strony.html`.
+Stan na 2026-09-05: **wersja 0.4 na GitHub Pages: https://twentyonelab.github.io/liofilizacja/** `index.html` + `assets/`. Silnik modelu podłączony do symulatora i do liczb na podstronach. Propozycja architektury: `plan/plan-strony.html`.
 
 ## Pliki w repo
 
@@ -14,7 +14,7 @@ Stan na 2026-09-05: **wersja 0.3 na GitHub Pages: https://twentyonelab.github.io
 | `referencje/budzet-EPI-I.13.5.2.pdf` + `.txt` | Szkic budżetu operacji EPI (PS WPR I.13.5.2): Emix + Uniwersytet Rolniczy + rolnik, 2,92 mln kosztów, 2,5 mln pomocy, 420 tys. wkładu. Nabór 1.10–2.11.2026. |
 | `referencje/emix-styl.css` | Arkusz stylu wyciągnięty ze strony EMIX „Piwnice 5500 m²”. Wzorzec prezentacji dla tego, co powstanie. |
 | `plan/plan-strony.html` | Propozycja architektury: zasady, 3 opcje + rekomendacja, mapa serwisu, makiety 6 podstron, kafle Granty, brief i prompty na render, decyzje. |
-| `index.html` | **Strona v0.3.** Osiem widoków (Start + 01 Liofilizacja + 02–07), router na hash. Liczby wstawiane z modelu przez `data-k`. |
+| `index.html` | **Strona v0.4.** Siedem widoków (Start + 01 Liofilizacja + 02–06), router na hash. Sloty na zdjęcia `assets/img/foto-taca.jpg` i `foto-urzadzenie.jpg` z zastępnikiem, gdy pliku brak. Liczby wstawiane z modelu przez `data-k`. |
 | `assets/style.css` | Styl: baza EMIX, kolory tylko w danych (paleta 6 serii zwalidowana, chłód niebieski, ciepło pomarańczowe). |
 | `assets/model.js` | Silnik bilansu, sekcje 1–3 symulatora v1.0 bez zmian. |
 | `assets/app.js` | Router, `REF` (zestaw odniesienia), wykresy SVG (energia, koszt, dźwignie, taryfa, profil, próżnia), symulator: tryb prosty 12 pól, pełny 100 pól. |
@@ -174,5 +174,6 @@ Nie rozstrzygam ich tu, tylko zapisuję. Zgodnie z zasadą: architektura przed k
 - **2026-09-04** – wgrany symulator v1.0, przeczytany w całości. Rozszyfrowana i przeanalizowana strona EMIX. Zapisane pliki referencyjne i te notatki. Nic nie zbudowane.
 - **2026-09-05** – nowe pliki: symulator z renderem, schemat linii, budżet EPI. Propozycja architektury strony (`plan/plan-strony.html`): hub + 6 podstron, zakładka Granty, brief na render.
 - **2026-09-05** – zbudowana klikalna makieta w opcji B, z prawdziwymi liczbami z modelu.
+- **2026-09-05** – wersja 0.4: zakładka 01 zaczyna się tabelą porównawczą z kolumną „przewaga” i „źródło” (model / piśmiennictwo / fizyka). Usunięta zakładka Metodyka. Sloty na dwa zdjęcia (taca z owocami na 01, render urządzenia jako hero Startu, z zapasem: render linii). Render linii przeniesiony na 03. **Czekam na pliki zdjęć.**
 - **2026-09-05** – wersja 0.3: nowa zakładka 01 Liofilizacja dla osób spoza tematu (wykres fazowy, trzy kroki, tabela porównawcza z suszeniem gorącym, wykres retencji z modelu z przełącznikiem podstawy, gdzie przewaga realna, zastosowania). Pozostałe strony przenumerowane 02–07. Pages włączone.
 - **2026-09-05** – wersja 0.2: strona właściwa w katalogu głównym pod GitHub Pages, model podłączony do symulatora, kolory, ilustracje, treści skrócone. Do włączenia: Settings → Pages → branch, folder root.

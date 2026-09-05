@@ -278,3 +278,15 @@ details.grp .grp__b{display:flex;flex-direction:column;gap:12px;padding:2px 0 12
 .foot__c a:hover{color:#fff}
 .foot__bar{max-width:1440px;margin:clamp(30px,4vw,56px) auto 0;padding-top:18px;border-top:1px solid rgba(255,255,255,.1);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13px;color:rgba(255,255,255,.42)}
 @media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important}}
+
+/* ---------- tabela porównawcza ---------- */
+table.cmp th:nth-child(4),table.cmp td:nth-child(4){white-space:nowrap}
+table.cmp td.src{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);white-space:nowrap}
+.adv{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;white-space:nowrap}
+.adv::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--ink-3)}
+.adv--li::before{background:var(--s3)}
+.adv--tr::before{background:var(--s2)}
+.adv--none{color:var(--ink-3);font-weight:400}
+.figframe.missing{aspect-ratio:3/2;display:grid;place-items:center;background:repeating-linear-gradient(135deg,transparent 0 9px,rgba(0,0,0,.05) 9px 10px)}
+.figframe.missing img{display:none}
+.figframe.missing::after{content:attr(data-note);font-family:ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);text-align:center;padding:20px;max-width:40ch}

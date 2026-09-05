@@ -407,7 +407,6 @@
   tableGrades($("#refGrades"), M0, "D");
   drawLevers($("#refLevers"), M0, "D", "refLevers", 6);
   drawTariff($("#refTariff"), M0, "D", "refTariff");
-  tableRefParams($("#refParamsTable"));
 
   /* ---------- symulator ---------- */
   const SIMPLE = ["product", "format", "trayArea", "batch", "wEnd", "pCham", "tShelf", "tIceSurf", "frzMode", "grade", "tariff", "pvKwp"];
@@ -556,9 +555,18 @@
   }));
   $("#simReset").addEventListener("click", () => { SP = JSON.parse(JSON.stringify(REF)); SEL = "D"; buildControls(); syncControls(); refresh(); });
 
+  /* ---------- zdjęcia: brak pliku = czytelny zastępnik albo render zapasowy ---------- */
+  $$("figure[data-photo] img").forEach(img => {
+    img.addEventListener("error", () => {
+      const fig = img.closest("figure"), fb = fig.getAttribute("data-fallback");
+      if (fb && img.src.indexOf(fb) < 0) { img.src = fb; const t = fig.querySelector(".tag"); if (t && fig.getAttribute("data-fallback-tag")) t.textContent = fig.getAttribute("data-fallback-tag"); return; }
+      fig.classList.add("missing"); fig.setAttribute("data-note", "Zdjęcie do wstawienia: " + fig.getAttribute("data-photo"));
+    });
+  });
+
   /* ---------- router ---------- */
   const views = $$(".view"), links = $$("#navLinks a");
-  const MAP = { "": "index", "/": "index", "/liofilizacja": "liofilizacja", "/urzadzenie": "urzadzenie", "/linia": "linia", "/ekonomia": "ekonomia", "/symulator": "symulator", "/granty": "granty", "/metodyka": "metodyka" };
+  const MAP = { "": "index", "/": "index", "/liofilizacja": "liofilizacja", "/urzadzenie": "urzadzenie", "/linia": "linia", "/ekonomia": "ekonomia", "/symulator": "symulator", "/granty": "granty" };
   function route() {
     const h = location.hash.replace(/^#/, ""), key = MAP[h] !== undefined ? MAP[h] : "index";
     views.forEach(v => { v.hidden = (v.id !== "view-" + key); });
