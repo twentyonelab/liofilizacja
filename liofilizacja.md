@@ -2,7 +2,7 @@
 
 Projekt 21 zmysłów. Cel: narzędzie decyzyjne do liofilizacji przemysłowej (bilans cieplny, próżnia, koszt wytworzenia, energia i PV), podane w języku wizualnym materiałów EMIX.
 
-Stan na 2026-09-05: **architektura zaproponowana, nic nie zbudowane.** Propozycja: `plan/plan-strony.html` (opublikowana też jako artefakt). W repo leżą pliki referencyjne i te notatki.
+Stan na 2026-09-05: **makieta zbudowana.** Klikalna makieta: `makieta/index.html` (hub + 6 podstron, router na hash, wykresy w monochromie). Propozycja architektury: `plan/plan-strony.html`. Oba opublikowane jako artefakty.
 
 ## Pliki w repo
 
@@ -14,6 +14,9 @@ Stan na 2026-09-05: **architektura zaproponowana, nic nie zbudowane.** Propozycj
 | `referencje/budzet-EPI-I.13.5.2.pdf` + `.txt` | Szkic budżetu operacji EPI (PS WPR I.13.5.2): Emix + Uniwersytet Rolniczy + rolnik, 2,92 mln kosztów, 2,5 mln pomocy, 420 tys. wkładu. Nabór 1.10–2.11.2026. |
 | `referencje/emix-styl.css` | Arkusz stylu wyciągnięty ze strony EMIX „Piwnice 5500 m²”. Wzorzec prezentacji dla tego, co powstanie. |
 | `plan/plan-strony.html` | Propozycja architektury: zasady, 3 opcje + rekomendacja, mapa serwisu, makiety 6 podstron, kafle Granty, brief i prompty na render, decyzje. |
+| `makieta/index.html` | **Klikalna makieta** (573 kB z osadzonymi renderami). Jeden plik, router na hash, 7 widoków, wykresy SVG w monochromie, sterowanie symulatora bez podłączonego modelu. |
+| `makieta/index-src.html` | Źródło makiety bez osadzonych obrazów (placeholdery `__IMG_LINIA__`, `__IMG_MEDIA__`). Do edycji. |
+| `makieta/liczby-modelu.json` | Wynik modelu dla zestawu odniesienia, wyciągnięty z symulatora. Źródło wszystkich liczb w makiecie. |
 
 ---
 
@@ -125,7 +128,23 @@ Granty na start: 1 kafel z danymi (EPI I.13.5.2), 4 kandydaci do weryfikacji (FE
 
 Render na otwarcie: produkt, nie instalacja. Trzy bryły (komora, moduł maszynowy, 2 kasety PCM), stal + grafit, białe tło, czytelny w szarości. Trzy kadry: hero, przekrój, linia. Prompty w `plan/plan-strony.html`.
 
-## 4. Decyzje do podjęcia przed budową
+## 4. Makieta (2026-09-05)
+
+Zbudowana w opcji B. Jeden plik HTML, router na hash (`#/`, `#/urzadzenie`, …), siedem widoków. Wysokość podstron 2 100 – 4 700 px wobec 13 500 px w symulatorze.
+
+**Paleta i typografia** wprost z EMIX: biel, czerń, `#525252`, `#737373`, Inter + systemowy monospace, tylko jasny motyw.
+
+**Wykresy w monochromie** – system zastępujący sześć kolorów serii: czerń = pozycja główna, `#525252` i `#737373` = kolejne, `#B3B3B3` = najsłabsza, kreskowanie ukośne (`<pattern>`) = pozycja wyróżniona jakościowo (grzanie elektryczne, sublimacja), obrys bez wypełnienia = pozycja marginalna. Wzory definiowane lokalnie w każdym SVG.
+
+**Warstwa 3** zrobiona na `<details>` – bez JS, dostępna z klawiatury.
+
+**Liczby** pochodzą z `makieta/liczby-modelu.json`, wyciągniętego przez uruchomienie symulatora w przeglądarce. Nic nie jest zmyślone. Wyjątek świadomy: cztery kafle grantów mają znaki zapytania zamiast kwot.
+
+**Rozbieżność do domknięcia:** strony 01, 03 i 04 liczone przy 65 Pa (cykl 26,1 h, 285 cykli), strona 02 przy 69 Pa ze schematu linii (cykl 24,6 h, 302 cykle). Opisane wprost na stronie Metodyka. Rekomendacja: przyjąć 69 Pa dla całości.
+
+**Czego makieta nie ma:** podłączonego modelu do suwaków, bramki z hasłem, docelowych renderów (są zastępcze ze schematu linii).
+
+## 5. Decyzje do podjęcia przed budową
 
 Nie rozstrzygam ich tu, tylko zapisuję. Zgodnie z zasadą: architektura przed kodem, one-way doors wskazane wprost.
 
@@ -138,7 +157,8 @@ Nie rozstrzygam ich tu, tylko zapisuję. Zgodnie z zasadą: architektura przed k
 
 ---
 
-## 5. Dziennik
+## 6. Dziennik
 
 - **2026-09-04** – wgrany symulator v1.0, przeczytany w całości. Rozszyfrowana i przeanalizowana strona EMIX. Zapisane pliki referencyjne i te notatki. Nic nie zbudowane.
-- **2026-09-05** – nowe pliki: symulator z renderem, schemat linii, budżet EPI. Propozycja architektury strony (`plan/plan-strony.html`): hub + 6 podstron, zakładka Granty, brief na render. Czeka na decyzje 1–3.
+- **2026-09-05** – nowe pliki: symulator z renderem, schemat linii, budżet EPI. Propozycja architektury strony (`plan/plan-strony.html`): hub + 6 podstron, zakładka Granty, brief na render.
+- **2026-09-05** – zbudowana klikalna makieta (`makieta/index.html`) w opcji B, z prawdziwymi liczbami z modelu. Czeka na decyzje 1–3 i na ocenę układu.
