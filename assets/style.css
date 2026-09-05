@@ -290,3 +290,26 @@ table.cmp td.src{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:10.
 .figframe.missing{aspect-ratio:3/2;display:grid;place-items:center;background:repeating-linear-gradient(135deg,transparent 0 9px,rgba(0,0,0,.05) 9px 10px)}
 .figframe.missing img{display:none}
 .figframe.missing::after{content:attr(data-note);font-family:ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);text-align:center;padding:20px;max-width:40ch}
+
+/* ---------- tabela typu pricing ---------- */
+.pricing{display:grid;grid-template-columns:minmax(200px,1.1fr) minmax(0,1fr) minmax(0,1fr);border-top:1px solid var(--ink)}
+.pricing>div{padding:14px 18px 14px 0;border-bottom:1px solid var(--line);display:flex;flex-direction:column;justify-content:center;gap:4px;min-width:0}
+.pricing .ph{padding:18px 18px 16px 0;border-bottom:1px solid var(--ink)}
+.pricing .ph h3{font-size:clamp(17px,1.6vw,22px);letter-spacing:-.04em;line-height:1.1}
+.pricing .ph .mono{color:var(--ink-3);margin-top:6px}
+.pricing .ph.li{color:var(--ink)}
+.pricing .rk{font-weight:600;font-size:15.5px}
+.pricing .rk .src{display:block;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:400;margin-top:3px}
+.pricing .c{display:flex;align-items:center;gap:12px;font-size:15px;color:var(--ink-2)}
+.pricing .c .ic{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:14px;font-weight:700;color:#fff}
+.pricing .c.yes .ic{background:var(--s3)} .pricing .c.no .ic{background:var(--bad)} .pricing .c.mid .ic{background:#b3b3b3}
+.pricing .c .v{font-weight:600;color:var(--ink)}
+.pricing .c small{display:block;font-weight:400;color:var(--ink-3);font-size:13px}
+.pricing .li{background:var(--soft);padding-left:16px;padding-right:16px}
+.pricing .ph.li{border-top:2px solid var(--ink);margin-top:-1px}
+@media (max-width:760px){
+  .pricing{grid-template-columns:1fr}
+  .pricing .rk{border-bottom:0;padding-bottom:4px}
+  .pricing .ph:first-child{display:none}
+  .pricing .li{padding-left:12px;padding-right:12px}
+}

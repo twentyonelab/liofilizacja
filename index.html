@@ -93,30 +93,56 @@
 
   <div class="section section--tight">
     <div class="wrap">
-      <div class="sec-head"><h2>Porównanie na wejście</h2><p class="mono">Owoce · kolumna „przewaga” mówi, kto wygrywa</p></div>
-      <div class="table-scroll">
-        <table class="cmp">
-          <thead><tr><th>Cecha</th><th>Suszenie gorącym powietrzem</th><th>Liofilizacja</th><th>Przewaga</th><th>Źródło</th></tr></thead>
-          <tbody>
-            <tr><td>Temperatura produktu</td><td class="sub">+60 do +90 °C przez cały proces</td><td class="sub">−40 do −20 °C, na końcu do +40 °C</td><td><span class="adv adv--li">liofilizacja</span></td><td class="src">fizyka procesu</td></tr>
-            <tr><td>Droga wody</td><td class="sub">ciecz paruje z powierzchni, produkt wysycha od zewnątrz</td><td class="sub">lód sublimuje w całej objętości</td><td><span class="adv adv--li">liofilizacja</span></td><td class="src">fizyka procesu</td></tr>
-            <tr><td>Struktura i kształt</td><td class="sub">skurcz, twarda lub gumowa</td><td class="sub">porowata, kształt i objętość zachowane</td><td><span class="adv adv--li">liofilizacja</span></td><td class="src">piśmiennictwo</td></tr>
-            <tr><td>Rehydratacja</td><td class="sub">powolna, niepełna</td><td class="sub">szybka, niemal do stanu wyjściowego</td><td><span class="adv adv--li">liofilizacja</span></td><td class="src">piśmiennictwo</td></tr>
-            <tr><td>Kolor i aromat</td><td class="sub">ciemnienie, utrata lotnych aromatów</td><td class="sub">kolor i aromat surowca</td><td><span class="adv adv--li">liofilizacja</span></td><td class="src">piśmiennictwo</td></tr>
-            <tr><td>Wilgotność końcowa</td><td class="sub"><span data-k="wEndTrad"></span> % wody</td><td class="sub"><span data-k="wEnd"></span> % wody</td><td><span class="adv adv--li">liofilizacja</span></td><td class="src">model</td></tr>
-            <tr><td>Witamina C</td><td class="sub">około <span data-k="retC_tr"></span> % przetrwa</td><td class="sub">około <span data-k="retC_li"></span> % przetrwa</td><td><span class="adv adv--li">liofilizacja</span></td><td class="src">model, retencje z piśmiennictwa</td></tr>
-            <tr><td>Antocyjany · polifenole</td><td class="sub">45 % · 65 % przetrwa</td><td class="sub">88 % · 92 % przetrwa</td><td><span class="adv adv--li">liofilizacja</span></td><td class="src">model, retencje z piśmiennictwa</td></tr>
-            <tr><td>Minerały · błonnik · białko</td><td class="sub">100 %</td><td class="sub">100 %</td><td><span class="adv adv--none">bez różnicy</span></td><td class="src">model</td></tr>
-            <tr><td>Karotenoidy po przechowywaniu</td><td class="sub">zwarty susz utlenia się wolniej</td><td class="sub">porowaty liofilizat utlenia się szybciej bez bariery tlenowej</td><td><span class="adv adv--none">zależy od opakowania</span></td><td class="src">piśmiennictwo</td></tr>
-            <tr><td>Czas procesu</td><td class="sub">kilka do kilkunastu godzin</td><td class="sub"><span data-k="tCyc"></span> h cyklu</td><td><span class="adv adv--tr">suszenie</span></td><td class="src">model</td></tr>
-            <tr><td>Energia na kg odparowanej wody</td><td class="sub">niższa, zwykle ciepło z gazu</td><td class="sub"><span data-k="kgW_A"></span> kWh el. tradycyjnie · <span data-k="kgW_D"></span> z integracją cieplną</td><td><span class="adv adv--tr">suszenie</span></td><td class="src">model</td></tr>
-            <tr><td>Trwałość bez konserwantów</td><td class="sub">miesiące</td><td class="sub">lata przy szczelnym opakowaniu</td><td><span class="adv adv--li">liofilizacja</span></td><td class="src">piśmiennictwo</td></tr>
-          </tbody>
-        </table>
+      <div class="sec-head"><h2>Porównanie na wejście</h2><p class="mono">Owoce · truskawka jako odniesienie</p></div>
+      <div class="pricing" role="table" aria-label="Porównanie suszenia gorącym powietrzem i liofilizacji">
+        <div class="ph" role="columnheader"><span class="mono mono--sm">Cecha</span></div>
+        <div class="ph" role="columnheader"><h3>Suszenie gorącym powietrzem</h3><p class="mono mono--sm">Stan techniki · tanie · szybkie</p></div>
+        <div class="ph li" role="columnheader"><h3>Liofilizacja</h3><p class="mono mono--sm">Sublimacja w próżni · produkt premium</p></div>
+
+        <div class="rk">Produkt nie jest podgrzewany<span class="src">fizyka procesu</span></div>
+        <div class="c no"><span class="ic">✕</span><span><span class="v">+60 do +90 °C</span><small>przez cały proces</small></span></div>
+        <div class="c yes li"><span class="ic">✓</span><span><span class="v">−40 do −20 °C</span><small>zamrożony przez całe suszenie</small></span></div>
+
+        <div class="rk">Kształt i objętość zachowane<span class="src">literatura</span></div>
+        <div class="c no"><span class="ic">✕</span><span><span class="v">Skurcz</span><small>twardy lub gumowy</small></span></div>
+        <div class="c yes li"><span class="ic">✓</span><span><span class="v">Porowaty</span><small>jak surowiec, tylko lżejszy</small></span></div>
+
+        <div class="rk">Kolor i aromat surowca<span class="src">literatura</span></div>
+        <div class="c no"><span class="ic">✕</span><span><span class="v">Ciemnienie</span><small>utrata lotnych aromatów</small></span></div>
+        <div class="c yes li"><span class="ic">✓</span><span><span class="v">Zachowane</span><small>truskawka pachnie truskawką</small></span></div>
+
+        <div class="rk">Szybka rehydratacja<span class="src">literatura</span></div>
+        <div class="c no"><span class="ic">✕</span><span><span class="v">Powolna, niepełna</span></span></div>
+        <div class="c yes li"><span class="ic">✓</span><span><span class="v">Minuty</span><small>niemal do stanu wyjściowego</small></span></div>
+
+        <div class="rk">Witamina C przetrwa<span class="src">model · retencje z literatury</span></div>
+        <div class="c no"><span class="ic">✕</span><span><span class="v">około <span data-k="retC_tr"></span> %</span></span></div>
+        <div class="c yes li"><span class="ic">✓</span><span><span class="v">około <span data-k="retC_li"></span> %</span></span></div>
+
+        <div class="rk">Antocyjany i polifenole przetrwają<span class="src">model · retencje z literatury</span></div>
+        <div class="c no"><span class="ic">✕</span><span><span class="v">45 % · 65 %</span></span></div>
+        <div class="c yes li"><span class="ic">✓</span><span><span class="v">88 % · 92 %</span></span></div>
+
+        <div class="rk">Minerały, błonnik, białko<span class="src">model</span></div>
+        <div class="c mid"><span class="ic">=</span><span><span class="v">100 %</span></span></div>
+        <div class="c mid li"><span class="ic">=</span><span><span class="v">100 %</span><small>tu nie ma przewagi</small></span></div>
+
+        <div class="rk">Wilgotność końcowa<span class="src">model</span></div>
+        <div class="c no"><span class="ic">✕</span><span><span class="v"><span data-k="wEndTrad"></span> % wody</span></span></div>
+        <div class="c yes li"><span class="ic">✓</span><span><span class="v"><span data-k="wEnd"></span> % wody</span></span></div>
+
+        <div class="rk">Trwałość bez konserwantów<span class="src">literatura</span></div>
+        <div class="c no"><span class="ic">✕</span><span><span class="v">Miesiące</span></span></div>
+        <div class="c yes li"><span class="ic">✓</span><span><span class="v">Lata</span><small>przy szczelnym opakowaniu</small></span></div>
+
+        <div class="rk">Krótki czas procesu<span class="src">model</span></div>
+        <div class="c yes"><span class="ic">✓</span><span><span class="v">Kilka do kilkunastu godzin</span></span></div>
+        <div class="c no li"><span class="ic">✕</span><span><span class="v"><span data-k="tCyc"></span> h</span><small>stąd sześć komór naprzemiennie</small></span></div>
+
+        <div class="rk">Niskie zużycie energii<span class="src">model</span></div>
+        <div class="c yes"><span class="ic">✓</span><span><span class="v">Niższe</span><small>zwykle ciepło z gazu</small></span></div>
+        <div class="c no li"><span class="ic">✕</span><span><span class="v"><span data-k="kgW_A"></span> kWh/kg wody</span><small>z integracją cieplną <span data-k="kgW_D"></span>, i o to chodzi w projekcie</small></span></div>
       </div>
-      <p class="figcap" style="margin-top:14px"><b>Skąd te wartości.</b> „Model” to bilans na tej stronie, liczony dla truskawki
-        w plastrach. „Piśmiennictwo” to cechy jakościowe opisane w literaturze technologii żywności, bez liczb, bo zależą od
-        surowca i nastaw. Dwie ostatnie przewagi suszenia gorącego, czas i energia, to cała cena liofilizacji i o nią chodzi w projekcie.</p>
     </div>
   </div>
 
@@ -616,25 +642,6 @@
       </div>
 
       <div class="block">
-        <p class="mono block__n">Agregat</p>
-        <div class="block__b">
-          <h3>Jedna maszynownia na trzy poziomy temperatur</h3>
-          <div class="duo" style="align-items:start">
-            <figure class="figframe">
-              <span class="mono mono--sm tag">Agregat kaskadowy · 112 kW chłodu</span>
-              <img src="assets/img/agregat.webp" alt="Wizualizacja agregatu kaskadowego z chłodnicą, sprężarkami i kolektorem chłodu" width="490" height="328" loading="lazy">
-            </figure>
-            <div>
-              <p>CO₂ subkrytyczny schodzi do −45 °C na kondensatory lodu. R290 podnosi ciepło do +50 °C na półki
-                i odbiorniki zakładu. Booster CO₂ transkrytyczny wychodzi na +85 °C dla mycia i regeneracji osuszaczy.
-                Około 100 kW elektrycznych ze 150 kW mocy całej linii.</p>
-              <p>Maszynownia leży między komorami a resztą zakładu, bo najdroższe rurociągi to te na −45 °C i próżniowe.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="block">
         <p class="mono block__n">Rzut hali</p>
         <div class="block__b">
           <h3>48 × 24 m, strefa mokra oddzielona od suchej</h3>
@@ -715,19 +722,6 @@
             </div></div>
           </details>
 
-          <details class="more">
-            <summary>Uwagi projektowe: gdzie założone poziomy temperatur się nie spinają</summary>
-            <div class="more__b">
-              <h4>1. Zimna bateria: −30 °C nie obsłuży kondensatora lodu</h4>
-              <p>Przy 69 Pa front sublimacji odpowiada około −38,6 °C. Kondensator −40 °C daje siłę napędową 83 Pa,
-                kondensator −25 °C tylko 33 Pa. Cykl wydłuża się o rząd 40 % i cały zysk znika.
-                <strong>Rekomendacja: bateria przy komorze na −40 °C</strong>, poziom −30 °C zostaje dla mroźni i tunelu.</p>
-              <h4 style="margin-top:20px">2. Ciepła bateria: +35 °C oznacza półki około 33 °C, a nie 40 °C</h4>
-              <p>Półka 33 °C zamiast 40 °C daje o 11,5 % mniejszą różnicę do frontu, cykl 24,6 → 26,8 h
-                i około 8 % mniej przerobu. <strong>Najtańsze wyjście: materiał zmiennofazowy na +45 °C</strong>,
-                bo booster i tak wychodzi na +85 °C.</p>
-            </div>
-          </details>
         </div>
       </div>
 
@@ -1071,7 +1065,7 @@
     </div>
   </div>
   <div class="foot__bar">
-    <span>Wersja 0.4 · wrzesień 2026</span>
+    <span>Wersja 0.5 · wrzesień 2026</span>
     <span>Model uproszczony do analizy wariantów, nie do doboru urządzeń</span>
   </div>
 </footer>
