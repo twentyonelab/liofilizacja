@@ -1,0 +1,824 @@
+<title>Plan strony Liofilizacja</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:light;
+  --bg:#FFFFFF; --ink:#000000; --ink-2:#525252; --ink-3:#737373;
+  --line:rgba(0,0,0,.10); --line-2:rgba(0,0,0,.22); --dark:#0A0A0A; --soft:#F5F5F5;
+  --ease:cubic-bezier(.16,1,.3,1); --pad:clamp(20px,4vw,64px);
+}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
+  font-size:17px;line-height:1.5;letter-spacing:-.02em;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3,h4{font-weight:700;letter-spacing:-.05em;line-height:.95;margin:0;text-wrap:balance}
+p{margin:0 0 1.1em} p:last-child{margin-bottom:0}
+strong{font-weight:600}
+a{color:inherit}
+.mono{font-family:ui-monospace,SFMono-Regular,'SF Mono',Menlo,Consolas,'Liberation Mono',monospace;
+  font-size:13px;text-transform:uppercase;letter-spacing:.1em;line-height:1.4;font-weight:400;letter-spacing:.1em}
+.mono--sm{font-size:11.5px}
+.muted{color:var(--ink-2)} .muted-3{color:var(--ink-3)}
+::selection{background:#000;color:#fff}
+
+.wrap{max-width:1440px;margin:0 auto}
+.section{padding:clamp(56px,7vw,110px) var(--pad)}
+.section--tight{padding-top:0}
+.sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:24px;
+  padding-bottom:18px;border-bottom:1px solid var(--line);margin-bottom:clamp(30px,4vw,52px)}
+.sec-head h2{font-size:clamp(26px,3vw,40px)}
+.sec-head .mono{color:var(--ink-3)}
+@media (max-width:640px){.sec-head{flex-direction:column;align-items:flex-start;gap:10px}}
+
+/* hero */
+.hero{padding:clamp(70px,9vw,130px) var(--pad) clamp(40px,5vw,70px);max-width:1440px;margin:0 auto}
+.hero__eyebrow{color:var(--ink-2);margin-bottom:clamp(22px,3vw,36px)}
+.hero__title{font-size:clamp(44px,8.5vw,128px);line-height:.88;letter-spacing:-.05em;max-width:14ch}
+.hero__sub{margin-top:30px;max-width:56ch;font-size:clamp(17px,1.5vw,22px);line-height:1.42;color:var(--ink-2)}
+.hero__sub strong{color:var(--ink)}
+
+/* facts */
+.facts{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line)}
+.facts__item{padding:26px 20px 0;border-right:1px solid var(--line)}
+.facts__item:last-child{border-right:0}
+.facts__n{font-size:clamp(28px,3.6vw,52px);font-weight:700;letter-spacing:-.05em;line-height:.95;font-variant-numeric:tabular-nums}
+.facts__n small{font-size:.5em;font-weight:600;color:var(--ink-3);margin-left:.15em}
+.facts__l{margin-top:12px;color:var(--ink-3);max-width:26ch}
+@media (max-width:820px){.facts{grid-template-columns:repeat(2,1fr)}
+  .facts__item{border-bottom:1px solid var(--line);padding-bottom:24px}
+  .facts__item:nth-child(2n){border-right:0}.facts__item:nth-last-child(-n+2){border-bottom:0}}
+
+/* statement */
+.statement{max-width:960px;margin:0 auto}
+.statement__lead{font-size:clamp(22px,3vw,40px);font-weight:700;letter-spacing:-.045em;line-height:1.08;margin:0 0 clamp(22px,3vw,36px)}
+.statement__body{font-size:clamp(16px,1.3vw,18.5px);color:var(--ink-2);max-width:68ch}
+.statement__body strong{color:var(--ink)}
+
+/* rules */
+.rules{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(22px,3vw,44px)}
+.rule{border-top:1px solid var(--ink);padding-top:18px}
+.rule h3{font-size:clamp(19px,1.8vw,24px);letter-spacing:-.04em;line-height:1.1;margin-bottom:12px}
+.rule p{color:var(--ink-2);font-size:16px}
+@media (max-width:820px){.rules{grid-template-columns:1fr}}
+
+/* options */
+.opts{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(18px,2.4vw,36px)}
+.opt{border:1px solid var(--line-2);padding:26px 24px 24px;display:flex;flex-direction:column;gap:14px;position:relative}
+.opt--rec{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.opt__k{display:flex;justify-content:space-between;align-items:baseline;gap:10px;color:var(--ink-3)}
+.opt__k b{font-weight:400;color:var(--ink);border:1px solid var(--ink);padding:3px 9px;border-radius:2px}
+.opt h3{font-size:clamp(20px,1.9vw,26px);letter-spacing:-.045em;line-height:1.08}
+.opt p{color:var(--ink-2);font-size:15.5px}
+.opt ul{margin:0;padding-left:1.1em;color:var(--ink-2);font-size:15px}
+.opt li{margin:.35em 0}
+.opt .verdict{margin-top:auto;padding-top:14px;border-top:1px solid var(--line);font-size:15px}
+.opt .verdict b{color:var(--ink)}
+@media (max-width:900px){.opts{grid-template-columns:1fr}}
+
+/* figure */
+figure{margin:0}
+figure svg{display:block;width:100%;height:auto;max-width:100%}
+figcaption{margin-top:14px;color:var(--ink-3);font-size:15px;max-width:80ch}
+.fig-scroll{overflow-x:auto}
+.map text{font-family:'Inter',system-ui,sans-serif;fill:currentColor}
+.map .t{font-size:14px;font-weight:600;letter-spacing:-.02em}
+.map .s{font-size:11px;fill:var(--ink-3)}
+.map .m{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:10px;letter-spacing:.08em;fill:var(--ink-3)}
+.map .box{fill:#fff;stroke:currentColor;stroke-width:1.2}
+.map .box--hub{fill:#000}
+.map .box--hub ~ .t{fill:#fff}
+.map .chip{fill:var(--soft);stroke:none}
+.map .ln{stroke:currentColor;stroke-width:1.1;fill:none}
+.map .ln--soft{stroke:var(--line-2);stroke-dasharray:3 3}
+
+/* page cards with wireframes */
+.pages{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(28px,4vw,56px) clamp(22px,3vw,48px)}
+@media (max-width:980px){.pages{grid-template-columns:1fr}}
+.page{display:grid;grid-template-columns:230px 1fr;gap:clamp(18px,2.4vw,32px);border-top:1px solid var(--ink);padding-top:22px}
+@media (max-width:560px){.page{grid-template-columns:1fr}}
+.page__k{color:var(--ink-3);margin-bottom:10px;display:flex;justify-content:space-between;gap:10px}
+.page h3{font-size:clamp(21px,2vw,27px);letter-spacing:-.045em;line-height:1.08;margin-bottom:10px}
+.page__q{font-size:15.5px;color:var(--ink);font-weight:500;margin-bottom:14px}
+.page ol{margin:0 0 14px;padding-left:1.25em;color:var(--ink-2);font-size:15px}
+.page li{margin:.3em 0}
+.page li b{color:var(--ink);font-weight:600}
+.page .src{color:var(--ink-3);font-size:13.5px;line-height:1.5}
+.page .src b{color:var(--ink-2);font-weight:500}
+.page .no{margin-top:10px;font-size:13.5px;color:var(--ink-3);border-left:1px solid var(--ink);padding-left:12px}
+.page .no b{color:var(--ink);font-weight:500}
+
+/* wireframe */
+.wf{border:1px solid var(--ink);background:#fff;padding:8px;display:flex;flex-direction:column;gap:5px;aspect-ratio:3/4.35;position:relative}
+.wf__bar{height:12px;border-bottom:1px solid var(--line-2);display:flex;align-items:center;justify-content:space-between;padding:0 2px 4px}
+.wf__bar i{display:block;width:26px;height:4px;background:#000}
+.wf__bar span{display:flex;gap:4px}
+.wf__bar span i{width:9px;height:3px;background:var(--line-2)}
+.b{border:1px solid var(--line-2);position:relative;min-height:14px;display:flex;align-items:flex-end;padding:3px 5px}
+.b .l{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:8.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.b--img{background:repeating-linear-gradient(135deg,transparent 0 5px,rgba(0,0,0,.12) 5px 6px);border-color:var(--ink)}
+.b--img .l{background:#fff;padding:2px 4px;color:var(--ink)}
+.b--dark{background:#000;border-color:#000}
+.b--dark .l{color:#fff}
+.b--h{height:30px} .b--h2{height:44px} .b--h3{height:64px} .b--h4{height:92px} .b--h5{height:120px}
+.b--fill{flex:1}
+.b--num{display:grid;grid-template-columns:repeat(4,1fr);gap:0;padding:0;align-items:stretch}
+.b--num i{display:block;border-right:1px solid var(--line-2);height:100%;position:relative}
+.b--num i:last-child{border-right:0}
+.b--num i::after{content:"";position:absolute;left:4px;top:5px;width:55%;height:6px;background:#000}
+.b--num .l{position:absolute;left:5px;bottom:3px}
+.b--tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:4px;align-items:stretch}
+.b--tiles i{display:block;border:1px solid var(--line-2);min-height:24px}
+.b--tiles.two{grid-template-columns:repeat(2,1fr)}
+.b--tiles .l{position:absolute;left:5px;bottom:3px;background:#fff}
+.b--chart{background:linear-gradient(to top,rgba(0,0,0,.08),rgba(0,0,0,.08)) 0 100%/100% 1px no-repeat}
+.b--chart::before{content:"";position:absolute;left:8%;right:8%;bottom:6px;height:55%;
+  background:linear-gradient(90deg,#000 0 10%,transparent 10% 22%,#000 22% 32%,transparent 32% 44%,#000 44% 54%,transparent 54% 66%,#000 66% 76%,transparent 76% 88%,#000 88% 98%,transparent 98%);
+  -webkit-mask:linear-gradient(to top,#000 40%,transparent 40%,transparent);opacity:.75}
+.b--line::before{content:"";position:absolute;left:6%;right:6%;top:30%;height:1.5px;background:#000;transform:rotate(-6deg)}
+.b--split{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px}
+.b--split i{display:block;border:1px solid var(--line-2)}
+.b--split .l{position:absolute;left:5px;bottom:3px;background:#fff}
+.b--table{background:repeating-linear-gradient(to bottom,transparent 0 9px,rgba(0,0,0,.14) 9px 10px)}
+.b--table .l{background:#fff}
+.b--ctl{display:grid;grid-template-columns:110px 1fr;gap:4px;padding:4px}
+.b--ctl i{display:block;border:1px solid var(--line-2);background:repeating-linear-gradient(to bottom,transparent 0 7px,rgba(0,0,0,.14) 7px 8px)}
+.b--ctl em{display:block;border:1px dashed var(--line-2)}
+.b--ctl .l{position:absolute;left:5px;bottom:3px;background:#fff}
+.wf .tag{position:absolute;top:-1px;right:-1px;background:#000;color:#fff;font-family:ui-monospace,Menlo,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:3px 7px}
+
+/* depth diagram */
+.depth{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--ink)}
+.depth__i{padding:22px 22px 20px;border-right:1px solid var(--line-2);display:flex;flex-direction:column;gap:12px}
+.depth__i:last-child{border-right:0}
+.depth__i .mono{color:var(--ink-3)}
+.depth__i h4{font-size:19px;letter-spacing:-.04em;line-height:1.1}
+.depth__i p{font-size:15px;color:var(--ink-2)}
+.depth__i .ex{font-size:14px;border-top:1px solid var(--line);padding-top:10px;color:var(--ink)}
+.depth__i .ex b{font-weight:500;color:var(--ink-3)}
+.depth__i:nth-child(1){background:#000;color:#fff}
+.depth__i:nth-child(1) .mono,.depth__i:nth-child(1) p,.depth__i:nth-child(1) .ex b{color:rgba(255,255,255,.62)}
+.depth__i:nth-child(1) .ex{color:#fff;border-color:rgba(255,255,255,.18)}
+.depth__i:nth-child(2){background:var(--soft)}
+@media (max-width:820px){.depth{grid-template-columns:1fr}.depth__i{border-right:0;border-bottom:1px solid var(--line-2)}.depth__i:last-child{border-bottom:0}}
+
+/* grants */
+.grants{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(18px,2.4vw,36px)}
+@media (max-width:1100px){.grants{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:700px){.grants{grid-template-columns:1fr}}
+.g{border-top:1px solid var(--ink);padding-top:18px;display:flex;flex-direction:column;gap:14px}
+.g__k{display:flex;justify-content:space-between;align-items:center;gap:10px;color:var(--ink-3)}
+.g__k .st{border:1px solid var(--ink);color:var(--ink);padding:3px 9px;border-radius:2px;white-space:nowrap}
+.g__k .st--draft{border-color:var(--line-2);color:var(--ink-3)}
+.g h3{font-size:clamp(20px,1.9vw,26px);letter-spacing:-.045em;line-height:1.08;max-width:22ch}
+.g .who{font-size:15px;color:var(--ink-2)}
+.g .who b{color:var(--ink);font-weight:600}
+.g .big{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line)}
+.g .big div{background:#fff;padding:12px 10px 11px}
+.g .big .n{font-size:clamp(20px,1.7vw,24px);font-weight:700;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
+.g .big .n small{font-size:12px;font-weight:600;color:var(--ink-3);margin-left:2px}
+.g .big .l{margin-top:6px;color:var(--ink-3);font-size:10.5px}
+.g dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:14.5px}
+.g dt{color:var(--ink-3)} .g dd{margin:0;color:var(--ink)}
+.g .fit{margin-top:auto;border-left:1px solid var(--ink);padding-left:12px;font-size:14.5px;color:var(--ink-2)}
+.g .fit b{color:var(--ink);font-weight:500}
+.g--draft h3,.g--draft .who,.g--draft dd{color:var(--ink-2)}
+.g--draft .big .n{color:var(--ink-3)}
+
+.table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:15px;min-width:600px}
+th,td{text-align:left;padding:13px 18px 13px 0;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11.5px;text-transform:uppercase;letter-spacing:.1em;font-weight:400;color:var(--ink-3);border-bottom:1px solid var(--ink)}
+td:first-child{font-weight:600;padding-right:26px;white-space:nowrap}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}
+th.num{text-align:right}
+tr.tot td{border-top:1px solid var(--ink);border-bottom:0;font-weight:600}
+
+/* callout, prompt */
+.callout{border-left:1px solid var(--ink);padding:2px 0 2px 22px;margin:28px 0;max-width:78ch}
+.callout .mono{color:var(--ink-3);margin-bottom:10px}
+.callout p{font-size:16px}
+.render{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,3.5vw,56px);align-items:start}
+@media (max-width:900px){.render{grid-template-columns:1fr}}
+.render h3{font-size:clamp(20px,1.9vw,26px);letter-spacing:-.045em;line-height:1.1;margin-bottom:12px}
+.render p,.render li{font-size:15.5px;color:var(--ink-2)}
+.render ul{margin:0 0 1em;padding-left:1.1em}
+.render li{margin:.35em 0}
+.render strong{color:var(--ink)}
+pre{margin:0;background:var(--dark);color:#fff;padding:22px 24px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:13.5px;line-height:1.6;letter-spacing:0;white-space:pre-wrap;word-break:break-word;border-radius:2px}
+pre b{color:rgba(255,255,255,.5);font-weight:400}
+.prompt-k{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:22px 0 10px;color:var(--ink-3)}
+.prompt-k:first-child{margin-top:0}
+.sheet{border:1px solid var(--ink);padding:0;display:grid;grid-template-columns:1fr 1fr;aspect-ratio:16/9;position:relative;overflow:hidden;
+  background:repeating-linear-gradient(135deg,transparent 0 9px,rgba(0,0,0,.05) 9px 10px)}
+.sheet .obj{position:absolute;left:18%;right:18%;top:16%;bottom:22%;border:1.5px solid #000;background:#fff}
+.sheet .obj i{position:absolute;border:1px solid #000}
+.sheet .obj .door{left:8%;top:14%;width:30%;height:66%;background:repeating-linear-gradient(to bottom,transparent 0 6px,rgba(0,0,0,.35) 6px 7px);border-radius:1px}
+.sheet .obj .mach{left:44%;top:8%;width:48%;height:78%;background:#000}
+.sheet .obj .pcm{left:44%;top:88%;width:22%;height:14%;background:#fff;top:auto;bottom:-16%}
+.sheet .obj .pcm2{left:70%;width:22%;height:14%;background:#fff;bottom:-16%}
+.sheet .cap{position:absolute;left:14px;bottom:12px;color:var(--ink-3)}
+.sheet .cap2{position:absolute;right:14px;top:12px;color:var(--ink-3)}
+
+/* avoid */
+.avoid{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(18px,2.4vw,36px)}
+@media (max-width:820px){.avoid{grid-template-columns:1fr}}
+.avoid__i{border-top:1px solid var(--line-2);padding-top:14px;display:grid;grid-template-columns:34px 1fr;gap:12px}
+.avoid__i .x{font-weight:700;font-size:22px;line-height:1;letter-spacing:-.05em}
+.avoid__i h4{font-size:17px;letter-spacing:-.03em;line-height:1.2;margin-bottom:6px}
+.avoid__i p{font-size:15px;color:var(--ink-2)}
+
+/* decisions */
+.dec{display:grid;grid-template-columns:200px 1fr;gap:clamp(18px,3vw,50px);padding:clamp(24px,3vw,40px) 0;border-top:1px solid var(--line)}
+.dec:first-child{border-top:0;padding-top:0}
+.dec .mono{color:var(--ink-3)}
+.dec h3{font-size:clamp(21px,2.1vw,29px);letter-spacing:-.045em;line-height:1.08;margin-bottom:12px;max-width:26ch}
+.dec p{font-size:16px;color:var(--ink-2);max-width:68ch}
+.dec p strong{color:var(--ink)}
+@media (max-width:760px){.dec{grid-template-columns:1fr;gap:12px}}
+
+.site-foot{background:var(--dark);color:#fff;padding:clamp(48px,6vw,80px) var(--pad) 26px;margin-top:clamp(40px,5vw,80px)}
+.site-foot .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;font-size:14px;color:rgba(255,255,255,.55)}
+.site-foot b{color:#fff;font-weight:600}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<!-- ============================ HERO ============================ -->
+<header class="hero">
+  <p class="mono hero__eyebrow">Propozycja architektury · 21 zmysłów · 5 września 2026</p>
+  <h1 class="hero__title">Jedno pytanie na stronę.</h1>
+  <p class="hero__sub">
+    Dziś wszystko leży w jednym pliku: czternaście bloków, sto suwaków, trzynaście tysięcy pikseli w dół.
+    Propozycja rozbija to na <strong>hub i sześć podstron</strong>, z których każda odpowiada na jedno pytanie
+    i pokazuje najpierw liczbę, potem obraz, a tabelę dopiero na życzenie. Otwiera render urządzenia,
+    zamyka zakładka Granty.
+  </p>
+</header>
+
+<section class="section section--tight">
+  <div class="wrap">
+    <div class="facts">
+      <div class="facts__item"><div class="facts__n">14 <small>→ 6</small></div><p class="mono mono--sm facts__l">Bloków wynikowych symulatora rozłożonych na podstron</p></div>
+      <div class="facts__item"><div class="facts__n">~100 <small>→ 12</small></div><p class="mono mono--sm facts__l">Suwaków widocznych na wejściu; reszta pod trybem Ekspert</p></div>
+      <div class="facts__item"><div class="facts__n">3</div><p class="mono mono--sm facts__l">Warstwy głębokości na każdej stronie: liczba, obraz, tabela</p></div>
+      <div class="facts__item"><div class="facts__n">1</div><p class="mono mono--sm facts__l">Render na otwarcie, zamiast panelu parametrów</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ ZASADY ============================ -->
+<section class="section">
+  <div class="wrap statement">
+    <h2 class="statement__lead">Za gęsto nie dlatego, że za dużo wiemy. Za gęsto, bo wszystko jest na tym samym poziomie.</h2>
+    <div class="statement__body">
+      <p>Symulator, schemat linii i budżet grantu to trzy dobre dokumenty pisane dla trzech różnych rozmów.
+      Kiedy leżą obok siebie, czytelnik nie wie, którą rozmowę prowadzi. Architektura nie ma nic usuwać.
+      Ma <strong>ustawić kolejność</strong>: co widzi partner w pierwszych trzydziestu sekundach, co inżynier
+      w piątej minucie, a co osoba pisząca wniosek, gdy potrzebuje konkretnej liczby.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section section--tight">
+  <div class="wrap">
+    <div class="rules">
+      <div class="rule"><p class="mono mono--sm muted-3" style="margin-bottom:10px">Zasada 1</p>
+        <h3>Jedno pytanie na stronę</h3>
+        <p>Każda podstrona ma tytuł, który jest pytaniem, i maksymalnie pięć bloków, które na nie odpowiadają. Jeśli blok odpowiada na inne pytanie, idzie na inną stronę.</p></div>
+      <div class="rule"><p class="mono mono--sm muted-3" style="margin-bottom:10px">Zasada 2</p>
+        <h3>Liczba, potem obraz, tabela na życzenie</h3>
+        <p>Trzy warstwy głębokości. Pierwsza jest widoczna zawsze, druga po przewinięciu, trzecia po kliknięciu. Nikt nie dostaje pełnej tabeli bilansu, kto o nią nie prosił.</p></div>
+      <div class="rule"><p class="mono mono--sm muted-3" style="margin-bottom:10px">Zasada 3</p>
+        <h3>Symulator jest narzędziem, nie stroną</h3>
+        <p>Liczby ze symulatora zasilają podstrony jako gotowe wyniki. Sam symulator z suwakami zostaje jedną zakładką dla tych, którzy chcą liczyć, i otwiera się w trybie prostym.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ WARSTWY ============================ -->
+<section class="section">
+  <div class="wrap">
+    <div class="sec-head"><h2>Trzy warstwy głębokości</h2><p class="mono">Obowiązuje na każdej podstronie</p></div>
+    <div class="depth">
+      <div class="depth__i"><p class="mono mono--sm">Warstwa 1 · zawsze widoczna</p><h4>Liczba i zdanie</h4>
+        <p>Rząd trzech, czterech liczb i jedno zdanie, które mówi, co z nich wynika. To jest cała strona dla kogoś, kto ma trzydzieści sekund.</p>
+        <p class="ex"><b>Przykład:</b> 1,37 kWh na kg wody zamiast 2,04. Ten sam strumień ciepła policzony raz, nie dwa razy.</p></div>
+      <div class="depth__i"><p class="mono mono--sm">Warstwa 2 · po przewinięciu</p><h4>Jeden obraz na blok</h4>
+        <p>Schemat, wykres albo render, z podpisem, który stawia tezę. Jeden obraz. Jeśli potrzebne są dwa, to są dwa bloki.</p>
+        <p class="ex"><b>Przykład:</b> drabina temperatur dla wariantu D, bez przełącznika wariantów. Porównanie z A jest osobnym blokiem.</p></div>
+      <div class="depth__i"><p class="mono mono--sm">Warstwa 3 · po kliknięciu</p><h4>Tabela, założenia, źródła</h4>
+        <p>Rozwijane pod blokiem. Pełne rozbicie bilansu, wykaz aparatów, metodyka. Dla inżyniera i recenzenta wniosku, nie dla partnera na pierwszym spotkaniu.</p>
+        <p class="ex"><b>Przykład:</b> „Pokaż pełne rozbicie” pod wykresem energii otwiera 40 wierszy tabeli z symulatora.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ OPCJE ============================ -->
+<section class="section section--tight">
+  <div class="wrap">
+    <div class="sec-head"><h2>Trzy opcje struktury</h2><p class="mono">Jedna rekomendacja</p></div>
+    <div class="opts">
+      <div class="opt">
+        <div class="opt__k"><span class="mono mono--sm">Opcja A</span></div>
+        <h3>Jedna opowieść</h3>
+        <p>Jedna długa strona w układzie EMIX „Koncepcja A”: pitch, numerowane rozdziały, symulator jako osobny link na końcu.</p>
+        <ul><li>Najszybsza do zbudowania</li><li>Znany wzorzec, spójny z EMIX Piwnice</li><li>Wciąż jedna ściana przewijania, granty giną na dole</li></ul>
+        <p class="verdict"><b>Werdykt:</b> dobra na tydzień, zła na kwartał. Gdy dojdą kolejne materiały, wróci gęstość.</p>
+      </div>
+      <div class="opt opt--rec">
+        <div class="opt__k"><span class="mono mono--sm">Opcja B</span><b class="mono mono--sm">Rekomendacja</b></div>
+        <h3>Hub i sześć podstron</h3>
+        <p>Strona startowa z renderem i kaflami, sześć podstron po jednym pytaniu, wspólna nawigacja i pager „poprzednia / następna”, jak w EMIX.</p>
+        <ul><li>Każda podstrona mieści się w 3–4 ekranach</li><li>Granty dostają równorzędną zakładkę, nie stopkę</li><li>Symulator zostaje narzędziem z własnym adresem</li></ul>
+        <p class="verdict"><b>Werdykt:</b> najlepszy stosunek porządku do nakładu. Wzorzec EMIX ma już gotowe wszystkie potrzebne komponenty.</p>
+      </div>
+      <div class="opt">
+        <div class="opt__k"><span class="mono mono--sm">Opcja C</span></div>
+        <h3>Trzy poziomy wtajemniczenia</h3>
+        <p>Pitch na 90 sekund, potem rozdziały, potem narzędzia, z osobnym trybem dla partnera, inżyniera i recenzenta.</p>
+        <ul><li>Najlepiej dopasowana do trzech odbiorców</li><li>Wymaga trzech wersji tych samych treści</li><li>Trudna do utrzymania w dwuosobowym zespole</li></ul>
+        <p class="verdict"><b>Werdykt:</b> za dużo na start. Jej sens, warstwy głębokości, wchodzi do opcji B jako zasada, nie jako struktura.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ MAPA ============================ -->
+<section class="section">
+  <div class="wrap">
+    <div class="sec-head"><h2>Mapa serwisu</h2><p class="mono">Opcja B · skąd biorą się treści</p></div>
+    <figure>
+      <div class="fig-scroll">
+      <svg class="map" viewBox="0 0 1240 560" role="img" aria-label="Mapa serwisu: strona startowa z renderem prowadzi do sześciu podstron. Urządzenie, Linia i hala, Ekonomia, Symulator, Granty, Metodyka. Pod każdą podstroną wskazane są istniejące materiały, z których czerpie: bloki symulatora, rysunki schematu linii, budżet EPI. Z boku wejście ze strony EMIX Piwnice, Koncepcja A.">
+        <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,1 L9,5 L0,9 z" fill="currentColor"/></marker></defs>
+        <!-- EMIX entry -->
+        <rect class="box" x="20" y="34" width="190" height="56" style="stroke-dasharray:4 3;stroke:var(--ink-3)"/>
+        <text class="m" x="34" y="55">EMIX · PIWNICE</text>
+        <text class="t" x="34" y="76" style="fill:var(--ink-2)">Koncepcja A</text>
+        <path class="ln ln--soft" d="M210,62 L500,62" marker-end="url(#ar)"/>
+        <text class="s" x="300" y="54">link „szczegóły koncepcji”</text>
+        <!-- hub -->
+        <rect class="box box--hub" x="500" y="20" width="240" height="84"/>
+        <text class="t" x="518" y="48" style="fill:#fff">Start</text>
+        <text class="s" x="518" y="68" style="fill:rgba(255,255,255,.7)">render · teza · 4 liczby</text>
+        <text class="s" x="518" y="86" style="fill:rgba(255,255,255,.7)">6 kafli do podstron</text>
+        <!-- trunk -->
+        <path class="ln" d="M620,104 L620,140"/>
+        <path class="ln" d="M110,140 L1130,140"/>
+        <!-- six pages -->
+        <g>
+          <path class="ln" d="M110,140 L110,170" marker-end="url(#ar)"/>
+          <rect class="box" x="20" y="172" width="180" height="88"/>
+          <text class="m" x="32" y="192">01</text>
+          <text class="t" x="32" y="214">Urządzenie</text>
+          <text class="s" x="32" y="234">Dlaczego jedna maszyna</text>
+          <text class="s" x="32" y="249">liczy się dwa razy?</text>
+          <rect class="chip" x="20" y="272" width="180" height="20"/><text class="m" x="28" y="286">SYM · KPI, DRABINA, WĘZEŁ</text>
+          <rect class="chip" x="20" y="296" width="180" height="20"/><text class="m" x="28" y="310">SCHEMAT · RYS. 2, RENDER</text>
+          <rect class="chip" x="20" y="320" width="180" height="20"/><text class="m" x="28" y="334">SYM · WARIANT A vs D</text>
+        </g>
+        <g>
+          <path class="ln" d="M314,140 L314,170" marker-end="url(#ar)"/>
+          <rect class="box" x="224" y="172" width="180" height="88"/>
+          <text class="m" x="236" y="192">02</text>
+          <text class="t" x="236" y="214">Linia i hala</text>
+          <text class="s" x="236" y="234">Jak to stoi i pracuje</text>
+          <text class="s" x="236" y="249">w sześciu komorach?</text>
+          <rect class="chip" x="224" y="272" width="180" height="20"/><text class="m" x="232" y="286">SCHEMAT · RYS. 1, 3, 4</text>
+          <rect class="chip" x="224" y="296" width="180" height="20"/><text class="m" x="232" y="310">SCHEMAT · WYKAZ APARATÓW</text>
+          <rect class="chip" x="224" y="320" width="180" height="20"/><text class="m" x="232" y="334">SCHEMAT · UWAGI PCM</text>
+        </g>
+        <g>
+          <path class="ln" d="M518,140 L518,170" marker-end="url(#ar)"/>
+          <rect class="box" x="428" y="172" width="180" height="88"/>
+          <text class="m" x="440" y="192">03</text>
+          <text class="t" x="440" y="214">Ekonomia</text>
+          <text class="s" x="440" y="234">Ile kosztuje kilogram</text>
+          <text class="s" x="440" y="249">i kto za to płaci?</text>
+          <rect class="chip" x="428" y="272" width="180" height="20"/><text class="m" x="436" y="286">SYM · KOSZT WYTWORZENIA</text>
+          <rect class="chip" x="428" y="296" width="180" height="20"/><text class="m" x="436" y="310">SYM · ROK, PV, TARYFA</text>
+          <rect class="chip" x="428" y="320" width="180" height="20"/><text class="m" x="436" y="334">SYM · DŹWIGNIE, ZWROT</text>
+        </g>
+        <g>
+          <path class="ln" d="M722,140 L722,170" marker-end="url(#ar)"/>
+          <rect class="box" x="632" y="172" width="180" height="88"/>
+          <text class="m" x="644" y="192">04</text>
+          <text class="t" x="644" y="214">Symulator</text>
+          <text class="s" x="644" y="234">Co się stanie, jeśli</text>
+          <text class="s" x="644" y="249">zmienię surowiec?</text>
+          <rect class="chip" x="632" y="272" width="180" height="20"/><text class="m" x="640" y="286">SYM · MODEL BEZ ZMIAN</text>
+          <rect class="chip" x="632" y="296" width="180" height="20"/><text class="m" x="640" y="310">TRYB PROSTY · 12 PARAM.</text>
+          <rect class="chip" x="632" y="320" width="180" height="20"/><text class="m" x="640" y="334">TRYB EKSPERT · WSZYSTKO</text>
+        </g>
+        <g>
+          <path class="ln" d="M926,140 L926,170" marker-end="url(#ar)"/>
+          <rect class="box" x="836" y="172" width="180" height="88" style="stroke-width:2"/>
+          <text class="m" x="848" y="192">05</text>
+          <text class="t" x="848" y="214">Granty</text>
+          <text class="s" x="848" y="234">Z czego to sfinansować</text>
+          <text class="s" x="848" y="249">i w jakiej kolejności?</text>
+          <rect class="chip" x="836" y="272" width="180" height="20"/><text class="m" x="844" y="286">PDF · BUDŻET EPI I.13.5.2</text>
+          <rect class="chip" x="836" y="296" width="180" height="20"/><text class="m" x="844" y="310">KAFLE · KANDYDACI</text>
+          <rect class="chip" x="836" y="320" width="180" height="20"/><text class="m" x="844" y="334">OŚ CZASU NABORÓW</text>
+        </g>
+        <g>
+          <path class="ln" d="M1130,140 L1130,170" marker-end="url(#ar)"/>
+          <rect class="box" x="1040" y="172" width="180" height="88" style="stroke-dasharray:4 3"/>
+          <text class="m" x="1052" y="192">06</text>
+          <text class="t" x="1052" y="214">Metodyka</text>
+          <text class="s" x="1052" y="234">Skąd te liczby</text>
+          <text class="s" x="1052" y="249">i czego model nie robi?</text>
+          <rect class="chip" x="1040" y="272" width="180" height="20"/><text class="m" x="1048" y="286">SYM · METODYKA, ŻRÓDŁA</text>
+          <rect class="chip" x="1040" y="296" width="180" height="20"/><text class="m" x="1048" y="310">SYM · PEŁNA TABELA</text>
+          <rect class="chip" x="1040" y="320" width="180" height="20"/><text class="m" x="1048" y="334">SCHEMAT · CZEGO NIE ROZSTRZYGA</text>
+        </g>
+        <!-- pager -->
+        <path class="ln ln--soft" d="M200,380 L1040,380"/>
+        <text class="m" x="20" y="384">PAGER</text>
+        <text class="s" x="440" y="372" style="fill:var(--ink-3)">poprzednia · następna, jak w EMIX; kolejność 01 → 06 to kolejność rozmowy z partnerem</text>
+        <!-- feeds -->
+        <rect class="box" x="20" y="430" width="1200" height="98" style="stroke:var(--ink-3);stroke-dasharray:4 3"/>
+        <text class="m" x="34" y="452">JEDNO ŻRÓDŁO LICZB</text>
+        <text class="t" x="34" y="478" style="font-size:13px">model.js · silnik symulatora wycięty bez zmian z v1.0</text>
+        <text class="s" x="34" y="498">Podstrony 01–03 nie mają własnych liczb. Czytają wyniki z modelu dla zestawu odniesienia (wariant D, truskawka w plastrach, 6 komór),</text>
+        <text class="s" x="34" y="514">więc zmiana założenia w jednym miejscu zmienia liczby na całej stronie. Symulator (04) to ten sam model z suwakami.</text>
+        <path class="ln ln--soft" d="M110,340 L110,430"/><path class="ln ln--soft" d="M314,340 L314,430"/><path class="ln ln--soft" d="M518,340 L518,430"/><path class="ln ln--soft" d="M722,340 L722,430"/>
+      </svg>
+      </div>
+      <figcaption>Hub prowadzi do sześciu podstron, każda z jednym pytaniem w tytule. Pod podstronami zaznaczono, z którego istniejącego materiału czerpią. Wszystkie liczby na stronach 01–04 pochodzą z jednego pliku modelu.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============================ MAKIETY ============================ -->
+<section class="section section--tight">
+  <div class="wrap">
+    <div class="sec-head"><h2>Makiety podstron</h2><p class="mono">Kolejność bloków · co wchodzi, co nie</p></div>
+    <div class="pages">
+
+      <!-- START -->
+      <article class="page">
+        <div class="wf"><span class="tag">Start</span>
+          <div class="wf__bar"><i></i><span><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+          <div class="b b--img b--h5"><span class="l">Render urządzenia · pełna szerokość</span></div>
+          <div class="b b--h2"><span class="l">Teza · 2 zdania</span></div>
+          <div class="b b--num b--h2"><i></i><i></i><i></i><i></i><span class="l">4 liczby</span></div>
+          <div class="b b--tiles b--fill"><i></i><i></i><i></i><i></i><i></i><i></i><span class="l">6 kafli → podstrony</span></div>
+          <div class="b b--h"><span class="l">Stopka · kontakt · EMIX</span></div>
+        </div>
+        <div>
+          <p class="mono mono--sm page__k"><span>Hub</span><span>≈ 2,5 ekranu</span></p>
+          <h3>Start</h3>
+          <p class="page__q">Co to jest i dlaczego warto czytać dalej?</p>
+          <ol>
+            <li><b>Render urządzenia</b>, szary, bez podpisów, na całą szerokość. Nic się nie rusza poza wjazdem tytułu.</li>
+            <li><b>Teza w dwóch zdaniach.</b> Ciepło sublimacji przechodzi przez bilans dwa razy. Jedna maszyna liczy je raz.</li>
+            <li><b>Cztery liczby</b>: 1,37 kWh/kg wody · 83 t liofilizatu rocznie · 6 komór · 2,5 mln zł pomocy do pozyskania.</li>
+            <li><b>Sześć kafli</b> w układzie EMIX, każdy z pytaniem podstrony zamiast opisu.</li>
+          </ol>
+          <p class="src"><b>Skąd:</b> KPI symulatora, wizualizacja ze schematu linii, tytuły podstron.</p>
+          <p class="no"><b>Czego tu nie ma:</b> ani jednego suwaka, wykresu ani tabeli. Start nie tłumaczy, Start zaprasza.</p>
+        </div>
+      </article>
+
+      <!-- URZĄDZENIE -->
+      <article class="page">
+        <div class="wf"><span class="tag">01</span>
+          <div class="wf__bar"><i></i><span><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+          <div class="b b--h2"><span class="l">Pytanie · lede</span></div>
+          <div class="b b--img b--h4"><span class="l">Render · przekrój komory</span></div>
+          <div class="b b--num b--h"><i></i><i></i><i></i><i></i><span class="l">3 liczby</span></div>
+          <div class="b b--h3"><span class="l">Węzeł komory · rys. 2</span></div>
+          <div class="b b--split b--h3"><i></i><i></i><span class="l">Wariant A vs D</span></div>
+          <div class="b b--chart b--fill"><span class="l">Drabina temperatur</span></div>
+          <div class="b b--h"><span class="l">▸ Pełne rozbicie energii</span></div>
+        </div>
+        <div>
+          <p class="mono mono--sm page__k"><span>Podstrona 01</span><span>≈ 4 ekrany</span></p>
+          <h3>Urządzenie</h3>
+          <p class="page__q">Dlaczego jedna maszyna liczy ten sam strumień raz, a nie dwa razy?</p>
+          <ol>
+            <li><b>Render z przekrojem</b>: komora, kondensator lodu, agregat, dwie baterie PCM.</li>
+            <li><b>Trzy liczby</b>: 2,04 → 1,37 kWh/kg wody · 82 kW ciepła na półki z odzysku · 130 kW ciepła odpadowego do zagospodarowania.</li>
+            <li><b>Węzeł jednej komory</b> (rys. 2 ze schematu) z tezą „ten sam strumień 2 838 kJ/kg dwa razy”.</li>
+            <li><b>Wariant A obok D</b>: dwa proste schematy, jedna różnica. Bez B i C, one idą do warstwy trzeciej.</li>
+            <li><b>Drabina temperatur</b> dla D, w monochromie.</li>
+          </ol>
+          <p class="src"><b>Skąd:</b> bloki 3, 4, 6 symulatora; rys. 2 i render ze schematu linii.</p>
+          <p class="no"><b>Czego tu nie ma:</b> próżni, wartości odżywczych, kosztów. Osobne pytania.</p>
+        </div>
+      </article>
+
+      <!-- LINIA I HALA -->
+      <article class="page">
+        <div class="wf"><span class="tag">02</span>
+          <div class="wf__bar"><i></i><span><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+          <div class="b b--h2"><span class="l">Pytanie · lede</span></div>
+          <div class="b b--img b--h3"><span class="l">Render linii · 6 komór</span></div>
+          <div class="b b--num b--h"><i></i><i></i><i></i><i></i><span class="l">4 liczby</span></div>
+          <div class="b b--h4"><span class="l">Schemat technologiczny · rys. 1</span></div>
+          <div class="b b--table b--h3"><span class="l">Harmonogram 6 komór · rys. 3</span></div>
+          <div class="b b--fill"><span class="l">Rzut hali · rys. 4</span></div>
+          <div class="b b--h"><span class="l">▸ Wykaz aparatów · ▸ Uwagi PCM</span></div>
+        </div>
+        <div>
+          <p class="mono mono--sm page__k"><span>Podstrona 02</span><span>≈ 4 ekrany</span></p>
+          <h3>Linia i hala</h3>
+          <p class="page__q">Jak to stoi w hali i dlaczego sześć komór pracuje na jednym agregacie?</p>
+          <ol>
+            <li><b>Cztery liczby</b>: 906 t surowca · 83 t produktu · 150 kW mocy · 1 152 m² hali.</li>
+            <li><b>Schemat technologiczny</b> (rys. 1): produkt górą, media dołem.</li>
+            <li><b>Harmonogram</b> (rys. 3) z tezą: przesunięcie 4,1 h to warunek, nie organizacja pracy.</li>
+            <li><b>Rzut hali</b> (rys. 4) 48 × 24 m, droga surowca nie krzyżuje się z drogą wyrobu.</li>
+          </ol>
+          <p class="src"><b>Skąd:</b> schemat linii w całości. To najlepiej ułożony z trzech dokumentów i prawie nie wymaga przeróbki.</p>
+          <p class="no"><b>Warstwa 3:</b> wykaz jedenastu aparatów i dwie uwagi projektowe o PCM (−30 °C nie obsłuży kondensatora, +35 °C to półki 33 °C). Ważne dla inżyniera, zbędne dla partnera.</p>
+        </div>
+      </article>
+
+      <!-- EKONOMIA -->
+      <article class="page">
+        <div class="wf"><span class="tag">03</span>
+          <div class="wf__bar"><i></i><span><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+          <div class="b b--h2"><span class="l">Pytanie · lede</span></div>
+          <div class="b b--num b--h2"><i></i><i></i><i></i><i></i><span class="l">4 liczby</span></div>
+          <div class="b b--chart b--h3"><span class="l">Koszt wytworzenia · pasek</span></div>
+          <div class="b b--chart b--h3"><span class="l">Dźwignie · 5 największych</span></div>
+          <div class="b b--split b--h3"><i></i><i></i><span class="l">Rok energii · taryfa</span></div>
+          <div class="b b--fill"><span class="l">Zwrot D vs A i vs B</span></div>
+          <div class="b b--h"><span class="l">▸ Surowiec i gatunek · ▸ PV</span></div>
+        </div>
+        <div>
+          <p class="mono mono--sm page__k"><span>Podstrona 03</span><span>≈ 3,5 ekranu</span></p>
+          <h3>Ekonomia</h3>
+          <p class="page__q">Ile kosztuje kilogram, co w tym koszcie waży najwięcej i kiedy inwestycja się zwraca?</p>
+          <ol>
+            <li><b>Cztery liczby</b>: koszt wytworzenia zł/kg · udział surowca · udział energii · zwrot D względem B w latach.</li>
+            <li><b>Koszt wytworzenia</b> jako jeden pasek do ceny sprzedaży. Surowiec jest tu większy niż energia i to jest teza bloku.</li>
+            <li><b>Pięć największych dźwigni</b>, nie dwanaście. Reszta w warstwie trzeciej.</li>
+            <li><b>Rok energetyczny i taryfa</b> w dwóch małych wykresach obok siebie.</li>
+            <li><b>Zwrot</b> jako jedno zdanie z liczbami, bez wykresu.</li>
+          </ol>
+          <p class="src"><b>Skąd:</b> bloki 4, 9, 10, 11, 12 symulatora.</p>
+          <p class="no"><b>Czego tu nie ma:</b> doby wzorcowej godzina po godzinie. To narzędzie do symulatora, nie argument dla partnera.</p>
+        </div>
+      </article>
+
+      <!-- SYMULATOR -->
+      <article class="page">
+        <div class="wf"><span class="tag">04</span>
+          <div class="wf__bar"><i></i><span><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+          <div class="b b--h"><span class="l">Prosty ◉ · Ekspert ○</span></div>
+          <div class="b b--ctl b--fill"><i></i><em></em><span class="l">12 suwaków · wyniki po prawej</span></div>
+          <div class="b b--num b--h"><i></i><i></i><i></i><i></i><span class="l">KPI</span></div>
+          <div class="b b--chart b--h3"><span class="l">Jeden wykres na raz · zakładki</span></div>
+          <div class="b b--h"><span class="l">▸ Pełna tabela · ▸ Metodyka</span></div>
+        </div>
+        <div>
+          <p class="mono mono--sm page__k"><span>Podstrona 04 · narzędzie</span><span>1 ekran + zakładki</span></p>
+          <h3>Symulator</h3>
+          <p class="page__q">Co się stanie z kosztem i cyklem, gdy zmienię surowiec, postać albo taryfę?</p>
+          <ol>
+            <li><b>Tryb prosty</b>, 12 parametrów: surowiec, postać, powierzchnia tac, wilgotność końcowa, ciśnienie, temperatura półek, temperatura kondensatora, wariant układu, gatunek surowca, taryfa, moc PV, sposób zamrażania.</li>
+            <li><b>Tryb ekspert</b> odsłania wszystkie grupy z v1.0 bez zmian.</li>
+            <li><b>Jeden wykres na raz</b> w zakładkach zamiast czternastu pod sobą. Przeliczenie działa na wszystkie, widoczny jest wybrany.</li>
+          </ol>
+          <p class="src"><b>Skąd:</b> cały silnik symulatora, przeniesiony 1:1 do osobnego pliku. Widok nowy, w monochromie.</p>
+          <p class="no"><b>Decyzja:</b> wykresy w czerni i szarościach wymagają zaprojektowania od nowa. Sześć kolorów serii z v1.0 nie przejdzie przez wzorzec EMIX.</p>
+        </div>
+      </article>
+
+      <!-- GRANTY -->
+      <article class="page">
+        <div class="wf"><span class="tag">05</span>
+          <div class="wf__bar"><i></i><span><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+          <div class="b b--h2"><span class="l">Pytanie · lede</span></div>
+          <div class="b b--line b--h2"><span class="l">Oś czasu naborów</span></div>
+          <div class="b b--tiles b--fill"><i></i><i></i><i></i><i></i><i></i><i></i><span class="l">Kafle finansowania</span></div>
+          <div class="b b--dark b--h3"><span class="l">EPI · budżet 2,92 mln · rozwinięty</span></div>
+          <div class="b b--h"><span class="l">▸ Podział na podmioty · ▸ Zadania</span></div>
+        </div>
+        <div>
+          <p class="mono mono--sm page__k"><span>Podstrona 05</span><span>≈ 3 ekrany</span></p>
+          <h3>Granty</h3>
+          <p class="page__q">Z czego to sfinansować, kto składa wniosek i w jakiej kolejności?</p>
+          <ol>
+            <li><b>Oś czasu naborów</b> na górze. Pierwszy termin, 1 października do 2 listopada 2026, jest za miesiąc i to on ustawia priorytety.</li>
+            <li><b>Kafle finansowania</b>, po jednym na program. Stan: jeden z danymi, cztery jako kandydaci do sprawdzenia.</li>
+            <li><b>Kafel EPI rozwinięty</b>: trzy podmioty, 2,92 mln kosztów, 2,5 mln pomocy, 420 tys. wkładu własnego, płynność jako główne ryzyko.</li>
+          </ol>
+          <p class="src"><b>Skąd:</b> budżet EPI I.13.5.2 z 1 września 2026. Kafle kandydatów poniżej, do weryfikacji.</p>
+          <p class="no"><b>Zasada kafla:</b> te same pola na każdym. Kto składa, na co, poziom dofinansowania, sufit, termin, dopasowanie do tego projektu. Brak pola to „do ustalenia”, nie pusta karta.</p>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================ GRANTY KAFLE ============================ -->
+<section class="section">
+  <div class="wrap">
+    <div class="sec-head"><h2>Zakładka Granty na start</h2><p class="mono">1 kafel z danymi · 4 kandydaci</p></div>
+    <div class="grants">
+
+      <article class="g">
+        <div class="g__k"><span class="mono mono--sm">PS WPR 2023–2027 · I.13.5.2</span><span class="mono mono--sm st">Dane z budżetu</span></div>
+        <h3>Współpraca Grup Operacyjnych EPI</h3>
+        <p class="who"><b>Konsorcjum:</b> Emix (przetwórca, lider) · Uniwersytet Rolniczy (nauka) · rolnik (producent owoców)</p>
+        <div class="big">
+          <div><div class="n">2,92<small>mln</small></div><div class="mono l">Koszty kwalifikowalne</div></div>
+          <div><div class="n">2,50<small>mln</small></div><div class="mono l">Pomoc · sufit operacji</div></div>
+          <div><div class="n">0,42<small>mln</small></div><div class="mono l">Wkład własny</div></div>
+        </div>
+        <dl>
+          <dt>Nabór</dt><dd>1 października – 2 listopada 2026</dd>
+          <dt>Forma</dt><dd>Refundacja. Najpierw wyłożyć całość, potem odzyskać.</dd>
+          <dt>Badania</dt><dd>100 %, maks. 50 % pomocy → Uniwersytet 1,25 mln</dd>
+          <dt>Inwestycje</dt><dd>65 % → Emix 1,0 mln, rolnik 0,2 mln</dd>
+          <dt>Próg</dt><dd>67 ze 134 punktów; opinia o innowacyjności obowiązkowa</dd>
+        </dl>
+        <p class="fit"><b>Dopasowanie:</b> liofilizator pilotażowy 550 tys., PCM i odzysk 250 tys., automatyka 120 tys. po stronie Emix. Innowacja mieszka w części badawczej, sama liofilizacja owoców jej nie obroni.</p>
+      </article>
+
+      <article class="g g--draft">
+        <div class="g__k"><span class="mono mono--sm">FENG · Ścieżka SMART</span><span class="mono mono--sm st st--draft">Kandydat · do weryfikacji</span></div>
+        <h3>Moduł B+R i wdrożenie dla przedsiębiorcy</h3>
+        <p class="who"><b>Kto składa:</b> Emix lub 21 zmysłów jako MŚP (PARP), konsorcjum z uczelnią możliwe</p>
+        <div class="big">
+          <div><div class="n">?</div><div class="mono l">Budżet</div></div>
+          <div><div class="n">?</div><div class="mono l">Poziom pomocy</div></div>
+          <div><div class="n">?</div><div class="mono l">Wkład własny</div></div>
+        </div>
+        <dl>
+          <dt>Nabór</dt><dd>do ustalenia po sprawdzeniu harmonogramu 2026/27</dd>
+          <dt>Na co</dt><dd>prace B+R nad integracją cieplną, potem wdrożenie linii</dd>
+          <dt>Relacja do EPI</dt><dd>alternatywa albo kolejny etap; ten sam koszt nie może iść dwa razy</dd>
+        </dl>
+        <p class="fit"><b>Dopasowanie:</b> naturalny drugi krok po pilotażu z EPI, gdy będzie co skalować.</p>
+      </article>
+
+      <article class="g g--draft">
+        <div class="g__k"><span class="mono mono--sm">FENG · BGK</span><span class="mono mono--sm st st--draft">Kandydat · do weryfikacji</span></div>
+        <h3>Kredyt ekologiczny na efektywność energetyczną</h3>
+        <p class="who"><b>Kto składa:</b> przedsiębiorca inwestujący we własny zakład (Emix)</p>
+        <div class="big">
+          <div><div class="n">?</div><div class="mono l">Budżet</div></div>
+          <div><div class="n">?</div><div class="mono l">Premia ekologiczna</div></div>
+          <div><div class="n">?</div><div class="mono l">Wymagany audyt</div></div>
+        </div>
+        <dl>
+          <dt>Nabór</dt><dd>do ustalenia</dd>
+          <dt>Na co</dt><dd>odzysk ciepła, magazyny PCM, agregat kaskadowy jako modernizacja energetyczna</dd>
+          <dt>Warunek</dt><dd>audyt energetyczny i wykazana oszczędność energii pierwotnej</dd>
+        </dl>
+        <p class="fit"><b>Dopasowanie:</b> to jest instrument dokładnie pod tezę projektu, 2,04 → 1,37 kWh/kg. Wymaga istniejącego zakładu jako punktu odniesienia.</p>
+      </article>
+
+      <article class="g g--draft">
+        <div class="g__k"><span class="mono mono--sm">NFOŚiGW · FE Małopolska</span><span class="mono mono--sm st st--draft">Kandydat · do weryfikacji</span></div>
+        <h3>Energia odnawialna i magazyny na terenie zakładu</h3>
+        <p class="who"><b>Kto składa:</b> Emix (PV, magazyny) albo rolnik (programy dla gospodarstw)</p>
+        <div class="big">
+          <div><div class="n">?</div><div class="mono l">Budżet</div></div>
+          <div><div class="n">?</div><div class="mono l">Poziom pomocy</div></div>
+          <div><div class="n">?</div><div class="mono l">Termin</div></div>
+        </div>
+        <dl>
+          <dt>Na co</dt><dd>instalacja PV, magazyn energii, ewentualnie magazyn ciepła</dd>
+          <dt>Relacja do EPI</dt><dd>komplementarne: EPI nie finansuje PV, symulator pokazuje 100 kWp jako dźwignię</dd>
+        </dl>
+        <p class="fit"><b>Dopasowanie:</b> domyka tę część bilansu, którą symulator liczy w bloku „rok energetyczny”.</p>
+      </article>
+
+      <article class="g g--draft">
+        <div class="g__k"><span class="mono mono--sm">Horyzont Europa · EIT Food</span><span class="mono mono--sm st st--draft">Kandydat · do weryfikacji</span></div>
+        <h3>Konsorcjum międzynarodowe wokół retencji składników</h3>
+        <p class="who"><b>Kto składa:</b> Uniwersytet Rolniczy jako lider naukowy, 21 zmysłów i Emix jako partnerzy</p>
+        <div class="big">
+          <div><div class="n">?</div><div class="mono l">Budżet</div></div>
+          <div><div class="n">?</div><div class="mono l">Poziom pomocy</div></div>
+          <div><div class="n">?</div><div class="mono l">Termin</div></div>
+        </div>
+        <dl>
+          <dt>Na co</dt><dd>badania retencji witaminy C, antocyjanów, polifenoli; oświadczenia żywieniowe</dd>
+          <dt>Horyzont czasu</dt><dd>2027+, po pierwszych wynikach z pilotażu</dd>
+        </dl>
+        <p class="fit"><b>Dopasowanie:</b> blok „wartości odżywcze” symulatora jest gotowym uzasadnieniem naukowym. Długi horyzont, wysoka konkurencja.</p>
+      </article>
+
+      <article class="g" style="border-top-color:var(--line-2)">
+        <div class="g__k"><span class="mono mono--sm">Wolne miejsce</span><span class="mono mono--sm st st--draft">Szablon kafla</span></div>
+        <h3 style="color:var(--ink-3)">Kolejny program wchodzi tu z tymi samymi polami</h3>
+        <dl style="color:var(--ink-3)">
+          <dt>Kto składa</dt><dd>—</dd>
+          <dt>Na co</dt><dd>—</dd>
+          <dt>Poziom · sufit</dt><dd>—</dd>
+          <dt>Termin</dt><dd>—</dd>
+          <dt>Relacja do EPI</dt><dd>—</dd>
+          <dt>Dopasowanie</dt><dd>—</dd>
+        </dl>
+      </article>
+    </div>
+
+    <div class="callout">
+      <p class="mono mono--sm">Uwaga o kandydatach</p>
+      <p>Cztery kafle „do weryfikacji” to kierunki, nie fakty. Nazwy programów i logika dopasowania są sprawdzone, poziomy pomocy i terminy trzeba potwierdzić w regulaminach aktualnych naborów przed wpisaniem liczb. Do tego czasu na stronie stoją znaki zapytania, nie szacunki.</p>
+    </div>
+
+    <div class="table-scroll" style="margin-top:40px">
+      <table>
+        <thead><tr><th>Budżet EPI · podmiot</th><th class="num">Koszty kwalifikowalne</th><th class="num">Pomoc</th><th class="num">Wkład własny</th><th>Główne pozycje</th></tr></thead>
+        <tbody>
+          <tr><td>Uniwersytet Rolniczy</td><td class="num">1 250 000</td><td class="num">1 250 000</td><td class="num">0</td><td>wynagrodzenia zespołu 600 tys. · analizy laboratoryjne 250 tys. · protokoły liofilizacji 150 tys. · badania energetyczne 120 tys.</td></tr>
+          <tr><td>Emix</td><td class="num">1 300 000</td><td class="num">950 000</td><td class="num">350 000</td><td>liofilizator pilotażowy 550 tys. · PCM i odzysk 250 tys. · automatyka 120 tys. · koordynacja 180 tys. · koszty ogólne 120 tys.</td></tr>
+          <tr><td>Rolnik</td><td class="num">370 000</td><td class="num">300 000</td><td class="num">70 000</td><td>komora buforowa 110 tys. · surowiec i partie testowe 90 tys. · upowszechnianie 80 tys. · mycie i sortowanie 60 tys.</td></tr>
+          <tr class="tot"><td>Razem</td><td class="num">2 920 000</td><td class="num">2 500 000</td><td class="num">420 000</td><td>zł · kwoty poglądowe, do podmiany na oferty</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ RENDER ============================ -->
+<section class="section section--tight">
+  <div class="wrap">
+    <div class="sec-head"><h2>Render na otwarcie</h2><p class="mono">Brief wzorniczy · prompt do narzędzi</p></div>
+    <div class="render">
+      <div>
+        <div class="sheet" aria-hidden="true">
+          <div class="obj"><i class="door"></i><i class="mach"></i><i class="pcm"></i><i class="pcm pcm2"></i></div>
+          <span class="mono mono--sm cap">Kadr hero · 16:9 · trzy czwarte · białe tło</span>
+          <span class="mono mono--sm cap2">Komora · moduł maszynowy · 2 baterie PCM</span>
+        </div>
+        <h3 style="margin-top:26px">Co ma pokazać</h3>
+        <p>Dwa istniejące rendery są dobre do rozmowy technicznej, ale nie do otwarcia strony: jeden jest ilustracją schematu z kolorowymi rurami, drugi pokazuje pięć komór zamiast sześciu. Na otwarcie potrzebny jest <strong>produkt, nie instalacja</strong>. Jedna zintegrowana jednostka, tak jak stałaby na targach.</p>
+        <ul>
+          <li><strong>Trzy bryły, jedna rodzina.</strong> Prostopadłościenna komora próżniowa z pełnowymiarowymi drzwiami i widocznym stosem półek; za nią i po prawej moduł maszynowy w zamkniętej, matowej obudowie (agregat kaskadowy CO₂/R290, zespół próżniowy); u podstawy dwie płaskie kasety baterii PCM, zimna i ciepła.</li>
+          <li><strong>Materiały</strong>: stal nierdzewna szczotkowana na komorze, obudowa maszynowa w ciemnym grafitowym proszku, jeden wąski pasek stanu w drzwiach. Bez rur na zewnątrz, media schowane pod wspólną ramą.</li>
+          <li><strong>Język formy</strong>: promienie narożników od 4 do 12 mm, podziały paneli zgodne z osiami półek, brak dekoracyjnych żeber. Wielkość czytelna przez postać człowieka albo paletę obok, nie przez podpis.</li>
+          <li><strong>Światło i tło</strong>: studio, białe tło, miękkie światło górne, cień kontaktowy. Render ma dobrze wyglądać w skali szarości, bo wzorzec EMIX pokazuje obrazy w szarości i dopiero po najechaniu w kolorze.</li>
+        </ul>
+        <h3 style="margin-top:26px">Trzy kadry do wygenerowania</h3>
+        <ul>
+          <li><strong>Hero</strong>: trzy czwarte z lewej, drzwi lekko otwarte, półki widoczne. Do strony Start.</li>
+          <li><strong>Przekrój</strong>: ta sama bryła cięta wzdłuż, widać komorę, kondensator lodu i trasę pary. Do podstrony Urządzenie.</li>
+          <li><strong>Linia</strong>: sześć jednostek w dwóch rzędach po trzy, jeden moduł maszynowy na końcu, widok izometryczny z góry. Do podstrony Linia i hala.</li>
+        </ul>
+      </div>
+      <div>
+        <div class="prompt-k"><span class="mono mono--sm">Prompt 1 · hero</span><span class="mono mono--sm">Midjourney v7 · Flux · Imagen · Vizcom</span></div>
+<pre>Industrial design product rendering of a compact integrated freeze-dryer for food processing, a single unit as shown at a trade fair. Three volumes in one family: a rectangular vacuum chamber in brushed stainless steel with a full-height door slightly open revealing a stack of twelve heated shelves; behind and to the right a closed machinery module in matte dark graphite powder-coat housing the cascade refrigeration unit and vacuum pumps; at the base two slim flat phase-change-material battery cassettes, one cold, one warm. No exposed pipes, all media hidden under a common frame. Corner radii 4 to 12 mm, panel seams aligned with the shelf pitch, no decorative ribs, one narrow status light strip in the door. Three-quarter view from the left, eye level slightly above, a wooden EUR pallet next to it for scale. Pure white seamless studio background, soft overhead softbox light, subtle contact shadow, no reflections of the environment. Photorealistic, 8k, Braun and Teenage Engineering restraint, Dieter Rams, product photography for an annual report. Colours must read well in greyscale. <b>--ar 16:9 --style raw --stylize 50 --v 7</b></pre>
+        <div class="prompt-k"><span class="mono mono--sm">Prompt 2 · przekrój</span></div>
+<pre>Same unit, same materials and lighting, cut lengthwise as a clean technical section rendering: vacuum chamber with shelf stack on the left, ice condenser coil behind a vapour duct on the right, cascade refrigeration compressors and vacuum pumps in the dark machinery module, two PCM cassettes at the base. Cut faces in flat light grey, interior components in muted natural materials, thin black leader lines without text. White background, orthographic side view, photorealistic with a technical-illustration clarity. <b>--ar 16:9 --style raw --stylize 30 --v 7</b></pre>
+        <div class="prompt-k"><span class="mono mono--sm">Prompt 3 · linia</span></div>
+<pre>Isometric aerial view of a freeze-drying line inside a bright industrial hall: six identical integrated freeze-dryer units in two rows of three, brushed stainless steel chambers with matte graphite machinery modules, one larger shared cascade refrigeration and vacuum skid at the end of the rows, a 5 m working aisle between the rows with stainless tray trolleys, polished light grey resin floor, white walls, north-light roof. Clean, uncluttered, no people, no visible piping, architectural visualisation quality, soft daylight, greyscale-friendly palette. <b>--ar 16:9 --style raw --stylize 40 --v 7</b></pre>
+        <div class="prompt-k"><span class="mono mono--sm">Czego unikać w promptach</span></div>
+        <ul>
+          <li>Kolorowych świecących rur i strzałek. To język schematu, nie produktu. Przepływy pokazuje rys. 1, nie render.</li>
+          <li>Cylindrycznych komór z bulajami. Kojarzą się z autoklawem i farmacją, a komora na 50 m² tac jest prostopadłościanem.</li>
+          <li>Ciemnego tła z siatką i cząsteczkami. Wzorzec EMIX jest biały, a szarość na czarnym tle ginie.</li>
+          <li>Napisów i logotypów w renderze. Typografia wchodzi w HTML, nie w obraz.</li>
+        </ul>
+        <p class="mono mono--sm" style="color:var(--ink-3);margin-top:14px">W Flux i Imagen parametry po „--” pominąć, resztę zostawić. W Vizcom użyć promptu 1 jako opisu i szkicu bryły jako podkładu.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CZEGO UNIKAĆ ============================ -->
+<section class="section">
+  <div class="wrap">
+    <div class="sec-head"><h2>Czego ta architektura ma unikać</h2><p class="mono">Odwrócenie problemu</p></div>
+    <div class="avoid">
+      <div class="avoid__i"><span class="x">×</span><div><h4>Przełącznika wariantów A–D na każdej stronie</h4><p>To on robi gęstość. Strona pokazuje D jako odniesienie, a porównanie z A jest jednym blokiem na podstronie Urządzenie. B i C zostają w symulatorze.</p></div></div>
+      <div class="avoid__i"><span class="x">×</span><div><h4>Tekstu generowanego z liczb w warstwie pierwszej</h4><p>Akapity symulatora, które przeliczają się z suwakami, są świetne w narzędziu i nieczytelne jako proza. Na podstronach stoją zdania napisane ręcznie, z liczbami wstawionymi z modelu.</p></div></div>
+      <div class="avoid__i"><span class="x">×</span><div><h4>Kolorów serii z symulatora</h4><p>Sześć kolorów, dwa akcenty, tryb ciemny. Wzorzec EMIX ma czerń, biel i dwie szarości. Wykresy trzeba narysować w tej palecie, z kreskowaniem i grubością linii zamiast barwy.</p></div></div>
+      <div class="avoid__i"><span class="x">×</span><div><h4>Trzech dokumentów obok siebie</h4><p>Symulator, schemat i budżet mają dziś trzy różne style, dwa zestawy fontów i własne stopki. Na stronie jest jedna nawigacja, jeden pager, jedna stopka. Oryginały zostają w repo jako źródła.</p></div></div>
+      <div class="avoid__i"><span class="x">×</span><div><h4>Grantów jako załącznika</h4><p>Termin naboru EPI jest za miesiąc. Granty to równorzędna podstrona z osią czasu na górze, a nie link w stopce.</p></div></div>
+      <div class="avoid__i"><span class="x">×</span><div><h4>Wartości odżywczych na start</h4><p>Blok jest wartościowy, ale odpowiada na pytanie o produkt, nie o urządzenie. Trafia do Metodyki jako materiał dla części badawczej wniosku, a na stronę produktu wróci, gdy będzie strona produktu.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ DECYZJE ============================ -->
+<section class="section section--tight">
+  <div class="wrap">
+    <div class="sec-head"><h2>Trzy decyzje przed budową</h2><p class="mono">One-way doors</p></div>
+    <div class="dec"><p class="mono mono--sm">Decyzja 1</p><div><h3>Hasło jak w EMIX czy strona publiczna?</h3>
+      <p>Budżet grantu i nazwy partnerów to materiał wewnętrzny. Wzorzec EMIX ma gotową bramkę z szyfrowaniem po stronie klienta. <strong>Rekomendacja:</strong> hasło na start, ta sama mechanika. Zdjęcie bramki później jest proste, założenie jej po publikacji już nie, bo treść zostanie w indeksach.</p></div></div>
+    <div class="dec"><p class="mono mono--sm">Decyzja 2</p><div><h3>Sześć podstron jako jeden plik z routerem czy sześć plików?</h3>
+      <p>EMIX jest jednym plikiem z routerem na hash. Przy sześciu podstronach i symulatorze plik urośnie do kilku megabajtów przez rendery. <strong>Rekomendacja:</strong> osobne pliki HTML ze wspólnym CSS i jednym plikiem modelu. GitHub Pages obsłuży to bez budowania. Zmiana później oznacza przepisanie nawigacji.</p></div></div>
+    <div class="dec"><p class="mono mono--sm">Decyzja 3</p><div><h3>Który zestaw założeń jest odniesieniem?</h3>
+      <p>Strony 01–03 pokazują liczby dla jednego zestawu: wariant D, truskawka w plastrach, 6 komór po 500 kg, taryfa dynamiczna, 100 kWp PV. Schemat linii już to przyjął. <strong>Rekomendacja:</strong> potwierdzić ten zestaw i zapisać go w modelu jako stały. Każda zmiana odniesienia zmienia liczby na całej stronie i wymaga przejrzenia wszystkich zdań.</p></div></div>
+  </div>
+</section>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <span><b>21 zmysłów</b> · propozycja architektury strony Liofilizacja · do dyskusji, nie do budowy</span>
+    <span>Źródła: symulator v1.0, schemat linii, budżet EPI I.13.5.2 z 1 września 2026</span>
+  </div>
+</footer>

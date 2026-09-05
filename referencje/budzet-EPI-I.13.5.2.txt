@@ -1,0 +1,94 @@
+===== STRONA 1 =====
+S Z K I C B U D Ż E T U O P E R A C J I
+ | Liofilizacja owoców w Grupie Operacyjnej EPI
+ | Interwencja I.13.5.2 — Współpraca GO EPI, realizacja operacji · PS WPR 2023–2027 |   | 1 września 2026
+ | Podział budżetu na trzy podmioty konsorcjum: Emix (przedsiębiorca przetwórczy), Uniwersytet
+ | Rolniczy (jednostka naukowa) i rolnik — producent owoców. Ramy procentowe pochodzą z
+ | wytycznych szczegółowych interwencji; kwoty są poglądowe i wymagają podmiany na realne
+ | oferty i kalkulacje.
+ | 01 |   | Warunki formalne w skrócie
+Skład grupy |  | Skład grupy |   | — co najmniej dwa różne podmioty z różnych kategorii, obowiązkowy udział rolnika; przy operacji z kosztami badań
+ | obowiązkowy udział podmiotu tworzącego system szkolnictwa wyższego i nauki. Rolnik + Emix + Uniwersytet Rolniczy spełniają ten
+ | warunek z zapasem.
+Brak powiązań |  | Brak powiązań |   | — podmioty uznaje się za różne tylko wtedy, gdy nie są powiązane osobowo ani kapitałowo; w składzie grupy nie mogą
+ | znaleźć się osoby najbliższe.
+PKD przedsiębiorcy |  | PKD przedsiębiorcy |   | musi być adekwatne do operacji (dla przetwórstwa owoców zwykle 10.39.Z).
+Przedmiot operacji |  | Przedmiot operacji |   | — nowe lub udoskonalone produkty i technologie w sektorach rolnym, spożywczym i leśnym, skoncentrowane na
+ | produkcji i przetwarzaniu produktów rolnych.
+Opinia o innowacyjności |  | Opinia o innowacyjności |   | — obowiązkowy załącznik do wniosku.
+Próg punktowy |  | Próg punktowy |   | — minimum 67 punktów ze 134 możliwych.
+Termin naboru |  | Termin naboru |   | — 1 października – 2 listopada 2026.
+ | 02 |   | Reguły, które wymuszają kształt budżetu
+ | Koszty badań |   | 100% refundacji, maksymalnie 50% kwoty pomocy na operację
+ | Inwestycje materialne i niematerialne |   | 65%; do 100% w przypadku inwestycji nieprodukcyjnych
+ | Koszty bieżące / administracyjne |   | 100%, ryczałt do 20% kosztów inwestycyjnych i badań
+ | Koszty ogólne |   | 100%, maksymalnie 10% pozostałych kosztów kwalifikowalnych
+ | Sufit pomocy |   | 2 500 000 zł na operację (forma refundacji)
+ | Wniosek strategiczny jest jeden: |   | wszystko, co da się uczciwie nazwać badaniem, idzie do uczelni | wszystko, co da się uczciwie nazwać badaniem, idzie do uczelni |   | — tam finansowanie jest stuprocentowe i
+ | nie wymaga wkładu własnego. Limit 50% kwoty pomocy jest tu wiążący, więc budżet buduje się od tej liczby w dół.
+ | 03 |   | Budżet zbiorczy — wariant pełny
+ | POZYCJA |   | KOSZT KWALIFIKOWALNY |   | POMOC |   | WKŁAD WŁASNY
+ | Badania — Uniwersytet Rolniczy |   | 1 250 000 |   | 1 250 000 |   | 0
+ | Inwestycje — Emix |   | 1 000 000 |   | 650 000 |   | 350 000
+ | Inwestycje — rolnik |   | 200 000 |   | 130 000 |   | 70 000
+ | Koszty bieżące (ryczałt) |   | 350 000 |   | 350 000 |   | 0
+ | Koszty ogólne |   | 120 000 |   | 120 000 |   | 0
+ | Razem |   | 2 920 000 |   | 2 500 000 |   | 420 000
+ | 04 |   | Uniwersytet Rolniczy — 1 250 000 zł, refundacja 100%
+ | ZADANIE |   | ZŁ
+ | Wynagrodzenia zespołu badawczego — kierownik naukowy, dwóch badaczy, doktorant, technik, ok. 24 miesiące |   | 600 000
+ | Analizy laboratoryjne — polifenole, antocyjany, witamina C, aktywność wody, barwa, tekstura, mikrobiologia, ocena |  | 250 000
+ | sensoryczna
+ | Opracowanie i walidacja protokołów liofilizacji — plan doświadczeń, matryca wariantów procesowych |   | 150 000
+ | Badania energetyczne procesu — bilanse cieplne, pomiary na instalacji pilotażowej, model pracy magazynów ciepła i chłodu |   | 120 000
+ | Materiały, odczynniki, amortyzacja aparatury |   | 80 000
+ | Badania przechowalnicze i trwałość produktu |   | 50 000
+ | Razem |   | 1 250 000
+ | To jest jednocześnie miejsce, w którym mieszka element innowacyjny operacji. Bez tej części projekt jest zakupem suszarki za środki
+ | publiczne — a sama liofilizacja owoców jest w Polsce technologią dojrzałą i nie obroni się jako innowacja.
+
+===== STRONA 2 =====
+05 |   | Emix — 1 300 000 zł kosztów, 950 000 zł pomocy
+ | POZYCJA |   | ZŁ |   | FINANSOWANIE
+ | Liofilizator pilotażowy z pełną rejestracją parametrów procesu |   | 550 000 |   | 65%
+65%
+ | Magazyn ciepła i chłodu (PCM), wymienniki, odzysk ciepła ze skraplacza |   | 250 000 |  
+ | Automatyka, opomiarowanie, sterowanie, warstwa 4.0 |   | 120 000 |   | 65%
+65%
+ | Wartości niematerialne i prawne — oprogramowanie sterujące, dokumentacja technologiczna |   | 80 000 |  
+ | Koordynacja projektu jako lider konsorcjum |   | (koszty bieżące) |   | 180 000 |   | 100%
+100%
+ | Koszty ogólne — opinia o innowacyjności, przygotowanie wniosku, obsługa prawna i księgowa, audyt |   | 120 000 |  
+ | Razem — wkład własny 350 000 zł |   | 1 300 000
+ | 06 |   | Rolnik — 370 000 zł kosztów, 300 000 zł pomocy
+ | POZYCJA |   | ZŁ |   | FINANSOWANIE
+ | Komora chłodnicza buforowa na surowiec do prób |   | 110 000 |   | 65%
+65%
+ | Mycie, sortowanie, kalibracja i krojenie partii testowych |   | 60 000 |  
+ | Monitoring dojrzałości i jakości surowca w sadzie (rolnictwo 4.0) |   | 30 000 |   | 65%
+100%
+ | Surowiec i partie testowe — zbiór, przygotowanie, transport |   | (koszty bieżące) |   | 90 000 |  
+ | Upowszechnianie — dni otwarte w gospodarstwie, strona, publikacje, materiały wideo |   | (koszty bieżące) |   | 80 000 |   | 100%
+ | Razem — wkład własny 70 000 zł |   | 370 000
+ | Rolnik musi mieć realne, własne zadania w operacji — nie może występować wyłącznie jako dostawca owoców na fakturę. Upowszechnianie
+ | rezultatów jest osobno punktowane w ocenie wniosku, więc opłaca się posadowić je właśnie po jego stronie.
+ | 07 |   | Podsumowanie w podziale na podmioty
+ | PODMIOT |   | KOSZTY KWALIFIKOWALNE |   | POMOC |   | WKŁAD WŁASNY
+ | Uniwersytet Rolniczy |   | 1 250 000 |   | 1 250 000 |   | 0
+ | Emix |   | 1 300 000 |   | 950 000 |   | 350 000
+ | Rolnik |   | 370 000 |   | 300 000 |   | 70 000
+ | Razem |   | 2 920 000 |   | 2 500 000 |   | 420 000
+ | 08 |   | Trzy rzeczy do przemyślenia przed liczbami
+ | PŁYNNOŚĆ, NIE BUDŻET
+ | Wkład własny 420 000 zł leży w całości na Emixie i rolniku, i to przy refundacji — najpierw trzeba wyłożyć pełne 2 920 000 zł, a dopiero
+ | potem je odzyskać. Bez linii kredytowej albo zaliczkowania to jest realne wąskie gardło operacji, większe niż sam wniosek.
+ | INWESTYCJE NIEPRODUKCYJNE
+ | Warto sprawdzić, czy część nakładów po stronie rolnika — zwłaszcza elementy energetyczne i klimatyczne — nie kwalifikuje się jako
+ | inwestycje nieprodukcyjne, finansowane do 100%. To potrafi zdjąć kilkadziesiąt tysięcy z wkładu własnego.
+ | WARIANT RYCZAŁTOWY
+ | Istnieje wariant ryczałtowy do 350 000 zł, dający 3 punkty w ocenie. Za te pieniądze nie kupi się liofilizatora, więc ma sens wyłącznie jako
+ | projekt badawczo-koncepcyjny prowadzony na cudzej instalacji. Przy powyższym zakresie te 3 punkty trzeba świadomie oddać i
+ | nadrobić w innych kryteriach.
+ | Dokument roboczy. Ramy procentowe i limity pochodzą z wytycznych szczegółowych dla interwencji I.13.5 Współpraca Grup Operacyjnych EPI (PS WPR 2023–2027); przed złożeniem
+ | wniosku należy je zweryfikować z regulaminem obowiązującego naboru. Wszystkie kwoty mają charakter poglądowy i służą wyłącznie pokazaniu mechaniki podziału budżetu — nie są
+ | wyceną ani ofertą.

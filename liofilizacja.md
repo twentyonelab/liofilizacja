@@ -2,14 +2,18 @@
 
 Projekt 21 zmysłów. Cel: narzędzie decyzyjne do liofilizacji przemysłowej (bilans cieplny, próżnia, koszt wytworzenia, energia i PV), podane w języku wizualnym materiałów EMIX.
 
-Stan na 2026-09-04: **faza zapoznania, nic nie zbudowane.** W repo leżą dwa pliki referencyjne i te notatki.
+Stan na 2026-09-05: **architektura zaproponowana, nic nie zbudowane.** Propozycja: `plan/plan-strony.html` (opublikowana też jako artefakt). W repo leżą pliki referencyjne i te notatki.
 
 ## Pliki w repo
 
 | Plik | Co to jest |
 |---|---|
 | `referencje/symulator-bilans-cieplny-v1.0.html` | Oryginalny symulator (v1.0, 179 kB, jeden plik, bez zależności poza Google Fonts). Nie ruszać – to źródło modelu. |
+| `referencje/symulator-bilans-cieplny-v1.0b-render.html` | Ten sam symulator z dodanym renderem poglądowym nad kaflami (jedyna różnica wobec v1.0). |
+| `referencje/linia-liofilizacji-schemat.html` | Schemat technologiczny linii 6 × 500 kg: rys. 1 schemat, rys. 2 węzeł komory, rys. 3 harmonogram, rys. 4 rzut hali 48 × 24 m, wykaz 11 aparatów, uwagi o PCM. Liczby z wariantu D symulatora. |
+| `referencje/budzet-EPI-I.13.5.2.pdf` + `.txt` | Szkic budżetu operacji EPI (PS WPR I.13.5.2): Emix + Uniwersytet Rolniczy + rolnik, 2,92 mln kosztów, 2,5 mln pomocy, 420 tys. wkładu. Nabór 1.10–2.11.2026. |
 | `referencje/emix-styl.css` | Arkusz stylu wyciągnięty ze strony EMIX „Piwnice 5500 m²”. Wzorzec prezentacji dla tego, co powstanie. |
+| `plan/plan-strony.html` | Propozycja architektury: zasady, 3 opcje + rekomendacja, mapa serwisu, makiety 6 podstron, kafle Granty, brief i prompty na render, decyzje. |
 
 ---
 
@@ -101,7 +105,27 @@ Strona `twentyonelab.github.io/piwnice_EMIX/` – „Bold Editorial Studio”. G
 
 ---
 
-## 3. Decyzje do podjęcia przed budową
+## 3. Architektura (propozycja z 2026-09-05)
+
+Rekomendacja: **hub + 6 podstron**, każda z jednym pytaniem, maks. 5 bloków, trzy warstwy głębokości (liczba → obraz → tabela po kliknięciu).
+
+| # | Podstrona | Pytanie | Skąd treść |
+|---|---|---|---|
+| – | Start | Co to jest i dlaczego czytać dalej? | render, teza, 4 liczby, 6 kafli |
+| 01 | Urządzenie | Dlaczego jedna maszyna liczy strumień raz, nie dwa razy? | sym. bloki 3, 4, 6; schemat rys. 2 |
+| 02 | Linia i hala | Jak to stoi i pracuje w 6 komorach? | schemat rys. 1, 3, 4, wykaz aparatów |
+| 03 | Ekonomia | Ile kosztuje kg i kiedy się zwraca? | sym. bloki 4, 9–12 |
+| 04 | Symulator | Co się stanie, gdy zmienię surowiec? | model 1:1, tryb prosty 12 param. / ekspert |
+| 05 | Granty | Z czego sfinansować i w jakiej kolejności? | budżet EPI + kafle kandydatów |
+| 06 | Metodyka | Skąd liczby, czego model nie robi? | sym. bloki 13–14, uwagi schematu |
+
+Odrzucone: jedna długa strona (wróci gęstość), trzy poziomy wtajemniczenia (za dużo utrzymania). Zasada warstw z opcji C wchodzi do B.
+
+Granty na start: 1 kafel z danymi (EPI I.13.5.2), 4 kandydaci do weryfikacji (FENG Ścieżka SMART, kredyt ekologiczny BGK, NFOŚiGW / FE Małopolska, Horyzont Europa / EIT Food). Wspólne pola kafla: kto składa, na co, poziom, sufit, termin, relacja do EPI, dopasowanie.
+
+Render na otwarcie: produkt, nie instalacja. Trzy bryły (komora, moduł maszynowy, 2 kasety PCM), stal + grafit, białe tło, czytelny w szarości. Trzy kadry: hero, przekrój, linia. Prompty w `plan/plan-strony.html`.
+
+## 4. Decyzje do podjęcia przed budową
 
 Nie rozstrzygam ich tu, tylko zapisuję. Zgodnie z zasadą: architektura przed kodem, one-way doors wskazane wprost.
 
@@ -114,6 +138,7 @@ Nie rozstrzygam ich tu, tylko zapisuję. Zgodnie z zasadą: architektura przed k
 
 ---
 
-## 4. Dziennik
+## 5. Dziennik
 
 - **2026-09-04** – wgrany symulator v1.0, przeczytany w całości. Rozszyfrowana i przeanalizowana strona EMIX. Zapisane pliki referencyjne i te notatki. Nic nie zbudowane.
+- **2026-09-05** – nowe pliki: symulator z renderem, schemat linii, budżet EPI. Propozycja architektury strony (`plan/plan-strony.html`): hub + 6 podstron, zakładka Granty, brief na render. Czeka na decyzje 1–3.
